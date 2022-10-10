@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\IntelliSAS\SchoolController;
 use App\Http\Controllers\MarksController;
 use App\Http\Controllers\Result\AdminResultController;
+use App\Http\Controllers\Result\CommentsController;
 use App\Http\Controllers\Settings\AssignSubjectsController;
 use App\Http\Controllers\Settings\BasicSettingsController;
 use App\Http\Controllers\Settings\CASchemeController;
@@ -142,10 +143,19 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
         Route::post('/grade_book/index', [MarksController::class, 'gradeGookSearch']);
     });
 
+    //termly result generation
     Route::group(['prefix' => 'result', 'middleware' => ['auth', 'admin']], function(){
 
         Route::get('/termly/index', [AdminResultController::class, 'termIndex'])->name('result.termly.index');
         Route::post('/termly/index', [AdminResultController::class, 'termGenerate']);
+      
+    });
+
+    ///comments 
+    Route::group(['prefix' => 'comments', 'middleware' => ['auth', 'admin']], function(){
+
+        Route::get('/index', [CommentsController::class, 'index'])->name('comments.index');
+      
       
     });
 

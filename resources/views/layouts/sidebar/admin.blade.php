@@ -46,7 +46,7 @@
          <li><a href="{{ route('result.termly.index') }}">Termly Report</a></li>   
          <li><a href="#">Sessional Report</a></li>   
          <li><a href="#">Broadsheet</a></li>   
-         <li><a href="#">Comments</a></li>   
+         <li><a href="{{ route('comments.index') }}">Comments</a></li>   
          <li><a href="#">Psychomotor/Affective</a></li>   
          <li><a href="#">Todler's Result</a></li>  
          <li><a href="#">Result Analysis</a></li>  
