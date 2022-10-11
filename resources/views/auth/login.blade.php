@@ -20,7 +20,8 @@
 	
 	<!-- FAVICONS ICON -->
 	<link rel="shortcut icon" type="image/png" href="images/favicon.png" />
-    <link href="./css/style.css" rel="stylesheet">
+    <link href="/vendor/jquery-nice-select/css/nice-select.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
 
 </head>
 
@@ -34,18 +35,30 @@
                             <div class="col-xl-12">
                                 <div class="auth-form">
 									<div class="text-center mb-3">
-										<a href="index.html"><img src="images/logo-full.png" alt=""></a>
+										<a href="index.html"><img src="/uploads/logo.png" alt="" width="100px"></a>
 									</div>
-                                    <h4 class="text-center mb-4">Sign in your account</h4>
+                                    <h4 class="text-center mb-4">Sign in to your account</h4>
                                     <ul id="error_list"></ul>
                                     <form action="">
                                         <div class="mb-3">
                                             <label class="mb-1" for="login"><strong>Email/Login ID</strong></label>
-                                            <input type="email" class="form-control" id="login" placeholder="Enter your Email/Login ID">
+                                            {{-- <input type="email" class="form-control" id="login" placeholder="Enter your Email/Login ID"> --}}
+                                            <div class="input-group">
+												<span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                                                <input type="text" class="form-control" id="login" placeholder="Enter your Email/Login ID..">
+                                            </div>
                                         </div>
                                         <div class="mb-3">
                                             <label class="mb-1" for="password"><strong>Password</strong></label>
-                                            <input type="password" class="form-control" id="password" placeholder="******">
+                                            {{-- <input type="password" class="form-control" id="password" placeholder="******"> --}}
+                                            <div class="input-group transparent-append">
+												<span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                                                <input type="password" class="form-control" id="dlab-password" placeholder="********">
+												<span class="input-group-text show-pass"> 
+													<i class="fa fa-eye-slash"></i>
+													<i class="fa fa-eye"></i>
+												</span>
+                                            </div>
                                         </div>
                                         <div class="row d-flex justify-content-between mt-4 mb-2">
                                             <div class="mb-3">
@@ -63,7 +76,7 @@
                                         </div>
                                     </form>
                                     <div class="new-account mt-3">
-                                        <p>Don't have an account? <a class="text-primary" href="#">Sign up</a></p>
+                                        <p>Any Problem or Feedback ? <a class="text-primary" href="tel:+2348037772628">Call Us</a> OR <a class="text-primary" href="https://wa.me/2348037772628?text=My%20school%20name%20is%20%20">WhatsApp Us</a></p>
                                     </div>
                                 </div>
                             </div>
@@ -89,7 +102,7 @@
         e.preventDefault();
         var data = {
             login: $("#login").val(),
-            password: $("#password").val(),
+            password: $("#dlab-password").val(),
             remember: $("#remember").prop("checked") == true ? 1 : 0,
         };
         spinner =

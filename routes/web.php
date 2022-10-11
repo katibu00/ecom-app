@@ -155,6 +155,9 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
     Route::group(['prefix' => 'comments', 'middleware' => ['auth', 'admin']], function(){
 
         Route::get('/index', [CommentsController::class, 'index'])->name('comments.index');
+        Route::post('/get-comments', [CommentsController::class, 'getComments'])->name('comments.get');
+        Route::post('/store-comments', [CommentsController::class, 'storeComments'])->name('comments.store');
+        Route::post('/view-comments', [CommentsController::class, 'viewComments'])->name('comments.view');
       
       
     });

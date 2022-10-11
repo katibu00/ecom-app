@@ -46,6 +46,7 @@
                                 <div class="col-md-12">
 
                                     @foreach (@$students as $student)
+                                    <div class="table-responsive">
                                         <table class="table table-sm table-hover">
 
                                             <thead>
@@ -121,6 +122,7 @@
                                                 @endforeach
                                             </tbody>
                                         </table>
+                                    </div>
                                     @endforeach
 
                                 </div>

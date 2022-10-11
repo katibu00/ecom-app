@@ -66,11 +66,7 @@
                         <div class="col-8"><span id="registered"></span>
                         </div>
                     </div>
-              
-              
-
-
-
+             
                     <h5 class="text-primary">Parent's Information</h5>
                     <div class="row mb-2">
                         <div class="col-4">

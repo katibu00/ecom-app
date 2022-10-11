@@ -20,13 +20,14 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    {{-- @include('comments.table') --}}
+                    @include('comments.table')
                 </div>
             </div>
         </div>
     </div>
         
         @include('comments.addModal')
+        @include('comments.viewCommentsModal')
         {{-- @include('settings.assign_subjects.editModal') --}}
     </div>
 </div>
@@ -34,5 +35,7 @@
 
 @section('js')
 <script src="/js/sweetalert.min.js"></script>
-@include('settings.assign_subjects.script')
+@include('comments.script')
+<script src="/handlebar/handlebars-v4.7.7.js"></script>
+{!! Toastr::message() !!}
 @endsection

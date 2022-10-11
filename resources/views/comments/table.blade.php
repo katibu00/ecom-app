@@ -1,41 +1,54 @@
-<table class="table table-responsive-sm primary-table-bg-hover">
+<table class="table table-responsive-sm r">
     <thead>
         <tr>
             <th class="text-center">S/N</th>
             <th>Class</th>
-            <th>Subject</th>
-            <th>Teacher</th>
+            <th class="text-center">Form Master</th>
+            <th class="text-center">Principal</th>
             <th class="text-center">Action</th>
         </tr>
     </thead>
     <tbody>
-        {{-- @foreach ($classes as $key => $value)
+        @foreach ($classes as $key => $row)
+        @php
+        $principal = App\Models\CommentSubmit::where('school_id', $school->id)->where('session_id', $school->session_id)->where('term',$school->term)->where('class_id',$row->id)->where('officer','p')->first(); 
+        $form_master = App\Models\CommentSubmit::where('school_id', $school->id)->where('session_id', $school->session_id)->where('term',$school->term)->where('class_id',$row->id)->where('officer','fm')->first(); 
+        @endphp
+
         <tr>
             
             <td class="text-center">{{ $key + 1 }}</td>
-            <td>{{ @$value->name }}</td>
-            <td></td>
-            <td></td>
-            <td></td>
-           
-        </tr>
-        @php
-            $subjects = App\Models\AssignSubject::where('class_id',$value->id)->where('school_id',auth()->user()->school_id)->get();
-        @endphp
-        @foreach ($subjects as $row => $subject )
-        <tr>
-            <td></td>
-            <td>{{ $row+1 }}</td>
-            <td>{{  $subject->subject->name }}</td>
-            <td>{{  $subject->teacher->title }} {{  $subject->teacher->first_name }} {{  $subject->teacher->last_name }}</td>
+            <td>{{ @$row->name }}</td>
             <td class="text-center">
-                <div>
-                    <a href="#" data-subject_name="{{ $subject->subject->name }}" data-class_name="{{ $value->name }}" data-id="{{ $subject->id }}" data-teacher_id="{{ $subject->teacher_id }}" data-bs-toggle="modal" data-bs-target="#editModal" class="btn btn-primary shadow btn-xs sharp me-1 editItem"><i class="fa fa-pencil"></i></a>
-                    <a href="#" data-id="{{ $value->id }}" data-name="{{ $value->name }}" class="btn btn-danger shadow btn-xs sharp deleteItem"><i class="fa fa-trash"></i></a>
+               @if($form_master)
+                 <i class="fa fa-check-square" style="font-size: 22px; color: green"></i> <p class="fst-italic">{{ $form_master->created_at->diffForHumans() }}</p>
+               @else
+                 <i class="fa fa-window-close-o" style="font-size: 22px; color: red"></i>
+               @endif
+            </td>
+            <td class="text-center">
+                @if($principal)
+                 <i class="fa fa-check-square" style="font-size: 22px; color: green"></i> <p class="fst-italic">{{ $principal->created_at->diffForHumans() }}</p>
+               @else
+                 <i class="fa fa-window-close-o" style="font-size: 22px; color: red"></i>
+               @endif
+               
+            </td>
+            <td class="text-center">
+                <div class="dropdown">
+                    <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
+                        <svg width="18px" height="18px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"/><circle fill="#000000" cx="5" cy="12" r="2"/><circle fill="#000000" cx="12" cy="12" r="2"/><circle fill="#000000" cx="19" cy="12" r="2"/></g></svg>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <a class="dropdown-item viewDetails" href="#" data-class_id="{{ $row->id }}" data-class_name="{{ $row->name }}" data-bs-toggle="modal" data-bs-target="#viewCommentsModal"><i class="fa fa-eye text-primary me-2"></i>View Comments</a>
+                        <a class="dropdown-item" href="#"><i class="fa fa-trash text-danger me-2"></i>Delete Comments</a>
+                    </div>
                 </div>
             </td>
+           
         </tr>
-        @endforeach --}}
+        
+       
         
         @endforeach
     </tbody>

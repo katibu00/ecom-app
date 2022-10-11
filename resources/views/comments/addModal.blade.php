@@ -2,21 +2,20 @@
     <div class="modal-dialog modal-dialog-centered modal-fullscreen" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Enter Comments</h5>
+                <h4 class="modal-title">Comments Entery</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal">
                 </button>
             </div>
-            <form id="create_data_form">
+           
                 <div class="modal-body" style="min-height: 80vh">
-                
-                        <ul id="error_list"></ul>
-                      
+                    
+                    <form id="search_form">
                         <div class="row">
                             <div class="col-xl-12">
 
                                 <div class="mb-2 row">
                                     <div class="col-lg-3">
-                                        <select class="default-select form-control wide mb-3" name="class_id" required>
+                                        <select class="default-select form-control wide mb-3" id="class_id">
                                             <option value="">--Select Class--</option>
                                             @foreach ($classes as $class)
                                                 <option value="{{ $class->id }}">{{ $class->name }}</option>
@@ -24,27 +23,54 @@
                                         </select>
                                     </div>
                                     <div class="col-lg-3">
-                                        <select class="default-select form-control wide mb-3" name="class_id" required>
-                                            <option value="">--Select Type--</option>
-                                            <option value="form">Form Master</option>
-                                            <option value="prin">Principal/Director</option>
+                                        <select class="default-select form-control wide mb-3" id="officer">
+                                            <option value="">--Select Officer--</option>
+                                            <option value="fm">Form Master</option>
+                                            <option value="p">Principal/Director</option>
                                         </select>
                                     </div>
                                     <div class="col-lg-4">
-                                        <button type="submit" class="btn btn-primary mb-2">Search Records</button>
+                                        <button type="submit" class="btn btn-secondary mb-2" id="search_btn">Search Records</button>
                                     </div>
                                 </div>
 
                             </div>
                         </div>
+                    </form>
+
+                    <form id="comments_form">
+                    <div class="row d-none" id="marks-generate">
+                        <div class="table-responsive">
+                            <input type="hidden" id="send_class_id" name="class_id" />
+                            <input type="hidden" id="send_officer" name="officer" />
+
+                            <table class="table table-bordered table-striped verticle-middle table-responsive-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Registration Number</th>
+                                        <th>Student Name</th>
+                                        <th>Position</th>
+                                        <th>Total Marks</th>
+                                        <th>Comment</th>
+                                        <th>Additional Comment</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="marks-generate-tr">
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
                        
                 
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary" id="submit_btn">Submit</button>
+                    <button type="submit" class="btn btn-primary d-none" id="submit_btn">Submit</button>
                 </div>
-        </form>
+            </form>
+       
         </div>
     </div>
 </div>

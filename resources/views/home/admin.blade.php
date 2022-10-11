@@ -4,7 +4,7 @@
 
 <div class="content-body">
     <!-- row -->
-    <div class="container-fluid">
+    {{-- <div class="container-fluid">
         <div class="row invoice-card-row">
             <div class="col-xl-3 col-xxl-6 col-sm-6">
                 <div class="card bg-warning invoice-card">
@@ -646,7 +646,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 </div>
 
 @endsection

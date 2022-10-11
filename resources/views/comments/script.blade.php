@@ -1,36 +1,61 @@
 <script>
     $(document).ready(function() {
-       
-        //create
-        $(document).on('submit', '#create_data_form', function(e){
+
+        //search records
+        $(document).on('submit', '#search_form', function(e) {
             e.preventDefault();
-            
-            let formData = new FormData($('#create_data_form')[0]);
-    
-            spinner = '<div class="spinner-border" style="height: 20px; width: 20px;" role="status"><span class="sr-only">Loading...</span></div> Submitting . . .'
-                     $('#submit_btn').html(spinner);
-                     $('#submit_btn').attr("disabled", true);
-    
+
+            var class_id = $('#class_id').val();
+            var officer = $('#officer').val();
+
+            $('#send_class_id').val(class_id);
+            $('#send_officer').val(officer);
+
+            if (class_id == '' || officer == '') {
+                Command: toastr["error"]("All fields are required")
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+                return;
+            }
+
+            spinner =
+                '<div class="spinner-border" style="height: 20px; width: 20px;" role="status"><span class="sr-only">Loading...</span></div> Fetching data . . .'
+            $('#search_btn').html(spinner);
+            $('#search_btn').attr("disabled", true);
+
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-    
+
             $.ajax({
                 type: "POST",
-                url: "{{ route('settings.assign_subjects.index') }}",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response){
-    
-                        if(response.status == 200){
-                            $('.table').load(location.href+' .table');
-                            $('#addModal').modal('hide');
-                            $('#create_data_form')[0].reset();
-                            Command: toastr["success"](response.message)
-                            toastr.options = {
+                url: "{{ route('comments.get') }}",
+                data: {
+                    'class_id': class_id
+                },
+                success: function(res) {
+
+                    if (!$.trim(res)) {
+                        Command: toastr["error"](
+                            "Generate End of Term Report First for the Selected Class")
+                        toastr.options = {
                             "closeButton": false,
                             "debug": false,
                             "newestOnTop": false,
@@ -46,167 +71,41 @@
                             "hideEasing": "linear",
                             "showMethod": "fadeIn",
                             "hideMethod": "fadeOut"
-                            }
-
-                            $('#submit_btn').text("Submit");
-                            $('#submit_btn').attr("disabled", false);
                         }
-                },
-            });
-    
-        });
-
-         //delete item
-         $(document).on('click', '.deleteItem', function(e) {
-            e.preventDefault();
-
-            let id = $(this).data('id');
-            let name = $(this).data('name');
-
-            swal({
-                    title: "Delete " + name + "?",
-                    text: "Once deleted, you will not be able to recover it!",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                })
-                .then((willDelete) => {
-                    if (willDelete) {
-
-                        $.ajaxSetup({
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            }
-                        });
-
-
-                        $.ajax({
-                            url: "{{ route('settings.subject.delete') }}",
-                            method: 'POST',
-                            data: {
-                                id: id,
-                            },
-
-                            success: function(res) {
-
-                                if (res.status == 200) {
-                                    swal('Deleted', res.message, "success");
-                                    $('.table').load(location.href + ' .table');
-                                }
-
-                            }
-                        });
-
-                    }
-                });
-
-        });
-
-         //edit item
-         $(document).on('click', '.editItem', function() {
-           
-            let class_name = $(this).data('class_name');
-            let subject_name = $(this).data('subject_name');
-            let id = $(this).data('id');
-            let teacher_id = $(this).data('teacher_id');
-            // if(status == 1)
-            // {
-            //     $("#status").prop("checked", true)
-            // }
-         
-            $('.modal-title').html('Update '+subject_name +' teacher for '+ class_name+'?');
-            $('#edit_name').val(name);
-            $('#update_id').val(id);
-        });
-
-        //update data
-        $(document).on('click', '#update_btn', function(e) {
-            e.preventDefault();
-
-            teacher_id = $('#update_teacher_id').val()
-            id = $('#update_id').val()
-
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
-            spinner = '<div class="spinner-border" style="height: 20px; width: 20px;" role="status"><span class="sr-only">Loading...</span></div> Updating. . .';
-            $("#update_btn").html(spinner);
-            $("#update_btn").attr("disabled", true);
-
-            $.ajax({
-                type: "POST",
-                url: "{{ route('settings.assign_subjects.update') }}",
-                data: {
-                    'teacher_id': teacher_id, 'id':id,
-                },
-                dataType: "json",
-                success: function(res) {
-
-                    if (res.status == 400) {
-                        $("#update_error_list").html("");
-                        $("#update_error_list").addClass("alert alert-danger");
-                        $.each(res.errors, function (key, err) {
-                            $("#update_error_list").append("<li>" + err + "</li>");
-                        });
-                        Command: toastr["error"](
-                            "Check your input and try again."
-                        );
-                        toastr.options = {
-                            closeButton: false,
-                            debug: false,
-                            newestOnTop: false,
-                            progressBar: false,
-                            positionClass: "toast-top-right",
-                            preventDuplicates: false,
-                            onclick: null,
-                            showDuration: "300",
-                            hideDuration: "1000",
-                            timeOut: "5000",
-                            extendedTimeOut: "1000",
-                            showEasing: "swing",
-                            hideEasing: "linear",
-                            showMethod: "fadeIn",
-                            hideMethod: "fadeOut",
-                        };
-                        $("#update_btn").text("Update");
-                        $("#update_btn").attr("disabled", false);
+                        $('#marks-generate').addClass('d-none');
+                        $('#marks-generate-tr').html('');
+                        $('#search_btn').html("Search Records");
+                        $('#search_btn').attr("disabled", false);
+                        return;
                     }
 
-                    if (res.status == 200) {
+                    $('#marks-generate').removeClass('d-none');
 
-                        $('#update_error_list').html("");
-                        $('#update_error_list').removeClass('alert alert-danger');
-                        $('#editModal').modal('hide');
-                        $('#update_btn').text("Update");
-                        $('#update_btn').attr("disabled", false);
-                        $('.table').load(location.href+' .table');
-                        
-                        Command: toastr["success"](res.message);
-                        toastr.options = {
-                            closeButton: false,
-                            debug: false,
-                            newestOnTop: false,
-                            progressBar: false,
-                            positionClass: "toast-top-right",
-                            preventDuplicates: false,
-                            onclick: null,
-                            showDuration: "300",
-                            hideDuration: "1000",
-                            timeOut: "5000",
-                            extendedTimeOut: "1000",
-                            showEasing: "swing",
-                            hideEasing: "linear",
-                            showMethod: "fadeIn",
-                            hideMethod: "fadeOut",
-                        };
-                        $("#update_btn").text("Update");
-                        $("#update_btn").attr("disabled", false);
+                    var html = '';
+                    $.each(res, function(key, v) {
 
-
-                    }
+                        html +=
+                            '<tr>' +
+                            '<td>' + v.student.login +
+                            '<input type="hidden" name="student_id[]" value="' + v
+                            .student.id + '"></td>' +
+                            '<td>' + v.student.first_name + ' ' + v.student
+                            .middle_name + ' ' + v.student.last_name + '</td>' +
+                            '<td>' + (key + 1) + '</td>' +
+                            '<td>' + v.total + '</td>' +
+                            '<td> <select name="comment[]" class="default-select form-control wide " >' +
+                            '<option value=""></option> <option value="Excellent Result, Keep it up.">Excellent Result, keep it up.</option>' +
+                            '<option value="Very Good Result, keep it up.">Very Good Result, keep it up.</option>' +
+                            '<option value="Good Result, keep it up.">Good Result, keep it up.</option>' +
+                            '<option value="Fair Result, you can do better next term.">Fair Result, you can do better next term.</option>' +
+                            '<option value="Best Result, keep it up.">Best Result, keep it up.</option></select></td>' +
+                            '<td><input type="text" class="form-control" name="additional[]" value=""></td>' +
+                            '</tr>';
+                    });
+                    html = $('#marks-generate-tr').html(html);
+                    $('#search_btn').html("Search Records");
+                    $('#search_btn').attr("disabled", false);
+                    $('#submit_btn').removeClass('d-none');
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
                     if (xhr.status === 419) {
@@ -232,30 +131,237 @@
                         };
 
                         setTimeout(() => {
-                               window.location.replace('{{ route('login') }}');
+                            window.location.replace('{{ route('login') }}');
                         }, 2000);
                     }
                 },
             });
+
         });
 
 
-        
+        //store comments
+        $(document).on('submit', '#comments_form', function(e) {
+            e.preventDefault();
+
+            let formData = new FormData($('#comments_form')[0]);
+
+            spinner =
+                '<div class="spinner-border" style="height: 20px; width: 20px;" role="status"><span class="sr-only">Loading...</span></div> Submitting . . .'
+            $('#submit_btn').html(spinner);
+            $('#submit_btn').attr("disabled", true);
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('comments.store') }}",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+
+                    if (response.status == 200) {
+                        $('.table').load(location.href + ' .table');
+                        $('#addModal').modal('hide');
+                        $('#comments_form')[0].reset();
+                        Command: toastr["success"](response.message)
+                        toastr.options = {
+                            "closeButton": false,
+                            "debug": false,
+                            "newestOnTop": false,
+                            "progressBar": false,
+                            "positionClass": "toast-top-right",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "300",
+                            "hideDuration": "1000",
+                            "timeOut": "5000",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut"
+                        }
+
+                        $('#submit_btn').text("Submit");
+                        $('#submit_btn').attr("disabled", false);
+                    }
+                    if (response.status == 404) {
+                        $('#comments_form')[0].reset();
+                        Command: toastr["error"](response.message)
+                        toastr.options = {
+                            "closeButton": false,
+                            "debug": false,
+                            "newestOnTop": false,
+                            "progressBar": false,
+                            "positionClass": "toast-top-right",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "300",
+                            "hideDuration": "1000",
+                            "timeOut": "5000",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut"
+                        }
+                        $('#submit_btn').text("Submit");
+                        $('#submit_btn').attr("disabled", false);
+                    }
+                    
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    if (xhr.status === 419) {
+                        Command: toastr["error"](
+                            "Session expired. please login again."
+                        );
+                        toastr.options = {
+                            closeButton: false,
+                            debug: false,
+                            newestOnTop: false,
+                            progressBar: false,
+                            positionClass: "toast-top-right",
+                            preventDuplicates: false,
+                            onclick: null,
+                            showDuration: "300",
+                            hideDuration: "1000",
+                            timeOut: "5000",
+                            extendedTimeOut: "1000",
+                            showEasing: "swing",
+                            hideEasing: "linear",
+                            showMethod: "fadeIn",
+                            hideMethod: "fadeOut",
+                        };
+
+                        setTimeout(() => {
+                            window.location.replace('{{ route('login') }}');
+                        }, 2000);
+                    }
+                },
+            });
+
+        });
+
+        //view comments click modal
+        $(document).on('click', '.viewDetails', function() {
+           
+           let class_id = $(this).data('class_id');
+           let class_name = $(this).data('class_name');
+           $('.viewTitle').html('Fetch Comments for Class '+class_name);
+           $('#view_class_id').val(class_id);
+           $('#loading_div').addClass('d-none');
+                        $('#content_div').addClass('d-none');
+                        html = $('#comments-generate-tr').html(null);
+
+       });
+
+        //view comments change select
+        $(document).on('change', '#view_officer', function() {
+           
+           let class_id = $('#view_class_id').val();
+           let officer = $('#view_officer').val();
+           
+
+           $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('comments.view') }}",
+                data: {'class_id':class_id, 'officer':officer},
+                beforeSend: function(){
+                    $('#loading_div').removeClass('d-none');
+                    $('#content_div').addClass('d-none');
+                    html = $('#comments-generate-tr').html(null);
+                },
+                success: function(data){
+
+                    if(!$.trim(data)){
+                       
+                        
+                        Command: toastr["error"](
+                            "No Comment has been Entered for the Selected Class/officer."
+                        );
+                        toastr.options = {
+                            closeButton: false,
+                            debug: false,
+                            newestOnTop: false,
+                            progressBar: false,
+                            positionClass: "toast-top-right",
+                            preventDuplicates: false,
+                            onclick: null,
+                            showDuration: "300",
+                            hideDuration: "1000",
+                            timeOut: "5000",
+                            extendedTimeOut: "1000",
+                            showEasing: "swing",
+                            hideEasing: "linear",
+                            showMethod: "fadeIn",
+                            hideMethod: "fadeOut",
+                        };
+                        $('#loading_div').addClass('d-none');
+                        $('#content_div').addClass('d-none');
+                        html = $('#comments-generate-tr').html(null);
+                        
+                        return;
+                    }
+
+                
+                    var html = '';
+                    $.each( data, function(key, v){
+
+                        html +=
+                        '<tr>'+
+                        '<td>'+(key+1)+'</td>'+
+                        '<td>'+v.student.login+'</td>'+
+                        '<td>'+v.student.first_name+' '+v.student.middle_name+' '+v.student.last_name+'</td>'+
+                        '<td>'+v.comment+' '+v.additional+'</td>'+
+                        '</tr>';
+                    });
+                    html = $('#comments-generate-tr').html(html);
+                    $('#loading_div').addClass('d-none');
+                    $('#content_div').removeClass('d-none');
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    if (xhr.status === 419) {
+                        Command: toastr["error"](
+                            "Session expired. please login again."
+                        );
+                        toastr.options = {
+                            closeButton: false,
+                            debug: false,
+                            newestOnTop: false,
+                            progressBar: false,
+                            positionClass: "toast-top-right",
+                            preventDuplicates: false,
+                            onclick: null,
+                            showDuration: "300",
+                            hideDuration: "1000",
+                            timeOut: "5000",
+                            extendedTimeOut: "1000",
+                            showEasing: "swing",
+                            hideEasing: "linear",
+                            showMethod: "fadeIn",
+                            hideMethod: "fadeOut",
+                        };
+
+                        setTimeout(() => {
+                            window.location.replace('{{ route('login') }}');
+                        }, 2000);
+                    }
+                },
+            });
+          
+       });
+
     });
-</script>
-
-<script type="text/javascript">
-    $(document).ready(function() {
-        var counter = 0;
-        $(document).on("click", ".addeventmore", function() {
-            var whole_extra_item_add = $("#whole_extra_item_add").html();
-            $(this).closest(".add_item").append(whole_extra_item_add);
-            counter++
-        });
-        $(document).on("click", ".removeeventmore", function(event) {
-            $(this).closest(".delete_whole_extra_item_add").remove();
-            counter -= 1;
-        });
-    });
-
 </script>
