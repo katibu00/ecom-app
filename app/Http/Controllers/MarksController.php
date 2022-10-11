@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AssignSubject;
 use App\Models\CAScheme;
 use App\Models\Classes;
-use App\Models\school;
+use App\Models\School;
 use App\Models\Mark;
 use App\Models\MarkSubmit;
 use App\Models\User;
