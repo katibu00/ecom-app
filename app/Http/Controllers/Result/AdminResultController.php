@@ -32,7 +32,7 @@ class AdminResultController extends Controller
         ]);
      
         $user = Auth::user();
-        $school = School::select('id','name','email','phone_first','phone_second','address','heading','grading')->where('id', $user->school_id)->first();
+        $school = School::select('id','name','username','email','phone_first','phone_second','address','heading','grading','logo')->where('id', $user->school_id)->first();
       
       
 

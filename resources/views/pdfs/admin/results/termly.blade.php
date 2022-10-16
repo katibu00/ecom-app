@@ -70,17 +70,17 @@
        <table width="100%">
            <tr>
                <td class="text-center" width="15%">
-                <img  src="/uploads/{{$school->username}}/{{$school->logo}}" style="width: 80px; height: 80px;">
+                <img  @if($school->logo == 'default.png') src="/uploads/no-image.jpg" @else src="/uploads/{{ $school->username }}/{{ $school->logo }}" @endif style="width: 80px; height: 80px;">
             </td>
                <td class="text-center" width="85%">
-                <{{$school->heading}} style="text-transform: uppercase;"><strong>{{$school->name}}</strong></{{$school->heading}}>
+                <{{ $school->heading }} style="text-transform: uppercase; color: #009879;"><strong>{{$school->name}}</strong></{{$school->heading}}>
                 <h5 style="margin-top: -10px;"><strong>Tel: {{$school->phone_first}} | website: {{$school->website}} | Email: {{$school->email}}</strong></h5>
                 <h5 style="margin-top: -20px;"><strong>{{$school->address}}</strong></h5>
             </td>
            </tr>
        </table>
        <div style="margin-top: -30px;">
-        <h4 style="text-transform: uppercase; text-align: center; border-bottom: 2px solid black; border-top: 2px solid black; padding:5px;"><strong>Student's End of Term Report Form</strong></h4>
+        <h4 style="text-transform: uppercase; text-align: center; border-bottom: 2px solid #009879; border-top: 2px solid #009879; padding:5px; color: #009879;"><strong>Student's End of Term Report Form</strong></h4>
        </div>
     </div>
 
