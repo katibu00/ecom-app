@@ -150,6 +150,7 @@
             let user_id = $(this).data('user_id');
             var marks = $(this).val()
             let subject_id = $('#subject_id_send').val();
+            let class_id = $('#class_id_send').val();
             let marks_category = $('#marks_category_send').val();
             var max_mark = $('#max_mark').val();
 
@@ -169,6 +170,7 @@
                 data: {
                     'subject_id': subject_id,
                     'user_id': user_id,
+                    'class_id': class_id,
                     'marks_category': marks_category,
                     'marks': marks,
                     'max_mark': max_mark,

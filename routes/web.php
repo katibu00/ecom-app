@@ -7,10 +7,13 @@ use App\Http\Controllers\IntelliSAS\SchoolController;
 use App\Http\Controllers\MarksController;
 use App\Http\Controllers\Result\AdminResultController;
 use App\Http\Controllers\Result\CommentsController;
+use App\Http\Controllers\Result\PsychomotorGradeController;
+use App\Http\Controllers\Settings\AffectiveCrudController;
 use App\Http\Controllers\Settings\AssignSubjectsController;
 use App\Http\Controllers\Settings\BasicSettingsController;
 use App\Http\Controllers\Settings\CASchemeController;
 use App\Http\Controllers\Settings\ClassesController;
+use App\Http\Controllers\Settings\PsychomotorCrudController;
 use App\Http\Controllers\Settings\SectionsController;
 use App\Http\Controllers\Settings\SessionsController;
 use App\Http\Controllers\Settings\SubjectsController;
@@ -108,6 +111,16 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
         Route::post('/ca_scheme/update', [CASchemeController::class, 'update'])->name('settings.ca_scheme.update');
         Route::post('/ca_scheme/delete', [CASchemeController::class, 'delete'])->name('settings.ca_scheme.delete');
 
+        Route::get('/psychomotor_skills/index', [PsychomotorCrudController::class, 'index'])->name('settings.psychomotor_crud.index');
+        Route::post('/psychomotor_skills/index', [PsychomotorCrudController::class, 'store']);
+        Route::post('/psychomotor_skills/update', [PsychomotorCrudController::class, 'update'])->name('settings.psychomotor_crud.update');
+        Route::post('/psychomotor_skills/delete', [PsychomotorCrudController::class, 'delete'])->name('settings.psychomotor_crud.delete');
+
+        Route::get('/affective_traits/index', [AffectiveCrudController::class, 'index'])->name('settings.affective_crud.index');
+        Route::post('/affective_traits/index', [AffectiveCrudController::class, 'store']);
+        Route::post('/affective_traits/update', [AffectiveCrudController::class, 'update'])->name('settings.affective_crud.update');
+        Route::post('/affective_traits/delete', [AffectiveCrudController::class, 'delete'])->name('settings.affective_crud.delete');
+
     });
 
 
@@ -158,6 +171,17 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
         Route::post('/get-comments', [CommentsController::class, 'getComments'])->name('comments.get');
         Route::post('/store-comments', [CommentsController::class, 'storeComments'])->name('comments.store');
         Route::post('/view-comments', [CommentsController::class, 'viewComments'])->name('comments.view');
+      
+      
+    });
+
+    ///comments 
+    Route::group(['prefix' => 'psychomotor', 'middleware' => ['auth', 'admin']], function(){
+
+        Route::get('/index', [PsychomotorGradeController::class, 'index'])->name('psychomotor.index');
+        Route::post('/get-psychomotor', [PsychomotorGradeController::class, 'getRecords'])->name('psychomotor.get');
+        Route::post('/store-psychomotor', [PsychomotorGradeController::class, 'storePsychomotor'])->name('psychomotor.store');
+        Route::post('/view-psychomotor', [PsychomotorGradeController::class, 'viewComments'])->name('psychomotor.view');
       
       
     });

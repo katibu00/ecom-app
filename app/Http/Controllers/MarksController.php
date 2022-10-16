@@ -49,13 +49,14 @@ class MarksController extends Controller
             $data['max_mark'] = 60;
         }
     
-        $data['students'] = Mark::with(['student','class'])->where('school_id',$school->id)->where('subject_id', $assign->subject_id)->where('type',$request->marks_category)->where('session_id',$session)->where('term',$term)->get();
+        $data['students'] = Mark::with(['student','class'])->where('school_id',$school->id)->where('subject_id', $assign->subject_id)->where('class_id',$assign->class_id)->where('type',$request->marks_category)->where('session_id',$session)->where('term',$term)->get();
 
         if($data['students']->count() > 0){
 
             $submitted = MarkSubmit::where('school_id',$school->id)
                                 ->where('session_id',$school->session_id)
                                 ->where('term',$school->term)
+                                ->where('class_id',$assign->class_id)
                                 ->where('subject_id',$assign->subject_id)
                                 ->where('marks_category',$request->marks_category)
                                 ->first();
@@ -66,6 +67,7 @@ class MarksController extends Controller
             $data['marked'] = Mark::where('school_id',$school->id)
              ->where('session_id',$session)
              ->where('term',$term)
+             ->where('class_id',$assign->class_id)
              ->where('subject_id',$assign->subject_id)
              ->where('type',$request->marks_category)
              ->where('marks','!=',null)->get()->count();
@@ -90,8 +92,8 @@ class MarksController extends Controller
 
         $user = Auth::user();
         $school = school::select('id','session_id','term')->where('id', $user->school_id)->first();
-
-        $check = Mark::where('school_id',$school->id)->where('session_id',$school->session_id)->where('term',$school->term)->where('subject_id',$request->subject_id)->where('type',$request->marks_category)->first();
+       
+        $check = Mark::where('school_id',$school->id)->where('session_id',$school->session_id)->where('term',$school->term)->where('subject_id',$request->subject_id)->where('class_id',$request->class_id)->where('type',$request->marks_category)->first();
 
         if($check){
             return response()->json([
@@ -99,7 +101,6 @@ class MarksController extends Controller
                 'message' => 'Marks have already been Initialized',
             ]);
         }
-
 
         $dataCount = count($request->user_id);
 
@@ -125,15 +126,15 @@ class MarksController extends Controller
 
 
     public function saveMarks(Request $request){
-
         $user = Auth::user();
         $school = school::select('id','session_id','term')->where('id', $user->school_id)->first();
-        $check = Mark::where('school_id',$school->id)->where('session_id',$school->session_id)->where('term',$school->term)->where('student_id',$request->user_id)->where('subject_id',$request->subject_id)->where('type',$request->marks_category)->first();
+        $check = Mark::where('school_id',$school->id)->where('session_id',$school->session_id)->where('term',$school->term)->where('student_id',$request->user_id)->where('class_id', $request->class_id)->where('subject_id',$request->subject_id)->where('type',$request->marks_category)->first();
 
         $marked = Mark::where('school_id',$school->id)
                         ->where('session_id',$school->session_id)
                         ->where('term',$school->term)
                         ->where('subject_id',$request->subject_id)
+                        ->where('class_id', $request->class_id)
                         ->where('type',$request->marks_category)
                         ->where('marks','!=',null)
                         ->get()->count();
@@ -143,7 +144,7 @@ class MarksController extends Controller
             if($request->marks > $request->max_mark){
                 return response()->json([
                     'status' => 404,
-                    'message' => 'Marks must not exceeeeeeed '.$request->max_mark,
+                    'message' => 'Marks must not exceed '.$request->max_mark,
                 ]);
             }
             $check->marks = $request->marks;
@@ -163,19 +164,19 @@ class MarksController extends Controller
     }
 
     public function submitMarks(Request $request){
-
         $user = Auth::user();
         $school = school::where('id', $user->school_id)->first();
-
         $submitexists = MarkSubmit::where('school_id',$school->id)
                             ->where('session_id',$school->session_id)
                             ->where('term',$school->term)
                             ->where('subject_id',$request->subject_id)
+                            ->where('class_id', $request->class_id)
                             ->where('marks_category',$request->marks_category)
                             ->first();
         $unmarkedexists = Mark::where('school_id',$school->id)
                             ->where('session_id',$school->session_id)
                             ->where('term',$school->term)
+                            ->where('class_id', $request->class_id)
                             ->where('subject_id',$request->subject_id)
                             ->where('type',$request->marks_category)
                             ->where('absent',null)
@@ -216,13 +217,11 @@ class MarksController extends Controller
 
     public function  checkAbsentMarks(Request $request)
     {
-      
         $user = Auth::user();
         $school = school::where('id', $user->school_id)->first();
+        $check = Mark::where('school_id',$school->id)->where('session_id',$school->session_id)->where('term',$school->term)->where('student_id',$request->user_id)->where('class_id', $request->class_id)->where('subject_id',$request->subject_id)->where('type',$request->marks_category)->first();
 
-        $check = Mark::where('school_id',$school->id)->where('session_id',$school->session_id)->where('term',$school->term)->where('student_id',$request->user_id)->where('subject_id',$request->subject_id)->where('type',$request->marks_category)->first();
-
-        $marked = Mark::where('school_id',$school->id)->where('session_id',$school->session_id)->where('term',$school->term)->where('subject_id',$request->subject_id)->where('type',$request->marks_category)->where('marks','!=','')->get()->count();
+        $marked = Mark::where('school_id',$school->id)->where('session_id',$school->session_id)->where('term',$school->term)->where('subject_id',$request->subject_id)->where('class_id', $request->class_id)->where('type',$request->marks_category)->where('marks','!=','')->get()->count();
 
         if($check != null){
            
@@ -249,16 +248,11 @@ class MarksController extends Controller
 
     public function  uncheckAbsentMarks(Request $request)
     {
-
         $user = Auth::user();
         $school = school::where('id', $user->school_id)->first();
-
-        $check = Mark::where('school_id',$school->id)->where('session_id',$school->session_id)->where('term',$school->term)->where('student_id',$request->user_id)->where('subject_id',$request->subject_id)->where('type',$request->marks_category)->first();
-
-        $marked = Mark::where('school_id',$school->id)->where('session_id',$school->session_id)->where('term',$school->term)->where('subject_id',$request->subject_id)->where('type',$request->marks_category)->where('marks','!=','')->get()->count();
-
+        $check = Mark::where('school_id',$school->id)->where('session_id',$school->session_id)->where('term',$school->term)->where('class_id', $request->class_id)->where('student_id',$request->user_id)->where('subject_id',$request->subject_id)->where('type',$request->marks_category)->first();
+        $marked = Mark::where('school_id',$school->id)->where('session_id',$school->session_id)->where('term',$school->term)->where('class_id', $request->class_id)->where('subject_id',$request->subject_id)->where('type',$request->marks_category)->where('marks','!=','')->get()->count();
         if($check != null){
-           
             $check->marks = $request->marks;
             $check->absent = null;
             $check->update();

@@ -49,7 +49,7 @@
                                         <div class="mb-3 row">
                                             <div class="col-md-12">
                                                 <div class="profile-img-edit">
-                                                    <img class="profile-pic" width="150" height="150" src="/uploads/no-image.jpg" alt="school logo">
+                                                    <img class="profile-pic" width="150" height="150" @if($school->logo == 'default.jpg') src="/uploads/no-image.jpg" @else src="/uploads/{{ $school->username }}/{{ $school->logo }}" @endif alt="school logo">
                                                     <div class="p-image">
                                                     <i class="fa fa-pencil  upload-button"></i>
                                                     <input class="file-upload" type="file" accept="image/*" name="logo" />

@@ -27,7 +27,7 @@
                         
                     </div>
                     <div class="card-body my-1 py-50">
-                        <form class="form" action="{{ route('result.termly.index')}}" method="POST">
+                        <form class="form" action="{{ route('result.termly.index')}}" method="POST" target="_blank">
                             @csrf
                             <div class="row">
                                 <div class="col-sm-3 mb-1">
@@ -37,6 +37,9 @@
                                             <option value="{{ $session->id }}" {{ $session->id == @$school->session_id ? 'selected':''}}>{{ $session->name }}</option>
                                         @endforeach
                                     </select>
+                                    @error('session_id')
+                                        <div style="color: red;">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 <div class="col-sm-3 mb-1">
                                     <select class="default-select form-control wide mb-3" name="class_id">
@@ -45,6 +48,9 @@
                                             <option value="{{ $class->id }}">{{ $class->name}}</option>
                                         @endforeach
                                     </select>
+                                    @error('class_id')
+                                        <div style="color: red;">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 <div class="col-sm-3 mb-1">
                                     <select class="default-select form-control wide mb-3" name="term">
@@ -53,31 +59,36 @@
                                         <option value="second" {{ $school->term == 'second' ? 'selected':''}}>Second</option>
                                         <option value="third" {{ $school->term == 'third' ? 'selected':''}}>Thirs</option>
                                     </select>
+                                    @error('term')
+                                        <div style="color: red;">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 <div class="col-sm-3">
                                     <label class="form-label" for=""></label>
                                     <button type="submit" class="btn btn-primary">Search Records</button>
                                 </div>
                             </div>
-                            <div class="mb-3">
+                            <div class="row my-3">
                                 <div class="form-check form-check-inline">
                                     <label class="form-check-label">
-                                        <input type="checkbox" class="form-check-input" value=""
-                                            checked>Comments
+                                        <input type="checkbox" class="form-check-input" name="comments">Comments
                                     </label>
                                 </div>
                                 <div class="form-check form-check-inline">
                                     <label class="form-check-label">
-                                        <input type="checkbox" class="form-check-input" value="">Psychomotor
+                                        <input type="checkbox" class="form-check-input"  name="psychomotor">Psychomotor
                                     </label>
                                 </div>
-                                <div class="form-check form-check-inline disabled">
+                               
+                                <div class="form-check form-check-inline ">
                                     <label class="form-check-label">
-                                        <input type="checkbox" class="form-check-input" value="">Next Term
+                                        <input type="checkbox" class="form-check-input" id="next_term" name="next_term">Next Term
                                     </label>
                                 </div>
-                                <div class="form-check form-check-inline">
-                                    <input type="text" class="form-control" placeholder="2017-06-04" id="mdate">
+                                <div class="d-none" id="next_term_date">
+                                    <div class="form-check form-check-inline">
+                                        <input type="text" class="form-control" placeholder="2017-06-04" id="mdate" name="date">
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -107,4 +118,16 @@
 
 <script src="/js/plugins-init/pickadate-init.js"></script>
     {!! Toastr::message() !!}
+
+    <script>
+    $(document).on("click", "#next_term", function() { 
+
+        if($(this).prop("checked") == true)
+        {
+            $('#next_term_date').removeClass('d-none');
+        }else{
+            $('#next_term_date').addClass('d-none');
+        }
+    });
+    </script>
 @endsection

@@ -14,8 +14,14 @@
          <li><a href="{{ route('settings.classes.index') }}">Classes</a></li>
          <li><a href="{{ route('settings.subjects.index') }}">Subjects</a></li>
          <li><a href="{{ route('settings.assign_subjects.index') }}">Subjects Assignment</a></li>
-         <li><a href="{{ route('settings.ca_scheme.index') }}">CA Scheme</a></li>
-         
+        
+         <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Result Settings</a>
+            <ul aria-expanded="false">
+                <li><a href="{{ route('settings.psychomotor_crud.index') }}">Psychomotor Skills</a></li>
+                <li><a href="{{ route('settings.affective_crud.index') }}">Affective Traits</a></li>
+                <li><a href="{{ route('settings.ca_scheme.index') }}">CA Scheme</a></li>
+            </ul>
+        </li>
      </ul>
  </li>
  <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
@@ -47,7 +53,7 @@
          <li><a href="#">Sessional Report</a></li>   
          <li><a href="#">Broadsheet</a></li>   
          <li><a href="{{ route('comments.index') }}">Comments</a></li>   
-         <li><a href="#">Psychomotor/Affective</a></li>   
+         <li><a href="{{ route('psychomotor.index') }}">Psychomotor/Affective</a></li>   
          <li><a href="#">Todler's Result</a></li>  
          <li><a href="#">Result Analysis</a></li>  
          <li><a href="#">Publish Result</a></li>  

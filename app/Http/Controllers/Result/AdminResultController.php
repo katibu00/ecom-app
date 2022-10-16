@@ -24,8 +24,12 @@ class AdminResultController extends Controller
 
 
     public function termGenerate(Request $request)
-    {
-
+    {   
+        $this->validate($request, [
+            'session_id' => 'required',
+            'class_id' => 'required',
+            'term' => 'required',
+        ]);
      
         $user = Auth::user();
         $school = School::select('id','name','email','phone_first','phone_second','address','heading','grading')->where('id', $user->school_id)->first();
@@ -72,8 +76,13 @@ class AdminResultController extends Controller
         $session_id = $request->session_id;
         $class_id = $request->class_id;
         $term = $request->term;
+        
+        $comments = @$request->comments;
+        $psychomotor = @$request->psychomotor;
+        $next_term = @$request->next_term;
+        $date = @$request->date;
 
-        return view('pdfs.admin.results.termly', compact('school', 'students', 'class_id', 'term', 'session_id'));
+        return view('pdfs.admin.results.termly', compact('school', 'students', 'class_id', 'term', 'session_id','comments','next_term','date','psychomotor'));
 
 
     }

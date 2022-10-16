@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>End of Term Report Sheet</title>
+    <link rel="stylesheet" type="text/css" href="/fontawesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/fontawesome/css/fontawesome.min.css">
     <style type="text/css">
        .styled-table {
             border-collapse: collapse;
@@ -47,7 +49,6 @@
             text-align: left;
         }
 
-
         @media print{
             *{
                 -webkit-print-color-adjust: exact;
@@ -76,14 +77,12 @@
                 <h5 style="margin-top: -10px;"><strong>Tel: {{$school->phone_first}} | website: {{$school->website}} | Email: {{$school->email}}</strong></h5>
                 <h5 style="margin-top: -20px;"><strong>{{$school->address}}</strong></h5>
             </td>
-
            </tr>
        </table>
        <div style="margin-top: -30px;">
         <h4 style="text-transform: uppercase; text-align: center; border-bottom: 2px solid black; border-top: 2px solid black; padding:5px;"><strong>Student's End of Term Report Form</strong></h4>
        </div>
     </div>
-
 
     <div style="width: 100%">
         <div style="width: 45%; float: left;">
@@ -108,7 +107,7 @@
          @endphp
 
         <div style="width: 40%; float: left; margin-left: 0px;">
-                <p style="margin-top: -15px;"><strong>TERM:</strong> {{$term}} Term</p>
+                <p style="margin-top: -15px;"><strong>TERM:</strong> {{ ucfirst($term) }} Term</p>
                 @php
                     $session = App\Models\Session::where('id',$session_id)->where('school_id',$school->id)->first();
                 @endphp
@@ -125,7 +124,6 @@
                      @php
                          $absent = App\Models\Attendance::where('class_id', $class_id)->where('class_section_id',  $class_section_id)->where('school_id',  $school_id)->where('status','!=','present')->where('term',$term)->where('session_id',$session_id)->where('user_id',$user->id)->get()->count();
                          $number = App\Models\Attendance::select('date')->where('class_id', $class_id)->where('class_section_id',  $class_section_id)->where('school_id',  $school_id)->where('session_id',$session_id)->where('term',$term)->groupBy('date')->get()->count();
-
                      @endphp
 
                 <p style="margin-top: -15px;"><strong>Attendance:</strong>Absent {{$absent}} out of {{$number}} times</p>
@@ -154,7 +152,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                  
                     @foreach($subjects as $key => $subject)
                         @php
                            $subject_name = App\Models\Subject::select('name')->where('id',$subject->subject_id)->first();
@@ -166,15 +163,10 @@
                             @php
                                  $ca = App\Models\Mark::where('student_id',$user->id)->where('class_id',$class_id)->where('term',$term)->where('school_id',$school->id)->where('type','!=', 'exam')->where('subject_id',$subject->subject_id)->sum('marks');
                                  $exam = App\Models\Mark::where('student_id',$user->id)->where('class_id',$class_id)->where('term',$term)->where('school_id',$school->id)->where('type','exam')->where('subject_id',$subject->subject_id)->sum('marks');
-
-                                
                                  $total_score = $exam+$ca;
-
                                 @$grade_marks = App\Models\Grade::where([['start_mark','<=',(int)$total_score],['end_mark','>=',(int)$total_score]])->where('type',$school->grading)->first();
                                 @$letter_grade = $grade_marks->letter_grade;
                                 @$remark = $grade_marks->remarks;
-
-
                             @endphp
                              <td class="text-center">{{$ca}}</td>
                              <td class="text-center">{{$exam}}</td>
@@ -186,22 +178,120 @@
 
                 </tbody>
             </table>
-            {{-- <p style="text-align: center; text-transform: uppercase; width: 100%; border-bottom: 2px solid black; padding: 5px;">REMARKS</p>
+      
+            @if(@$psychomotor)
+            <div style="margin-top: 25px"></div>
 
-            <div style=" width: 100%; overflow: auto; clear:both; margin-top: -10px;">
-                <div style="width: 50%; float: left; text-align: center;">
-                    <p style="text-align: center; width: 80%; margin-left: 5%; margin-top: 7%; border-top: 1px solid black; padding: 5px;">Principal</p>
+            <div style="width: 100% margin: px; clear: both; overflow: hidden;">
+                <div style="width: 47%; float: left;">
+                    <table class="styled-table" style="font-size: 14px;">
+                        <thead>
+                            <tr>
+                                <th style="text-align: left;">Psychomotor Skills</th>
+                                <th>5</th>
+                                <th>4</th>
+                                <th>3</th>
+                                <th>2</th>
+                                <th>1</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php
+                                $psychomotors = App\Models\PsychomotorCrud::where('school_id',$school->id)->where('status',1)->get();
+                            @endphp
+                            @foreach ($psychomotors as $psychomotor)
+                                @php
+                                    $score = App\Models\PsychomotorGrade::select('score')->where('school_id',$school->id)->where('session_id',@$session_id)->where('term',@$term)->where('class_id',@$class_id)->where('student_id',$student->student_id)->where('grade_id',$psychomotor->id)->first();
+                                @endphp
+                                <tr>
+                                <td style="text-align: left;">{{ $psychomotor->name}}</td>
+                                <td>{!! $score->score == 5? '<i class="fa fa-check"></i>': '' !!}</td>
+                                <td>{!! $score->score == 4? '<i class="fa fa-check"></i>': '' !!}</td>
+                                <td>{!! $score->score == 3? '<i class="fa fa-check"></i>': '' !!}</td>
+                                <td>{!! $score->score == 2? '<i class="fa fa-check"></i>': '' !!}</td>
+                                <td>{!! $score->score == 1? '<i class="fa fa-check"></i>': '' !!}</td>
+                                </tr>
+                            @endforeach     
+                        </tbody>
+                    </table>
+                    <p>SCALE:</p>
+                    <p style="margin-top: -12px">5 - Excellent</p>
+                    <p style="margin-top: -12px">4 - Good</p>
+                    <p style="margin-top: -12px">3 - Fair</p>
+                    <p style="margin-top: -12px">2 - Poor</p>
+                    <p style="margin-top: -12px">1 - Very Poor</p>
                 </div>
+                <div style="width: 47%; float: right;">
 
-                <div style="width: 50%; float: right;">
-                    <p style="text-align: center; width: 80%; margin-left: 0%; margin-top: 7%; border-top: 1px solid black; padding: 5px;">Form Master</p>
+                    <table class="styled-table" style="font-size: 14px;">
+                        <thead>
+                            <tr>
+                                <th style="text-align: left;">Affective Traits</th>
+                                <th>5</th>
+                                <th>4</th>
+                                <th>3</th>
+                                <th>2</th>
+                                <th>1</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php
+                                $affectives = App\Models\AffectiveCrud::where('school_id',$school->id)->where('status',1)->get();
+                            @endphp
+                            @foreach ($affectives as $affective)
+                                @php
+                                    $score = App\Models\PsychomotorGrade::select('score')->where('school_id',$school->id)->where('session_id',@$session_id)->where('term',@$term)->where('class_id',@$class_id)->where('student_id',$student->student_id)->where('grade_id',$psychomotor->id)->first();
+                                @endphp
+                                <tr>
+                                <td style="text-align: left;">{{ $affective->name}}</td>
+                                <td>{!! $score->score == 5? '<i class="fa fa-check"></i>': '' !!}</td>
+                                <td>{!! $score->score == 4? '<i class="fa fa-check"></i>': '' !!}</td>
+                                <td>{!! $score->score == 3? '<i class="fa fa-check"></i>': '' !!}</td>
+                                <td>{!! $score->score == 2? '<i class="fa fa-check"></i>': '' !!}</td>
+                                <td>{!! $score->score == 1? '<i class="fa fa-check"></i>': '' !!}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
-            </div> --}}
+            </div>
+            @endif
 
+            @if(@$comments)
+                @php
+                    $principal = App\Models\Comment::where('school_id', $school->id)
+                        ->where('student_id', $user->id)
+                        ->where('session_id', $session_id)
+                        ->where('term', $term)
+                        ->where('class_id', $class_id)
+                        ->where('officer', 'p')
+                        ->first();
+                    $master = App\Models\Comment::where('school_id', $school->id)
+                        ->where('student_id', $user->id)
+                        ->where('session_id', $session_id)
+                        ->where('term', $term)
+                        ->where('class_id', $class_id)
+                        ->where('officer', 'fm')
+                        ->first();
+                @endphp
+                <div style=" width: 100%; overflow: hidden; clear:both; margin-top: 0px;">
+                    <p style="margin: 0 0px; font-size: 17px; line-height: 1.8em;">Form Master's Comment: <span
+                            style="border-bottom: 1px solid black;  padding: 10px 100px;">{{ @$master->comment }}
+                            {{ @$master->addmitional }}</span></p>
+                    <p style="margin: 10px 0px; font-size: 17px; line-height: 1.8em;">Principal's Comment: <span
+                            style="border-bottom: 1px solid black;  padding: 5px 100px;">{{ @$principal->comment }}
+                            {{ @$principal->addmitional }}</span></p>
+                    <p style="margin: 0 70px; font-size: 17px; line-height: 1.8em;"> <span
+                                style="border-bottom: 2px solid black;  padding: 10px 200px;">
+                                </span></p>
+                </div>
+            @endif
 
-
+            @if(@$next_term)
+               <p style="font-size: 14px; margin-top: -10px;">Next Term Begins: {{ \Carbon\Carbon::parse($date)->format('l, d F Y') }}</p>
+            @endif
     </div>
-    <div style=" width: 100%; overflow: auto; clear:both; margin-top: 30px;">
+    <div style=" width: 100%; overflow: hidden; clear:both; margin-top: 5px;">
         <div style="width: 20%; float: left; text-align: center;">
             <img src="/uploads/qr-code.png" style="width: 80px; height: 80px;">
         </div>
@@ -211,11 +301,11 @@
         </div>
     </div>
 
-    {{-- <div style=" width: 100%; margin-top: 0px; clear: both;">
-            <p style="font-size: 14px; text-align: center; margin-top: -5px;">THIS REPORT REQUIRES SIGNATURE</p>
-    </div> --}}
-    <div style=" width: 100%; margin-top: 0px;">
-        <p style="font-size: 13px; text-align: center">Generated on {{date("l, jS \of F Y ")}} @ {{date("h:i A")}}</p>
+    <div style=" width: 100%; margin-top: 0px; clear: both;">
+            <p style="font-size: 14px; text-align: center; margin-top: -15px;">THIS REPORT DOES NOT REQUIRE SIGNATURE</p>
+    </div>
+    <div style=" width: 100%; margin-top: -5px;">
+        <p style="font-size: 13px; text-align: center">Generated on {{date("l, jS \of F Y ")}} @ {{date("h:i A")}} | intellisas</p>
     </div>
 
 </div>
@@ -224,11 +314,10 @@
 @endforeach
 </body>
 
-{{-- <script>
+<script>
     window.onload = function(){
         window.print();
-
     }
-</script> --}}
+</script>
 </html>
 

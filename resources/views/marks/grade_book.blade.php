@@ -113,7 +113,10 @@
 
                                                       
                                                         <td>
-                                                            {{ $total_ca + @$exam->marks }}
+                                                            @php
+                                                                $grand_total = $total_ca + @$exam->marks;
+                                                            @endphp
+                                                            {{ $grand_total == 0 ? '': $grand_total }}
                                                         </td>
                                                         @php
                                                             $total_ca = 0

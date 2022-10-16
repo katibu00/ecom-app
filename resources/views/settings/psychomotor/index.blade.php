@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('PageTitle', 'Comments Entry')
+@section('PageTitle', 'Psychomotor Skills')
 @section('content')
 
 <div class="content-body">
@@ -8,7 +8,7 @@
         <div class="d-flex flex-wrap align-items-center mb-3">
             <div class="mb-3 me-auto">
             </div>
-            <a href="" data-bs-toggle="modal" data-bs-target="#addModal" class="btn btn-outline-primary mb-3">+ New Comments</a>
+            <a href="" data-bs-toggle="modal" data-bs-target="#addModal" class="btn btn-outline-primary mb-3">+ Psychomotor Skill(s)</a>
         </div>
 
        {{-- content --}}
@@ -16,25 +16,23 @@
        <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title">Comments Entry</h4>
+                <h4 class="card-title">Psychomotor Skills</h4>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    @include('comments.table')
+                    @include('settings.psychomotor.table')
                 </div>
             </div>
         </div>
     </div>
         
-        @include('comments.addModal')
-        @include('comments.viewCommentsModal')
-        {{-- @include('settings.assign_subjects.editModal') --}}
+        @include('settings.psychomotor.addModal')
+        @include('settings.psychomotor.editModal')
     </div>
 </div>
 @endsection
 
 @section('js')
 <script src="/js/sweetalert.min.js"></script>
-@include('comments.script')
-{!! Toastr::message() !!}
+@include('settings.psychomotor.script')
 @endsection
