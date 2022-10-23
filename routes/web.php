@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Accounting\FeeCollectionController;
+use App\Http\Controllers\Accounting\InvoicesController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\HomeController;
@@ -13,6 +15,8 @@ use App\Http\Controllers\Settings\AssignSubjectsController;
 use App\Http\Controllers\Settings\BasicSettingsController;
 use App\Http\Controllers\Settings\CASchemeController;
 use App\Http\Controllers\Settings\ClassesController;
+use App\Http\Controllers\Settings\FeeCategoriesController;
+use App\Http\Controllers\Settings\FeeStructuresController;
 use App\Http\Controllers\Settings\PsychomotorCrudController;
 use App\Http\Controllers\Settings\SectionsController;
 use App\Http\Controllers\Settings\SessionsController;
@@ -121,22 +125,28 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
         Route::post('/affective_traits/update', [AffectiveCrudController::class, 'update'])->name('settings.affective_crud.update');
         Route::post('/affective_traits/delete', [AffectiveCrudController::class, 'delete'])->name('settings.affective_crud.delete');
 
+        Route::get('/fee_category/index', [FeeCategoriesController::class, 'index'])->name('settings.fee_category.index');
+        Route::post('/fee_category/index', [FeeCategoriesController::class, 'store']);
+        Route::post('/fee_category/update', [FeeCategoriesController::class, 'update'])->name('settings.fee_category.update');
+        Route::post('/fee_category/delete', [FeeCategoriesController::class, 'delete'])->name('settings.fee_category.delete');
+
+        Route::get('/fee_structure/index', [FeeStructuresController::class, 'index'])->name('settings.fee_structure.index');
+        Route::post('/fee_structure/index', [FeeStructuresController::class, 'store']);
+        Route::post('/fee_structure/update', [FeeStructuresController::class, 'update'])->name('settings.fee_structure.update');
+        Route::post('/fee_structure/details', [FeeStructuresController::class, 'details'])->name('settings.fee_structure.details');
+        Route::post('/fee_structure/delete', [FeeStructuresController::class, 'delete'])->name('settings.fee_structure.delete');
+
     });
 
-
     Route::group(['prefix' => 'users', 'middleware' => ['auth','admin']], function(){
-
         Route::get('/students/index', [StudentsController::class, 'index'])->name('users.students.index');
         Route::get('/students/create', [StudentsController::class, 'create'])->name('users.students.create');
         Route::post('/students/store', [StudentsController::class, 'store'])->name('users.students.store');
         Route::post('/students/sort', [StudentsController::class, 'sort'])->name('users.students.sort');
-        
         Route::post('/students/details', [StudentsController::class, 'details'])->name('users.students.details');
-        
         Route::get('/students/bulk_update/index', [StudentsController::class, 'bulk_update'])->name('users.students.bulk_update.index');
         Route::post('/students/bulk_update/index', [StudentsController::class, 'bulk_update']);
         Route::post('/students/bulk_update/store', [StudentsController::class, 'bulk_store'])->name('users.students.bulk_update.store');
-     
     });
 
     Route::group(['prefix' => 'marks', 'middleware' => ['auth', 'admin']], function(){
@@ -147,42 +157,47 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
         Route::post('/submit-marks-entry',  [MarksController::class, 'submitMarks'])->name('submit-marks-entry');
         Route::post('/check-absent-marks-entry',  [MarksController::class, 'checkAbsentMarks'])->name('check-absent-marks-entry');
         Route::post('/uncheck-absent-marks-entry',  [MarksController::class, 'uncheckAbsentMarks'])->name('uncheck-absent-marks-entry');
-    
         Route::get('/submissions/index', [MarksController::class, 'submissionIndex'])->name('marks.submissions.index');
         Route::post('/submissions/index', [MarksController::class, 'submissionSearch']);
-
-
         Route::get('/grade_book/index', [MarksController::class, 'gradeBookIndex'])->name('marks.grade_book.index');
         Route::post('/grade_book/index', [MarksController::class, 'gradeGookSearch']);
     });
-
     //termly result generation
     Route::group(['prefix' => 'result', 'middleware' => ['auth', 'admin']], function(){
-
         Route::get('/termly/index', [AdminResultController::class, 'termIndex'])->name('result.termly.index');
         Route::post('/termly/index', [AdminResultController::class, 'termGenerate']);
       
     });
-
     ///comments 
     Route::group(['prefix' => 'comments', 'middleware' => ['auth', 'admin']], function(){
-
         Route::get('/index', [CommentsController::class, 'index'])->name('comments.index');
         Route::post('/get-comments', [CommentsController::class, 'getComments'])->name('comments.get');
         Route::post('/store-comments', [CommentsController::class, 'storeComments'])->name('comments.store');
         Route::post('/view-comments', [CommentsController::class, 'viewComments'])->name('comments.view');
-      
-      
     });
-
     ///comments 
     Route::group(['prefix' => 'psychomotor', 'middleware' => ['auth', 'admin']], function(){
-
         Route::get('/index', [PsychomotorGradeController::class, 'index'])->name('psychomotor.index');
         Route::post('/get-psychomotor', [PsychomotorGradeController::class, 'getRecords'])->name('psychomotor.get');
         Route::post('/store-psychomotor', [PsychomotorGradeController::class, 'storePsychomotor'])->name('psychomotor.store');
-        Route::post('/view-psychomotor', [PsychomotorGradeController::class, 'viewComments'])->name('psychomotor.view');
+        Route::post('/view-psychomotor', [PsychomotorGradeController::class, 'viewComments'])->name('psychomotor.view'); 
       
+    });
+    //fees and billing
+    Route::group(['prefix' => 'billing', 'middleware' => ['auth', 'admin']], function(){
+        Route::get('/invoices/index', [InvoicesController::class, 'index'])->name('invoices.index');
+        Route::post('/get-students-invoices', [InvoicesController::class, 'getRecords'])->name('invoices.get.students');
+        Route::post('/store-invoices', [InvoicesController::class, 'storeInvoices'])->name('invoices.store');
+        // Route::post('/view-psychomotor', [PsychomotorGradeController::class, 'viewComments'])->name('psychomotor.view'); 
+
+
+        Route::get('/fee_collection/index', [FeeCollectionController::class, 'index'])->name('fee_collection.index');
+        Route::post('/get-invoices', [FeeCollectionController::class, 'getInvoices'])->name('get-invoices');
+        Route::post('/get-fees', [FeeCollectionController::class, 'getFees'])->name('get-fees');
+
+        Route::post('/initialize-payment', [FeeCollectionController::class, 'InitializePayment'])->name('initialize-payment');
+        Route::post('/record-payment', [FeeCollectionController::class, 'recordPayment'])->name('record-payment');
+
       
     });
 
