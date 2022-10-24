@@ -94,21 +94,25 @@
                     if(res.initial == 'yes'){
                         $('#btn_div').removeClass('d-none');
                         $('#table_div').addClass('d-none');
+                        $('#add_record_div').addClass('d-none');
                         $('#initialize_btn').html('Initialize Record');  
                         $('#initialize_btn').attr('disabled', false); 
-       
                     }
                     if(res.initial == 'no'){
                         $('#btn_div').addClass('d-none');
-                        
+                        $('#add_record_div').removeClass('d-none');
+
                         if(res.all_payments.length > 0)
                         {
                             var table = '';
                             $.each(res.all_payments, function(key, payment) {
+                                var url = '{{ route("admin.generate.receipt", ":id")}}';
+                                url = url.replace(':id',payment.id);
                                 table += '<tr>'+
                                         '<td>'+(key+1)+'</td>'+
                                         '<td>'+payment.paid_amount+'</td>'+
                                         '<td>'+payment.description+'</td>'+
+                                        '<td><a href="'+url+'" class="btn btn-success" target="__blank">Receipt</a></td>'+
                                         '</tr>'
                             });
                              $('#recent_payments_tbl').html(table);
@@ -119,8 +123,6 @@
                              $('#table_div').removeClass('d-none');
                         }
                     }
-
-
                 }
             });
 
@@ -215,6 +217,7 @@
                             hideMethod: "fadeOut",
                         };
                         $('#btn_div').addClass('d-none');
+                        $('#add_record_div').removeClass('d-none');
                    }
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
@@ -286,9 +289,7 @@
             data = {
                 'invoice_id': $('#invoice_id').val(),
                 'paid_amount': paid_amount,
-                'description': description,
-               
-               
+                'description': description,   
             }
           
             $.ajaxSetup({
@@ -302,9 +303,7 @@
                 url: "{{ route('record-payment') }}",
                 data: data,
                 success: function(res) {
-
                    if(res.status === 200){
-
                     Command: toastr["success"](res.message);
                         toastr.options = {
                             closeButton: false,
@@ -329,6 +328,7 @@
                         $('#description').val("");
                         $('.add_record_modal').modal('hide');
                         // $('.table').load(location.href+' .table');
+                        updateTable();
                    }
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
@@ -353,14 +353,12 @@
                             showMethod: "fadeIn",
                             hideMethod: "fadeOut",
                         };
-
                         setTimeout(() => {
                             window.location.replace('{{ route('login') }}');
                         }, 2000);
                     }
                 },
             });
-
         });
 
         //type amount paid
@@ -377,8 +375,68 @@
 
             $('.balance').html(parseInt(total_amount) - parseInt(payment_amount) - parseInt(discount));
 
-
         });
+
+        //update table
+        function updateTable()
+        {
+            
+            data = {
+                'invoice_id':$('#invoice_id').val(),
+            }
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('refresh-table') }}",
+                data: data,
+                success: function(res) {
+                  
+                    var table = '';
+                    $.each(res.all_payments, function(key, payment) {
+                        table += '<tr>'+
+                                '<td>'+(key+1)+'</td>'+
+                                '<td>'+payment.paid_amount+'</td>'+
+                                '<td>'+payment.description+'</td>'+
+                                '</tr>'
+                    });
+                        $('#recent_payments_tbl').html(table);
+                        $('#table_div').removeClass('d-none');
+                        
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    if (xhr.status === 419) {
+                        Command: toastr["error"](
+                            "Session expired. please login again."
+                        );
+                        toastr.options = {
+                            closeButton: false,
+                            debug: false,
+                            newestOnTop: false,
+                            progressBar: false,
+                            positionClass: "toast-top-right",
+                            preventDuplicates: false,
+                            onclick: null,
+                            showDuration: "300",
+                            hideDuration: "1000",
+                            timeOut: "5000",
+                            extendedTimeOut: "1000",
+                            showEasing: "swing",
+                            hideEasing: "linear",
+                            showMethod: "fadeIn",
+                            hideMethod: "fadeOut",
+                        };
+                        setTimeout(() => {
+                            window.location.replace('{{ route('login') }}');
+                        }, 2000);
+                    }
+                },
+            });
+        }
 
     });
 </script>

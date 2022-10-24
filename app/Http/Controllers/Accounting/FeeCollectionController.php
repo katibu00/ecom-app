@@ -11,6 +11,7 @@ use App\Models\PaymentSlip;
 use App\Models\School;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class FeeCollectionController extends Controller
 {
@@ -81,7 +82,7 @@ class FeeCollectionController extends Controller
                 array_push($additionals, $data_row);
             }
 
-            $all_payments = PaymentRecord::select('student_id','number','paid_amount','description')->where('invoice_id',$request->invoice_id)->get();
+            $all_payments = PaymentRecord::select('id','student_id','number','paid_amount','description')->where('invoice_id',$request->invoice_id)->get();
 
             return response()->json([
                 'mandatories' => $mandatories,
@@ -219,5 +220,43 @@ class FeeCollectionController extends Controller
             'message' => 'Payment Recorded Successfully',
         ]);
 
+    }
+
+
+    public function refreshPayment(Request $request)
+    {
+        $all_payments = PaymentRecord::select('id','student_id','number','paid_amount','description')->where('invoice_id',$request->invoice_id)->get();
+      
+        return response()->json([
+            'all_payments' => $all_payments,
+        ]);
+
+    }
+
+    public function generateReceipt($id)
+    {
+        $payment_record = PaymentRecord::select('number','student_id','session_id','term','invoice_id','paid_amount','description','created_at')->where('id',$id)->first();
+        $payment_slip = PaymentSlip::select('session_id','term','number','payable','discount','paid')->where('invoice_id',$payment_record->invoice_id)->first();
+    
+        $school = School::select('name','username','motto','address','phone_first','phone_second','email','website','logo','heading')->where('id', auth()->user()->school_id)->first();
+       
+      
+
+       
+
+        $student = User::where('id',$payment_record->student_id)->first();
+        // dd($student);
+
+        // $allPayment = Payment::where('school_id',$school_id)->where('student_id',$payment->student_id)->where('session_id',$session)->where('term',$term)->get();
+
+        // $invoice = AssignFee::where('school_id', $school_id)->where('class_id',$user->class_id)->where('student_type','Returning')->get();
+
+        // $pdf = PDF::loadView('pdfs.receipt', compact('institution','user','payment','invoice','allPayment'));
+
+        //  return $pdf->stream('SPR - '.$user->roll_number.'.pdf');
+
+         $pdf = Pdf::loadView('pdfs.account.admin.receipt', compact('school','student','payment_slip','payment_record'));
+         return $pdf->stream('SPR - '.$student->login.'.pdf');
+ 
     }
 }

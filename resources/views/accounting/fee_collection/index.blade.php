@@ -26,7 +26,7 @@
                                 </div>
 
                                
-                            <div class="input-group">
+                            <div class="d-none" id="add_record_div">
                                 <button type="button" class="btn btn-info btn-block mb-2" data-bs-toggle="modal" data-bs-target=".add_record_modal"><i class="fa fa-plus me-2"></i>Add payment</button>
                             </div>
                             @include('accounting.fee_collection.add_payment_modal')

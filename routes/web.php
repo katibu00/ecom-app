@@ -197,6 +197,9 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
 
         Route::post('/initialize-payment', [FeeCollectionController::class, 'InitializePayment'])->name('initialize-payment');
         Route::post('/record-payment', [FeeCollectionController::class, 'recordPayment'])->name('record-payment');
+        Route::post('/refresh-table', [FeeCollectionController::class, 'refreshPayment'])->name('refresh-table');
+
+        Route::get('/admin/generate/receipt/{id}', [FeeCollectionController::class, 'generateReceipt'])->name('admin.generate.receipt');
 
       
     });
