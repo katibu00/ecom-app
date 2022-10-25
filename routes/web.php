@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Accounting\ExpensesController;
 use App\Http\Controllers\Accounting\FeeCollectionController;
 use App\Http\Controllers\Accounting\InvoicesController;
 use App\Http\Controllers\Auth\LoginController;
@@ -200,6 +201,9 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
         Route::post('/refresh-table', [FeeCollectionController::class, 'refreshPayment'])->name('refresh-table');
 
         Route::get('/admin/generate/receipt/{id}', [FeeCollectionController::class, 'generateReceipt'])->name('admin.generate.receipt');
+
+        Route::get('/expenses/index', [ExpensesController::class, 'index'])->name('expenses.index');
+        Route::post('/expenses/index', [ExpensesController::class, 'store']);
 
       
     });

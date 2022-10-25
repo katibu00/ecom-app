@@ -239,21 +239,8 @@ class FeeCollectionController extends Controller
         $payment_slip = PaymentSlip::select('session_id','term','number','payable','discount','paid')->where('invoice_id',$payment_record->invoice_id)->first();
     
         $school = School::select('name','username','motto','address','phone_first','phone_second','email','website','logo','heading')->where('id', auth()->user()->school_id)->first();
-       
-      
-
-       
 
         $student = User::where('id',$payment_record->student_id)->first();
-        // dd($student);
-
-        // $allPayment = Payment::where('school_id',$school_id)->where('student_id',$payment->student_id)->where('session_id',$session)->where('term',$term)->get();
-
-        // $invoice = AssignFee::where('school_id', $school_id)->where('class_id',$user->class_id)->where('student_type','Returning')->get();
-
-        // $pdf = PDF::loadView('pdfs.receipt', compact('institution','user','payment','invoice','allPayment'));
-
-        //  return $pdf->stream('SPR - '.$user->roll_number.'.pdf');
 
          $pdf = Pdf::loadView('pdfs.account.admin.receipt', compact('school','student','payment_slip','payment_record'));
          return $pdf->stream('SPR - '.$student->login.'.pdf');

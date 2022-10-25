@@ -74,6 +74,7 @@
      <ul aria-expanded="false">
          <li><a href="{{ route('fee_collection.index') }}">Collect Fee</a></li>
          <li><a href="{{ route('invoices.index') }}">Invoices</a></li>
+         <li><a href="{{ route('expenses.index') }}">Expenses</a></li>
          
      </ul>
  </li>

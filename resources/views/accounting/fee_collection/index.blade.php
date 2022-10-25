@@ -11,6 +11,9 @@
         <div class="row">
             <div class="col-xl-12">
                 <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Fee Collection</h4>
+                    </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-4 order-lg-2 mb-4 d-none" id="sidebar">
@@ -68,9 +71,10 @@
 
                                 <div class="d-none" id="table_div">
                                     <hr class="mb-4">
-                                    <h5>Recent Payments</h5>
-
-                                    @include('accounting.fee_collection.recent_payment_table')
+                                    <h5>Payments (This Invoice)</h5>
+                                    <div class="table-responsive">
+                                       @include('accounting.fee_collection.recent_payment_table')
+                                    </div>
                                 </div>
 
                             </div>
