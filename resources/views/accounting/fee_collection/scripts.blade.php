@@ -4,7 +4,7 @@
         //onchange class
         $(document).on('change', '#class_id', function() {
 
-            var class_id = $('#class_id').val();
+            const class_id = $('#class_id').val();
 
             $.ajaxSetup({
                 headers: {

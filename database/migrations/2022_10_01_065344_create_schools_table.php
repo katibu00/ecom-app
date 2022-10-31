@@ -29,10 +29,6 @@ return new class extends Migration
             $table->string('logo')->default('default.png');
             $table->integer('session_id')->nullable();
             $table->string('term')->nullable();
-            $table->string('show_position')->default('on')->nullable();
-            $table->string('show_attendance')->default('on')->nullable();
-            $table->string('show_passport')->default('on')->nullable();
-            $table->string('grading')->default('waec');
             $table->string('heading')->default('h2');
             $table->integer('registrar_id');
             $table->integer('admin_id')->nullable();

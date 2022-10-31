@@ -60,10 +60,10 @@
          <li><a href="#">Broadsheet</a></li>
          <li><a href="{{ route('comments.index') }}">Comments</a></li>
          <li><a href="{{ route('psychomotor.index') }}">Psychomotor/Affective</a></li>
-         <li><a href="#">Todler's Result</a></li>
+         <li><a href="#">Early Year's Result</a></li>
          <li><a href="#">Result Analysis</a></li>
          <li><a href="#">Publish Result</a></li>
-         <li><a href="#">Result Settings</a></li>
+         <li><a href="{{ route('result.settings') }}">Result Settings</a></li>
      </ul>
  </li>
 

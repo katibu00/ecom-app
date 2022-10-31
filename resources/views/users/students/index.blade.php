@@ -1,8 +1,11 @@
 @extends('layouts.app')
-@section('PageTitle', 'Schools')
+@section('PageTitle', 'Students')
 
 @section('css')
 <link href="/vendor/datatables/css/jquery.dataTables.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="/vendor/select2/css/select2.min.css">
+<link href="/vendor/jquery-nice-select/css/nice-select.css" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -38,12 +41,14 @@
                 <div class="table-responsive">
                    @include('users.students.table')
                   
+                  
                 </div>
             </div>
         </div>
     </div>
 
     @include('users.students.details_modal')
+    @include('users.students.sno_modal')
 
     </div>
 </div>
@@ -52,5 +57,8 @@
 @section('js')
 <script src="/vendor/datatables/js/jquery.dataTables.min.js"></script>
 <script src="/js/plugins-init/datatables.init.js"></script>
+<script src="vendor/jquery-nice-select/js/jquery.nice-select.min.js"></script>
+<script src="/vendor/select2/js/select2.full.min.js"></script>
+<script src="/js/plugins-init/select2-init.js"></script>
 @include('users.students.script')
 @endsection

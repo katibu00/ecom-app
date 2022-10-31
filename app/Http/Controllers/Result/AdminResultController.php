@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Classes;
 use App\Models\Mark;
 use App\Models\ProcessedMark;
+use App\Models\ResultSettings;
 use App\Models\School;
 use App\Models\Session;
 use Brian2694\Toastr\Facades\Toastr;
@@ -32,7 +33,7 @@ class AdminResultController extends Controller
         ]);
      
         $user = Auth::user();
-        $school = School::select('id','name','username','email','phone_first','phone_second','address','heading','grading','logo')->where('id', $user->school_id)->first();
+        $school = School::select('id','name','username','email','phone_first','phone_second','address','heading','logo')->where('id', $user->school_id)->first();
       
       
 
@@ -85,6 +86,39 @@ class AdminResultController extends Controller
         return view('pdfs.admin.results.termly', compact('school', 'students', 'class_id', 'term', 'session_id','comments','next_term','date','psychomotor'));
 
 
+    }
+
+    public function settingsIndex()
+    {
+     
+        if(!ResultSettings::where('school_id',auth()->user()->school_id)->first()){
+            $new_row = new ResultSettings();
+            $new_row->school_id = auth()->user()->school_id;
+            $new_row->save();
+        }
+        $data['settings'] = ResultSettings::where('school_id',auth()->user()->school_id)->first();
+        return view('results.settings', $data);
+    }
+
+    public function settingsStore(Request $request)
+    {
+     
+        $data = ResultSettings::where('school_id', auth()->user()->school_id)->first();
+        $data->show_position = $request->show_position;
+        $data->show_attendance = $request->show_attendance;
+        $data->show_passport = $request->show_passport;
+        $data->withhold = $request->withhold;
+        $data->minimun_amount = $request->minimun_amount;
+        $data->grading_style = $request->grading_style;
+
+        if($data->update())
+        {
+            return response()->json([
+                'status' => 200,
+                'message' => 'Result Settings Updated Successfully'
+            ]);
+        }
+       
     }
 
 }

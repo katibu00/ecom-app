@@ -40,7 +40,19 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('home.admin');
+    
+    if(auth()->check()){
+        if(auth()->user()->usertype == 'admin'){
+            return redirect()->route('admin.home');
+        }
+        if(auth()->user()->usertype == 'intellisas'){
+            return redirect()->route('intellisas.home');
+        }
+       
+    };
+
+    return redirect()->route('login');
+    
 })->name('home');
 
 Route::get('/sendmail', function () {
@@ -55,7 +67,7 @@ Route::middleware('tenant')->group(function() {
     // routes
 });
 
-Route::get('/login', [LoginController::class, 'index'])->name('login');
+Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
 Route::post('/login', [LoginController::class, 'login']);
 Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
 
@@ -148,6 +160,9 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
         Route::get('/students/bulk_update/index', [StudentsController::class, 'bulk_update'])->name('users.students.bulk_update.index');
         Route::post('/students/bulk_update/index', [StudentsController::class, 'bulk_update']);
         Route::post('/students/bulk_update/store', [StudentsController::class, 'bulk_store'])->name('users.students.bulk_update.store');
+
+        Route::post('/get-subjects_not_offering', [StudentsController::class, 'get_subjects_offering'])->name('get-subjects_not_offering');
+        Route::post('/save-subjects_not_offering', [StudentsController::class, 'save_subjects_offering'])->name('save-subjects_not_offering');
     });
 
     Route::group(['prefix' => 'marks', 'middleware' => ['auth', 'admin']], function(){
@@ -167,6 +182,9 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
     Route::group(['prefix' => 'result', 'middleware' => ['auth', 'admin']], function(){
         Route::get('/termly/index', [AdminResultController::class, 'termIndex'])->name('result.termly.index');
         Route::post('/termly/index', [AdminResultController::class, 'termGenerate']);
+
+        Route::get('/settings/index', [AdminResultController::class, 'settingsIndex'])->name('result.settings');
+        Route::post('/settings/index', [AdminResultController::class, 'settingsStore']);
       
     });
     ///comments 

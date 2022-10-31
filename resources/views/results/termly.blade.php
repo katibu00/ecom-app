@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('PageTitle', 'Termly Report')
+@section('PageTitle', 'End of Term Report')
 @section('css')
 {{-- <link href="/vendor/datatables/css/jquery.dataTables.min.css" rel="stylesheet">
 <link href="/vendor/jquery-nice-select/css/nice-select.css" rel="stylesheet"> --}}
@@ -23,7 +23,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header border-bottom">
-                        <h4 class="card-title">Termly Report</h4>
+                        <h4 class="card-title">End of Term Report</h4>
                         
                     </div>
                     <div class="card-body my-1 py-50">

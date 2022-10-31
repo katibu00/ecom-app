@@ -59,11 +59,21 @@
 </head>
 @php
     $count = $students->count();
+    $settings = App\Models\ResultSettings::where('School_id',auth()->user()->school_id)->first();
 @endphp
 
 <body>
 
 @foreach($students as $position => $student)
+@php
+    $student_payments = App\Models\PaymentRecord::where('student_id',$student->student_id)
+                ->where('session_id',$session_id)
+                ->where('term',$term)
+                ->where('class_id',$class_id)
+                ->where('school_id',$school->id)
+                ->sum('paid_amount');
+               
+@endphp
 <div class="container" style="margin-top: -30px;">
 <div class="row">
     <div class="col-md-12">
@@ -87,7 +97,7 @@
     <div style="width: 100%">
         <div style="width: 45%; float: left;">
                 @php
-                    $user = App\Models\user::where('id',$student->student_id)->first();
+                    $user = App\Models\user::select('first_name','middle_name','last_name','class_id',)->where('id',$student->student_id)->first();
                 @endphp
                <p style="margin-top: -15px;"><strong>Roll Number:</strong> {{$user->login}}</p>
                <p style="margin-top: -15px;"><strong>Name:</strong> {{$user->first_name}}  {{$user->middle_name}}  {{$user->last_name}}</p>
@@ -114,12 +124,12 @@
                 <p style="margin-top: -15px;"><strong>Session:</strong> {{$session->name}}</p>
                 <p style="margin-top: -15px;"><strong>Class Population:</strong> {{$count}}</p>
 
-                @if($school->show_position == 'on')
-                   <p style="margin-top: -15px;"><strong>Position:</strong> {{$position+1}}</p>
+                @if($settings->show_position == '1')
+                   <p style="margin-top: -15px;"><strong>Position:</strong> @if($student_payments > $settings->minimun_amount) {{ addOrdinalNumberSuffix($position+1) }} @else Withheld  @endif</p>
                 @endif
 
-                <p style="margin-top: -15px;"><strong>Marks Obtained:</strong> {{$total_marks}} out of   {{$subject_number*100}}</p>
-                <p style="margin-top: -15px;"><strong>Average Score:</strong> {{number_format($average,2)}}</p>
+                <p style="margin-top: -15px;"><strong>Marks Obtained:</strong>  @if($student_payments > $settings->minimun_amount) {{ $total_marks }} out of   {{ $subject_number*100 }} @else Withheld @endif</p>
+                <p style="margin-top: -15px;"><strong>Average Score:</strong> @if($student_payments > $settings->minimun_amount) {{ number_format($average,2) }} @else Witheld @endif</p>
                 @if($school->show_attendance == 'on')
                      @php
                          $absent = App\Models\Attendance::where('class_id', $class_id)->where('class_section_id',  $class_section_id)->where('school_id',  $school_id)->where('status','!=','present')->where('term',$term)->where('session_id',$session_id)->where('user_id',$user->id)->get()->count();
@@ -131,9 +141,9 @@
         </div>
 
         <div style="width:15%; float: right;">
-            {{-- @if($school->show_passport == 'on') --}}
+            @if($settings->show_passport == '1')
               <p style="margin-top: -10px; margin-left: 0px;"><img @if($user->image == 'default.png') src="/uploads/default.png" @else src="/uploads/{{$school->username}}/{{$user->image}}" @endif style="width: 100px; height: 100px; border: 0px solid black;"></p>
-              {{-- @endif --}}
+            @endif
         </div>
     </div>
 
@@ -142,7 +152,7 @@
                 <thead>
                     <tr>
                         <th class="text-center" style="width: 5%;">S/N</th>
-                        <th class="text-center"  style="width: 25%;">Subject</th>
+                        <th style="width: 25%;">Subject</th>
                         <th class="text-center"  style="width: 5%;">CA</th>
                         <th class="text-center" style="width: 5%;" >Exam</th>
                         <th class="text-center"  style="width: 5%;">Total</th>
@@ -160,11 +170,13 @@
                             <td class="text-center">{{$key+1}}</td>
                             <td class="text-left">{{$subject_name->name }}</td>
 
+                            @if($student_payments > $settings->minimun_amount)
                             @php
-                                 $ca = App\Models\Mark::where('student_id',$user->id)->where('class_id',$class_id)->where('term',$term)->where('school_id',$school->id)->where('type','!=', 'exam')->where('subject_id',$subject->subject_id)->sum('marks');
-                                 $exam = App\Models\Mark::where('student_id',$user->id)->where('class_id',$class_id)->where('term',$term)->where('school_id',$school->id)->where('type','exam')->where('subject_id',$subject->subject_id)->sum('marks');
-                                 $total_score = $exam+$ca;
-                                @$grade_marks = App\Models\Grade::where([['start_mark','<=',(int)$total_score],['end_mark','>=',(int)$total_score]])->where('type',$school->grading)->first();
+                                 $ca = App\Models\Mark::where('student_id', $student->student_id)->where('class_id',$class_id)->where('term',$term)->where('school_id',$school->id)->where('type','!=', 'exam')->where('subject_id',$subject->subject_id)->sum('marks');
+                                 $exam = App\Models\Mark::where('student_id', $student->student_id)->where('class_id',$class_id)->where('term',$term)->where('school_id',$school->id)->where('type','exam')->where('subject_id',$subject->subject_id)->sum('marks');
+                             
+                                $total_score = $exam+$ca;
+                                @$grade_marks = App\Models\Grade::where([['start_mark','<=',(int)$total_score],['end_mark','>=',(int)$total_score]])->where('type',$settings->grading_style)->first();
                                 @$letter_grade = $grade_marks->letter_grade;
                                 @$remark = $grade_marks->remarks;
                             @endphp
@@ -173,6 +185,9 @@
                              <td class="text-center">{{$total_score}}</td>
                              <td class="text-center">{{@$letter_grade}}</td>
                              <td class="text-center">{{@$remark}}</td>
+                             @else
+                             <td colspan="5">Result Witheld Due to Non-payment of Fees</td>
+                             @endif
                         </tr>
                     @endforeach
 
@@ -204,22 +219,23 @@
                                     $score = App\Models\PsychomotorGrade::select('score')->where('school_id',$school->id)->where('session_id',@$session_id)->where('term',@$term)->where('class_id',@$class_id)->where('student_id',$student->student_id)->where('grade_id',$psychomotor->id)->first();
                                 @endphp
                                 <tr>
+                               
                                 <td style="text-align: left;">{{ $psychomotor->name}}</td>
+                                @if($student_payments > $settings->minimun_amount)
                                 <td>{!! $score->score == 5? '<i class="fa fa-check"></i>': '' !!}</td>
                                 <td>{!! $score->score == 4? '<i class="fa fa-check"></i>': '' !!}</td>
                                 <td>{!! $score->score == 3? '<i class="fa fa-check"></i>': '' !!}</td>
                                 <td>{!! $score->score == 2? '<i class="fa fa-check"></i>': '' !!}</td>
                                 <td>{!! $score->score == 1? '<i class="fa fa-check"></i>': '' !!}</td>
+                                @else
+                                    <td colspan="5">Witheld</td>
+                                @endif
                                 </tr>
                             @endforeach     
                         </tbody>
                     </table>
                     <p>SCALE:</p>
-                    <p style="margin-top: -12px">5 - Excellent</p>
-                    <p style="margin-top: -12px">4 - Good</p>
-                    <p style="margin-top: -12px">3 - Fair</p>
-                    <p style="margin-top: -12px">2 - Poor</p>
-                    <p style="margin-top: -12px">1 - Very Poor</p>
+                    <p style="margin-top: -12px">5 - Excellent, 4 - Good, 3 - Fair, 2 - Poor, 1 - Very Poor</p>
                 </div>
                 <div style="width: 47%; float: right;">
 
@@ -244,11 +260,15 @@
                                 @endphp
                                 <tr>
                                 <td style="text-align: left;">{{ $affective->name}}</td>
+                                @if($student_payments > $settings->minimun_amount)
                                 <td>{!! $score->score == 5? '<i class="fa fa-check"></i>': '' !!}</td>
                                 <td>{!! $score->score == 4? '<i class="fa fa-check"></i>': '' !!}</td>
                                 <td>{!! $score->score == 3? '<i class="fa fa-check"></i>': '' !!}</td>
                                 <td>{!! $score->score == 2? '<i class="fa fa-check"></i>': '' !!}</td>
                                 <td>{!! $score->score == 1? '<i class="fa fa-check"></i>': '' !!}</td>
+                                @else
+                                <td colspan="5">Witheld</td>
+                                @endif
                                 </tr>
                             @endforeach
                         </tbody>
@@ -276,11 +296,11 @@
                 @endphp
                 <div style=" width: 100%; overflow: hidden; clear:both; margin-top: 0px;">
                     <p style="margin: 0 0px; font-size: 17px; line-height: 1.8em;">Form Master's Comment: <span
-                            style="border-bottom: 1px solid black;  padding: 10px 100px;">{{ @$master->comment }}
-                            {{ @$master->addmitional }}</span></p>
+                            style="border-bottom: 1px solid black;  padding: 10px 100px;">
+                            @if($student_payments > $settings->minimun_amount) {{ @$master->comment }} {{ @$master->addmitional }} @else Withheld @endif</span></p>
                     <p style="margin: 10px 0px; font-size: 17px; line-height: 1.8em;">Principal's Comment: <span
-                            style="border-bottom: 1px solid black;  padding: 5px 100px;">{{ @$principal->comment }}
-                            {{ @$principal->addmitional }}</span></p>
+                            style="border-bottom: 1px solid black;  padding: 5px 100px;">
+                            @if($student_payments > $settings->minimun_amount) {{ @$principal->comment }} {{ @$principal->addmitional }} @else Withheld @endif</span></p>
                     <p style="margin: 0 70px; font-size: 17px; line-height: 1.8em;"> <span
                                 style="border-bottom: 2px solid black;  padding: 10px 200px;">
                                 </span></p>
@@ -297,12 +317,17 @@
         </div>
 
         <div style="width: 80%; float: right;">
-            <p style="font-size: 12px;">INTERPRETATION OF GRADES: A1 Excellent 75%-100%, B2 Very Good 70%-74%, B3 Good 65%-69%, C4 Credit 60%-64%, C5 Credit 55%-59%, C6 Credit 50%-54%, D7 Pass 45%-49%, E8 Pass 40%-45%, F9 Fail 1% - 44%, ABSENT 0%</p>
+            @if($settings->grading_style == 'waec')
+                <p style="font-size: 12px;">INTERPRETATION OF GRADES: A1 Excellent 75 - 100%, B2 Very Good 70-74%, B3 Good 65-69%, C4 Credit 60-64%, C5 Credit 55-59%, C6 Credit 50-54%, D7 Pass 45-49%, E8 Pass 40-45%, F9 Fail 1-44%, ABSENT 0%</p>
+            @endif
+            @if($settings->grading_style == 'standard')
+                <p style="font-size: 12px;">INTERPRETATION OF GRADES: A Excellent 70-100%, B Very Good 60-69%,  C Credit 50-59%, D Pass 40-49%, F Fail 1-39%, ABSENT 0%</p>
+            @endif
         </div>
     </div>
 
-    <div style=" width: 100%; margin-top: 0px; clear: both;">
-            <p style="font-size: 14px; text-align: center; margin-top: -15px;">THIS REPORT DOES NOT REQUIRE SIGNATURE</p>
+    <div style=" width: 100%; margin-top: 0px; clear: bo4th;">
+            <p style="font-size: 14px; text-align: center; margin-top: -35px;">THIS REPORT DOES NOT REQUIRE SIGNATURE</p>
     </div>
     <div style=" width: 100%; margin-top: -5px;">
         <p style="font-size: 13px; text-align: center">Generated on {{date("l, jS \of F Y ")}} @ {{date("h:i A")}} | intellisas</p>
@@ -320,4 +345,20 @@
     }
 </script>
 </html>
+
+<?php
+                    
+
+function addOrdinalNumberSuffix($num) {
+    if (!in_array(($num % 100),array(11,12,13))){
+    switch ($num % 10) {
+        case 1:  return $num.'st';
+        case 2:  return $num.'nd';
+        case 3:  return $num.'rd';
+    }
+    }
+    return $num.'th';
+}
+
+?>
 

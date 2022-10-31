@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
+use App\Models\AssignSubject;
 use App\Models\Classes;
 use App\Models\School;
 use App\Models\User;
@@ -143,4 +144,24 @@ class StudentsController extends Controller
             'message'=>'Students(s) Updated Successfully',
         ]);
     }
+
+    public function get_subjects_offering(Request $request)
+    {
+        // return $request->all();
+        $class_id = User::select('class_id')->where('id',$request->student_id)->first()->class_id;
+
+        $subjects = AssignSubject::with('subject')->select('subject_id')->where('class_id',$class_id)->where('school_id', auth()->user()->school_id)->get();
+
+        return response()->json([
+            'subjects' => $subjects,
+            'status' => 200,
+        ]);
+    }
+
+    public function save_subjects_offering(Request $request)
+    {
+        return $request->all();
+    }
+
+
 }
