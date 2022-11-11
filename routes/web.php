@@ -165,6 +165,10 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
         Route::post('/save-subjects_not_offering', [StudentsController::class, 'save_subjects_offering'])->name('save-subjects_not_offering');
     });
 
+
+    Route::get('/paginate-students', [StudentsController::class, 'paginate']);
+    Route::get('/users/students/sort', [StudentsController::class, 'sort']);
+
     Route::group(['prefix' => 'marks', 'middleware' => ['auth', 'admin']], function(){
         Route::get('/create', [MarksController::class, 'create'])->name('marks.create');
         Route::post('/create',  [MarksController::class, 'getMarks']);

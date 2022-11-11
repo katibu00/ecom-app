@@ -172,8 +172,9 @@
 
             var class_id = $('#select_class').val();
             $('#loading_div').removeClass('d-none')
-            $('#example5').addClass('d-none');
-
+            $('.table').addClass('d-none');
+            $('nav').html('');
+           
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -189,8 +190,11 @@
                 success: function(res) {
 
                     $('#loading_div').addClass('d-none');
-                    $('#example5').html(res);
-                    $('#example5').removeClass('d-none');
+                    $('.table').html(res);
+                    $('.table').removeClass('d-none');
+                  
+                    // var table = $('#example4').DataTable();
+                    // table.clear().draw();
 
                     if (res.status == 404) {
                         Command: toastr["warning"](
@@ -378,6 +382,43 @@
 
         });
 
+
+         //pagination
+         $(document).on('click', '.pagination a', function(e) {
+            e.preventDefault();
+
+            let page = $(this).attr('href').split('page=')[1]
+            fetchData(page)
+
+        });
+
+        function fetchData(page) {
+
+            
+            $.ajax({
+                url: "/paginate-students?page=" + page,
+                data: {
+                    // department_id: $('#department-hold').val(),
+                    // level: $('#level-hold').val(),
+                    // query: $('#query-hold').val(),
+                },
+                success: function(res) {
+                    $('nav').html('');
+                    $('.table').html(res);
+                }
+            });
+            $.ajax({
+                url: "/users/students/sort?page=" + page,
+                data: {
+                    class_id: $('#select_class').val(),
+                   
+                },
+                success: function(res) {
+                    $('nav').html('');
+                    $('.table').html(res);
+                }
+            });
+        }
 
     });
 </script>
