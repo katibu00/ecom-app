@@ -1,21 +1,24 @@
 @extends('layouts.app')
-@section('PageTitle', 'Gradebook')
+@section('PageTitle', 'Marks Entry')
+
+
 @section('content')
 
+    <div class="container-xxl flex-grow-1 container-p-y">
 
-<div class="content-body">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
+        <div class="row mb-5">
 
-                <div class="card">
-                    <div class="card-header border-bottom">
-                        <h4 class="card-title">Gradebook</h4>
-                    </div>
+            <div class="col-md">
+                <div class="card mb-4">
+                    <div class="card-body">
 
-                    <div class="card-body my-1 py-50">
+                        <div class="card-title header-elements  d-flex fle4x-row">
+                            <h5 class="m-0 me-2 d-none d-md-block">Marks Entry</h5>
+                        </div>
 
-                        <form action="{{ route('marks.grade_book.index')}}" method="POST">
+
+                        
+                        <form action="{{ route('marks.grade_book.search')}}" method="POST">
                             @csrf
                             <div class="row">
                                 <div class="col-sm-4 mb-1">
@@ -131,15 +134,20 @@
                                 </div>
                             </div>
                         @endif
+                       
+
                     </div>
                 </div>
-
             </div>
         </div>
+
+
     </div>
-</div>
 
 @endsection
+
 @section('js')
-{!! Toastr::message() !!}
+    @include('marks.scripts')
+    <script src="/js/sweetalert.min.js"></script>
+    {!! Toastr::message() !!}
 @endsection

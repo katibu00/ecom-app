@@ -1,38 +1,31 @@
 @extends('layouts.app')
 @section('PageTitle', 'Fee Categories')
+
+
 @section('content')
-
-<div class="content-body">
-<!-- row -->
-    <div class="container-fluid">
-        <div class="d-flex flex-wrap align-items-center mb-3">
-            <div class="mb-3 me-auto">
-            </div>
-            <a href="" data-bs-toggle="modal" data-bs-target="#addModal" class="btn btn-outline-primary mb-3">+ Fee Category(s)</a>
-        </div>
-
-       {{-- content --}}
-
-       <div class="col-12">
+    <!-- content @s -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <!-- Basic Bootstrap Table -->
         <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">Fee Categories</h4>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    @include('settings.fee_category.table')
+            <div class="card-header header-elements">
+                <span class="me-2">Fee Categories</span>
+
+                <div class="card-header-elements ms-auto">
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#addNewModal" class="btn btn-sm btn-primary">
+                        <span class="tf-icon ti ti-plus ti-xs me-1"></span>Add Fee Category(s)
+                    </button>
                 </div>
             </div>
+            @include('settings.fee_category.table')
         </div>
-    </div>
-        
+        <!--/ Basic Bootstrap Table -->
         @include('settings.fee_category.addModal')
         @include('settings.fee_category.editModal')
     </div>
-</div>
+    <!-- content @e -->
 @endsection
 
 @section('js')
-<script src="/js/sweetalert.min.js"></script>
-@include('settings.fee_category.script')
+    @include('settings.fee_category.script')
+    <script src="/sweetalert.min.js"></script>
 @endsection

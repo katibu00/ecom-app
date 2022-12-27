@@ -2,175 +2,165 @@
 @section('PageTitle', 'School Settings')
 
 @section('css')
-<link rel="stylesheet" href="/vendor/select2/css/select2.min.css">
-<link href="/vendor/jquery-nice-select/css/nice-select.css" rel="stylesheet">
+<link rel="stylesheet" href="/assets/vendor/libs/select2/select2.css" />
 @endsection
 
 @section('content')
+<div class="container-xxl flex-grow-1 container-p-y">
 
-  <div class="content-body">
-    <!-- row -->
-    <div class="container-fluid">
-        <div class="d-flex flex-wrap align-items-center mb-3">
-            <div class="mb-3 me-auto">
-                <div class="card-tabs style-1 mt-3 mt-sm-0">
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="javascript:void(0);" data-bs-toggle="tab" id="transaction-tab" data-bs-target="#AllTransaction" role="tab">Basic Settings</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="javascript:void(0);" data-bs-toggle="tab" id="Completed-tab" data-bs-target="#Completed" role="tab">Account</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="javascript:void(0);" data-bs-toggle="tab" id="Pending-tab" data-bs-target="#Pending" role="tab">Result</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="javascript:void(0);" data-bs-toggle="tab" id="Canceled-tab" data-bs-target="#Canceled" role="tab">Admission</a>
-                        </li>
-                    </ul>
-                </div>
+    <div class="row">
+      <div class="col-md-12">
+        <ul class="nav nav-pills flex-column flex-md-row mb-4">
+          <li class="nav-item">
+            <a class="nav-link active" href="javascript:void(0);"
+              ><i class="ti-xs ti ti-users me-1"></i> School</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="pages-account-settings-security.html"
+              ><i class="ti-xs ti ti-lock me-1"></i> Bank Account</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="pages-account-settings-billing.html"
+              ><i class="ti-xs ti ti-file-description me-1"></i> Result</a
+            >
+          </li>
+        </ul>
+        <div class="card mb-4">
+          <h5 class="card-header">School Account</h5>
+          <!-- Account -->
+          <ul id="error_list"></ul>
+          <form id="edit_school_form" method="POST" enctype="multipart/form-data">
+          <div class="card-body">
+            <div class="d-flex align-items-start align-items-sm-center gap-4">
+              <img
+              @if($school->logo == 'default.jpg') src="/uploads/no-image.jpg" @else src="/uploads/{{ $school->username }}/{{ $school->logo }}" @endif
+                alt="user-avatar"
+                class="d-block w-px-100 h-px-100 rounded"
+                id="uploadedAvatar"
+              />
+              <div class="button-wrapper">
+                <label for="upload" class="btn btn-primary me-2 mb-3" tabindex="0">
+                  <span class="d-none d-sm-block">Upload new logo</span>
+                  <i class="ti ti-upload d-block d-sm-none"></i>
+                  <input
+                    type="file"
+                    id="upload"
+                    class="account-file-input"
+                    hidden
+                    name="logo"
+                    accept="image/png, image/jpeg"
+                  />
+                </label>
+                <button type="button" class="btn btn-label-secondary account-image-reset mb-3">
+                  <i class="ti ti-refresh-dot d-block d-sm-none"></i>
+                  <span class="d-none d-sm-block">Reset</span>
+                </button>
+
+                <div class="text-muted">Allowed JPG, GIF or PNG. Max size of 800K</div>
+              </div>
             </div>
-            {{-- <a href="javascript:void(0);" class="btn btn-outline-primary mb-3"><i class="fa fa-calendar me-3 scale3"></i>Filter Date</a> --}}
-        </div>
-        <div class="row">
-            <div class="col-xl-12 tab-content">
-                <div class="tab-pane fade show active" id="AllTransaction" role="tabpanel" aria-labelledby="transaction-tab">
-                    
-                    <div class="col-xl-12 col-lg-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title">Basic School Settings</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="basic-form">
-                                    <ul id="error_list"></ul>
-                                    <form id="edit_school_form" method="POST" enctype="multipart/form-data">
-        
-                                        <div class="mb-3 row">
-                                            <div class="col-md-12">
-                                                <div class="profile-img-edit">
-                                                    <img class="profile-pic" width="150" height="150" @if($school->logo == 'default.jpg') src="/uploads/no-image.jpg" @else src="/uploads/{{ $school->username }}/{{ $school->logo }}" @endif alt="school logo">
-                                                    <div class="p-image">
-                                                    <i class="fa fa-pencil  upload-button"></i>
-                                                    <input class="file-upload" type="file" accept="image/*" name="logo" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                         </div>
-        
-        
-                                        <div class="mb-3 row">
-                                            <label class="col-sm-3 col-form-label">School Name <span class="text-danger"> *</span></label>
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control" name="name" value="{{ $school->name }}" placeholder="School Name">
-                                            </div>
-                                        </div>
-                                        <div class="mb-3 row">
-                                            <label class="col-sm-3 col-form-label">Username</label>
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control" name="username" value="{{ $school->username }}" placeholder="Username" disabled>
-                                            </div>
-                                        </div>
-                                        <div class="mb-3 row">
-                                            <label class="col-sm-3 col-form-label">Motto</label>
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control" name="motto" value="{{ $school->motto }}" placeholder="Motto">
-                                            </div>
-                                        </div>
-                                       
-                                        <div class="mb-3 row">
-                                            <label class="col-sm-3 col-form-label">Address<span class="text-danger"> *</span></label>
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control" name="address" value="{{ $school->address }}" placeholder="Full Address">
-                                            </div>
-                                        </div>
-                                        <div class="mb-3 row">
-                                            <label class="col-sm-3 col-form-label">School Email<span class="text-danger"> *</span></label>
-                                            <div class="col-sm-9">
-                                                <input type="email" class="form-control" name="school_email" value="{{ $school->email }}" placeholder="School Email">
-                                            </div>
-                                        </div>
-                                        <div class="mb-3 row">
-                                            <label class="col-sm-3 col-form-label">Phone Number<span class="text-danger"> *</span></label>
-                                            <div class="col-sm-9">
-                                                <input type="tel" class="form-control" name="school_phone" value="{{ $school->phone_first }}" placeholder="School Mobile Phone Number">
-                                            </div>
-                                        </div>
-                                        <div class="mb-3 row">
-                                            <label class="col-sm-3 col-form-label">Alternate Phone Number</label>
-                                            <div class="col-sm-9">
-                                                <input type="tel" class="form-control" name="alternate_phone" value="{{ $school->phone_second }}" placeholder="Alternate Phone Number">
-                                            </div>
-                                        </div>
-                                        <div class="mb-3 row">
-                                            <label class="col-sm-3 col-form-label">Web Address<span class="text-danger"> *</span></label>
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control" name="website" value="{{ $school->website }}" placeholder="Web Address">
-                                            </div>
-                                        </div>
-                                        <div class="mb-3 row">
-                                            <label class="col-sm-3 col-form-label">Session<span class="text-danger"> *</span><a href=""><small class="text-danger"><cite title="Create a new session"> Create a new session</cite></small></a></label>
-                                            <div class="col-sm-9">
-                                                <select class="default-select form-control wide mb-3" name="session_id">
-                                                    <option></option>
-                                                    @foreach ($sessions as $session)
-                                                    <option value="{{ $session->id }}" {{$school->session_id == $session->id ? 'selected' : ''}}>{{ $session->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="mb-3 row">
-                                            <label class="col-sm-3 col-form-label">Term<span class="text-danger"> *</span></label>
-                                            <div class="col-sm-9">
-                                                <select class="default-select form-control wide mb-3" name="term">
-                                                    <option></option>
-                                                    <option value="first" {{$school->term == 'first' ? 'selected' : ''}}>First</option>
-                                                    <option value="second" {{$school->term == 'second' ? 'selected' : ''}}>Second</option>
-                                                    <option value="third" {{$school->term == 'third' ? 'selected' : ''}}>Third</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="mb-3 row">
-                                            <label class="col-sm-3 col-form-label">Service Fee/Student</label>
-                                            <div class="col-sm-9">
-                                                <input type="number" class="form-control" name="service_fee" value="{{ $school->service_fee }}" placeholder="Negociated Service Fee/Student" disabled>
-                                            </div>
-                                        </div>
-        
-                                      
-        
-                                        <div class="mb-3 row">
-                                            <div class="col-sm-10">
-                                                <button type="submit" id="submit_btn" class="btn btn-primary d-block">Save Changes</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
+          </div>
+          <hr class="my-0" />
+          <div class="card-body">
+              <div class="row">
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">School Name</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" name="name" value="{{ $school->name }}" placeholder="School Name" />
                     </div>
-               
                 </div>
-
-
-                <div class="tab-pane fade" id="Completed" role="tabpanel" aria-labelledby="Completed-tab">
-                   
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">Username</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control"  name="username" value="{{ $school->username }}" placeholder="Username" disabled />
+                    </div>
                 </div>
-                <div class="tab-pane fade" id="Pending" role="tabpanel" aria-labelledby="Pending-tab">
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">Motto</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="motto" value="{{ $school->motto }}" placeholder="Motto">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">Address</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="address" value="{{ $school->address }}" placeholder="Full Address">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">Email</label>
+                    <div class="col-sm-10">
+                        <input type="email" class="form-control" name="school_email" value="{{ $school->email }}" placeholder="School Email">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">Phone Number</label>
+                    <div class="col-sm-10">
+                        <input type="tel" class="form-control" name="school_phone" value="{{ $school->phone_first }}" placeholder="School Mobile Phone Number">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">Alternate Phone Number</label>
+                    <div class="col-sm-10">
+                        <input type="tel" class="form-control" name="alternate_phone" value="{{ $school->phone_second }}" placeholder="Alternate Phone Number">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">Website</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="website" value="{{ $school->website }}" placeholder="Web Address">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">Session</label>
+                    <div class="col-sm-10">
+                        <select id="" class="select2 form-select" name="session_id" data-allow-clear="true">
+                            <option value=""></option>
+                            @foreach ($sessions as $session)
+                            <option value="{{ $session->id }}" {{$school->session_id == $session->id ? 'selected' : ''}}>{{ $session->name }}</option>
+                            @endforeach
+                          </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">Term</label>
+                    <div class="col-sm-10">
+                        <select id="" class="select2 form-select" name="term" data-allow-clear="true">
+                            <option value=""></option>
+                            <option value="first" {{$school->term == 'first' ? 'selected' : ''}}>First</option>
+                            <option value="second" {{$school->term == 'second' ? 'selected' : ''}}>Second</option>
+                            <option value="third" {{$school->term == 'third' ? 'selected' : ''}}>Third</option>
+                          </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">Fee/Head/Term</label>
+                    <div class="col-sm-10">
+                        <input type="number" class="form-control" name="service_fee" value="{{ $school->service_fee }}" placeholder="Negociated Service Fee/Student" disabled>
+                    </div>
+                </div>
+                
+                  
                  
-                </div>
-                <div class="tab-pane fade" id="Canceled" role="tabpanel" aria-labelledby="Canceled-tab">
-                   
-                </div>
-            </div>
+              </div>
+              <div class="mt-2">
+                <button type="submit" id="submit_btn" class="btn btn-primary me-2">Save changes</button>
+                <button type="reset" class="btn btn-label-secondary">Reset</button>
+              </div>
+          </div>
+        </form>
+          <!-- /Account -->
         </div>
+      </div>
     </div>
-</div>
+  </div>
+
 @endsection
 
 @section('js')
-<script src="/vendor/select2/js/select2.full.min.js"></script>
-<script src="/js/plugins-init/select2-init.js"></script>
-<script src="/vendor/jquery-nice-select/js/jquery.nice-select.min.js"></script>
+
+<script src="/assets/vendor/libs/select2/select2.js"></script>
 @include('settings.school.script')
 @endsection

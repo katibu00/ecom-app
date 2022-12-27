@@ -26,22 +26,23 @@
                                 <label class="col-form-label col-sm-3 pt-0">Payment Method</label>
                                 <div class="col-sm-9">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="gridRadios" value="option1" checked>
+                                        <input class="form-check-input method" type="radio" name="account" value="cash">
                                         <label class="form-check-label">
-                                            First radio
+                                            Cash Transaction
                                         </label>
                                     </div>
+                                   @foreach ($accounts as $account)
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="gridRadios" value="option2">
+                                        <input class="form-check-input method" type="radio" name="account" value="{{ $account->bank }}">
                                         <label class="form-check-label">
-                                            Second radio
+                                            {{ $account->bank }}
                                         </label>
                                     </div>
-                                
+                                    @endforeach
                                 </div>
                             </div>
                         </fieldset>
-                        <div class="mb-3 row">
+                        {{-- <div class="mb-3 row">
                             <div class="col-sm-3">Total Amount Payable</div>
                             <div class="col-sm-9">
                                 <h5 class="payable"></h5>
@@ -52,11 +53,11 @@
                             <div class="col-sm-9">
                                 <h5 class="discount"></h5>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="mb-3 row">
                             <div class="col-sm-3">Remaining Balance</div>
                             <div class="col-sm-9">
-                                <h5 class="balance"></h5>
+                                <h5 class="modal_balance"></h5>
                             </div>
                         </div>
                     </div>

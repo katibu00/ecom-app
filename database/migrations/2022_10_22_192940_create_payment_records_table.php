@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('invoice_id');
             $table->string('number');
             $table->double('paid_amount');
+            $table->string('method');
             $table->string('description');
             $table->timestamps();
         });

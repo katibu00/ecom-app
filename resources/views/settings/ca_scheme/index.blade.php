@@ -1,40 +1,35 @@
 @extends('layouts.app')
-@section('PageTitle', 'CA Scheme')
+@section('PageTitle', 'Continous Assesment Scheme')
+
+@section('css')
+<link rel="stylesheet" href="/assets/vendor/libs/select2/select2.css" />
+@endsection
 @section('content')
-
-<div class="content-body">
-<!-- row -->
-    <div class="container-fluid">
-        <div class="d-flex flex-wrap align-items-center mb-3">
-            <div class="mb-3 me-auto">
-            </div>
-            <a href="" data-bs-toggle="modal" data-bs-target="#addModal" class="btn btn-outline-primary mb-3">+ Add New CA Scheme(s)</a>
-        </div>
-
-       {{-- content --}}
-
-       <div class="col-12">
+    <!-- content @s -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <!-- Basic Bootstrap Table -->
         <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">CA Scheme</h4>
-                <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target=".instructions">Instructions</button>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    @include('settings.ca_scheme.table')
+            <div class="card-header header-elements">
+                <span class="me-2">CA Scheme</span>
+
+                <div class="card-header-elements ms-auto">
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#addModal" class="btn btn-sm btn-primary">
+                        <span class="tf-icon ti ti-plus ti-xs me-1"></span>Add CA Scheme
+                    </button>
                 </div>
             </div>
+            @include('settings.ca_scheme.table')
         </div>
-    </div>
-        
+        <!--/ Basic Bootstrap Table -->
         @include('settings.ca_scheme.addModal')
         @include('settings.ca_scheme.editModal')
-        @include('settings.ca_scheme.instructions')
     </div>
-</div>
+    <!-- content @e -->
 @endsection
 
 @section('js')
-<script src="/js/sweetalert.min.js"></script>
-@include('settings.ca_scheme.script')
+    @include('settings.ca_scheme.script')
+    <script src="/sweetalert.min.js"></script>
+    <script src="/assets/vendor/libs/select2/select2.js"></script>
+    <script src="/assets/js/modal-edit-user.js"></script>
 @endsection

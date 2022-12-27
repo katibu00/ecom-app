@@ -7,7 +7,7 @@
                 var reader = new FileReader();
     
                 reader.onload = function (e) {
-                    $('.profile-pic').attr('src', e.target.result);
+                    $('#uploadedAvatar').attr('src', e.target.result);
                 }
         
                 reader.readAsDataURL(input.files[0]);
@@ -15,21 +15,17 @@
         }
         
     
-        $(".file-upload").on('change', function(){
+        $("#upload").on('change', function(){
             readURL(this);
         });
         
-        $(".upload-button").on('click', function() {
-           $(".file-upload").click();
-        });
-    
     
         $(document).on('submit', '#edit_school_form', function(e){
             e.preventDefault();
             
             let formData = new FormData($('#edit_school_form')[0]);
     
-            spinner = '<div class="spinner-border" style="height: 20px; width: 20px;" role="status"><span class="sr-only">Loading...</span></div> Saving . . .'
+            spinner = '<div class="spinner-border" style="height: 15px; width: 15px;" role="status"></div> &nbsp; Saving . . .'
                      $('#submit_btn').html(spinner);
                      $('#submit_btn').attr("disabled", true);
     

@@ -1,38 +1,28 @@
 @extends('layouts.app')
 @section('PageTitle', 'Invoices')
-@section('css')
-<link href="/vendor/datatables/css/jquery.dataTables.min.css" rel="stylesheet">
-@endsection
+
+
 @section('content')
+    <!-- content @s -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <!-- Basic Bootstrap Table -->
+        <div class="card">
+            <div class="card-header header-elements">
+                <h5 class="me-2">Invoices</h5>
 
-<div class="content-body">
-<!-- row -->
-    <div class="container-fluid">
-        <div class="d-flex flex-wrap align-items-center mb-3">
-            <div class="mb-3 me-auto">
-            </div>
-            <a href="" data-bs-toggle="modal" data-bs-target="#addModal" class="btn btn-outline-primary mb-3">+ Generate Invoices</a>
-        </div>
-
-       {{-- content --}}
-
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Invoices</h4>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive fs-14">
-                       @include('accounting.invoices.table')
-                    </div>
+                <div class="card-header-elements ms-auto">
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#addModal" class="btn btn-sm btn-primary">
+                        <span class="tf-icon ti ti-plus ti-xs me-1"></span>Generate Invoices
+                    </button>
                 </div>
             </div>
+            @include('accounting.invoices.table')
         </div>
-        
+        <!--/ Basic Bootstrap Table -->
         @include('accounting.invoices.addModal')
         @include('accounting.invoices.viewCommentsModal')
     </div>
-</div>
+    <!-- content @e -->
 @endsection
 
 @section('js')

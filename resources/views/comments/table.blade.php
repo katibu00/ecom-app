@@ -1,4 +1,5 @@
-<table class="table table-responsive-sm r">
+<div class="table-responsive text-nowrap">
+    <table class="table table-hover">
     <thead>
         <tr>
             <th class="text-center">S/N</th>
@@ -21,16 +22,16 @@
             <td>{{ @$row->name }}</td>
             <td class="text-center">
                @if($form_master)
-                 <i class="fa fa-check-square" style="font-size: 22px; color: green"></i> <p class="fst-italic">{{ $form_master->created_at->diffForHumans() }}</p>
+                 <i class="ti ti-checkbox" style="font-size: 22px; color: green"></i> <p class="fst-italic">{{ $form_master->created_at->diffForHumans() }}</p>
                @else
-                 <i class="fa fa-window-close-o" style="font-size: 22px; color: red"></i>
+                 <i class="ti ti-square-x" style="font-size: 22px; color: red"></i>
                @endif
             </td>
             <td class="text-center">
                 @if($principal)
-                 <i class="fa fa-check-square" style="font-size: 22px; color: green"></i> <p class="fst-italic">{{ $principal->created_at->diffForHumans() }}</p>
+                 <i class="ti ti-checkbox" style="font-size: 22px; color: green"></i> <p class="fst-italic">{{ $principal->created_at->diffForHumans() }}</p>
                @else
-                 <i class="fa fa-window-close-o" style="font-size: 22px; color: red"></i>
+                 <i class="ti ti-square-x" style="font-size: 22px; color: red"></i>
                @endif
                
             </td>
@@ -40,16 +41,14 @@
                         <svg width="18px" height="18px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"/><circle fill="#000000" cx="5" cy="12" r="2"/><circle fill="#000000" cx="12" cy="12" r="2"/><circle fill="#000000" cx="19" cy="12" r="2"/></g></svg>
                     </button>
                     <div class="dropdown-menu dropdown-menu-end">
-                        <a class="dropdown-item viewDetails" href="#" data-class_id="{{ $row->id }}" data-class_name="{{ $row->name }}" data-bs-toggle="modal" data-bs-target="#viewCommentsModal"><i class="fa fa-eye text-primary me-2"></i>View Comments</a>
-                        <a class="dropdown-item" href="#"><i class="fa fa-trash text-danger me-2"></i>Delete Comments</a>
+                        <a class="dropdown-item viewDetails" href="#" data-class_id="{{ $row->id }}" data-class_name="{{ $row->name }}" data-bs-toggle="modal" data-bs-target="#viewCommentsModal"><i class="ti ti-eye text-primary me-2"></i>View Comments</a>
+                        <a class="dropdown-item" href="#"><i class="ti ti-trash me-1 text-danger"></i>Delete Comments</a>
                     </div>
                 </div>
             </td>
            
         </tr>
-        
-       
-        
         @endforeach
     </tbody>
 </table>
+</div>

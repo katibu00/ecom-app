@@ -1,5 +1,5 @@
-<table id="example5" class="display" style="min-width: 845px">
-    <thead>
+<div class="table-responsive text-nowrap">
+    <table class="table table-hover">    <thead>
         <tr>
             <th>S/N</th>
             <th>Date</th>
@@ -46,6 +46,7 @@
         @endif
     </tbody>
 </table>
+</div>
 
 <div class="d-flex justify-content-center d-none" id="loading_div">
     <div class="spinner-border" style="margin: 80px; height: 40px; width: 40px;" role="status"><span class="sr-only">Loading...</span></div>

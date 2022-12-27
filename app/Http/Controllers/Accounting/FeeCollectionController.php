@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Accounting;
 
 use App\Http\Controllers\Controller;
+use App\Models\BankAccount;
 use App\Models\Classes;
 use App\Models\FeeStructure;
 use App\Models\Invoice;
@@ -20,7 +21,7 @@ class FeeCollectionController extends Controller
 
         $school = School::select('id', 'term', 'session_id')->where('id', auth()->user()->school_id)->first();
         $data['classes'] = Classes::select('id', 'name')->where('school_id', $school->id)->get();
-        // $data['invoices'] = Invoice::with(['student','class'])->where('school_id',$school->id)->where('session_id',$school->session_id)->where('term',$school->term)->get();
+        $data['accounts'] = BankAccount::where('school_id',$school->id)->where('status',1)->get();
         return view('accounting.fee_collection.index', $data);
     }
 
@@ -42,13 +43,8 @@ class FeeCollectionController extends Controller
 
     public function getFees(Request $request)
     {
-
-        $school = School::select('id', 'term', 'session_id')->where('id', auth()->user()->school_id)->first();
-
         $paymentSlip = PaymentSlip::where('invoice_id', $request->invoice_id)
-                    ->where('school_id',$school->id)
-                    ->where('session_id',$school->session_id)
-                    ->where('term',$school->term)
+                    ->where('school_id',auth()->user()->school_id)
                     ->first();
 
         if ($paymentSlip) {
@@ -74,15 +70,21 @@ class FeeCollectionController extends Controller
 
             $invoice_discount = Invoice::where('id', $request->invoice_id)->first();
             $student = User::select('first_name','middle_name','last_name')->where('id',$invoice_discount->student_id)->first();
-            $fields = explode(',', @$paymentSlip->additional); 
-           
+            $additional_fees = explode(',', @$paymentSlip->additional); 
+          
             $additionals = [];
-            foreach($fields as $field){
+            foreach($additional_fees as $field){
                 $data_row = FeeStructure::with('fee_category')->where('id',$field)->first();
                 array_push($additionals, $data_row);
             }
-
-            $all_payments = PaymentRecord::select('id','student_id','number','paid_amount','description')->where('invoice_id',$request->invoice_id)->get();
+         
+            $all_payments = PaymentRecord::select('id','student_id','number','paid_amount','description')->where('invoice_id',$request->invoice_id)->latest()->get();
+            $total_paid = 0;
+            foreach($all_payments as $payment)
+            {
+                $total_paid+= $payment->paid_amount;
+            }
+            $balance = (int)$paymentSlip->payable-(int)$invoice_discount->discount-(int)$total_paid;
 
             return response()->json([
                 'mandatories' => $mandatories,
@@ -92,6 +94,10 @@ class FeeCollectionController extends Controller
                 'total_invoice' => $total_invoice,
                 'student' => $student,
                 'all_payments' => $all_payments,
+                'total_paid' => $total_paid,
+                'balance' => $balance,
+                'total_payable' => $paymentSlip->payable,
+                'discounted_amount' => $paymentSlip->payable-$paymentSlip->discount,
                 'initial' => 'no',
                 'invoice_discount' => $invoice_discount->discount,
             ]);
@@ -132,7 +138,7 @@ class FeeCollectionController extends Controller
                 ->where('student_type', 'r')->sum('amount');
             $invoice_discount = Invoice::where('id', $request->invoice_id)->first();
             $student = User::select('first_name','middle_name','last_name')->where('id',$invoice_discount->student_id)->first();
-
+            $balance = $mandatory_sum- $invoice_discount->discount;
             return response()->json([
                 'mandatories' => $mandatories,
                 'recommededs' => $recommededs,
@@ -140,6 +146,7 @@ class FeeCollectionController extends Controller
                 'additionals' => [],
                 'mandatory_sum' => $mandatory_sum,
                 'total_invoice' => $total_invoice,
+                'balance' => $balance,
                 'student' => $student,
                 'initial' => 'yes',
                 'invoice_discount' => $invoice_discount->discount,
@@ -188,7 +195,7 @@ class FeeCollectionController extends Controller
 
     public function recordPayment(Request $request)
     {
-       
+
         $school = School::select('id', 'term', 'session_id')->where('id', auth()->user()->school_id)->first();
         $invoice = Invoice::select('student_id', 'class_id')->where('id', $request->invoice_id)->first();
 
@@ -208,6 +215,7 @@ class FeeCollectionController extends Controller
         $data->number = $number + 1;
       
         $data->paid_amount = $request->paid_amount;
+        $data->method = $request->method;
         $data->description = $request->description;
         $data->save();
 
@@ -225,10 +233,20 @@ class FeeCollectionController extends Controller
 
     public function refreshPayment(Request $request)
     {
-        $all_payments = PaymentRecord::select('id','student_id','number','paid_amount','description')->where('invoice_id',$request->invoice_id)->get();
-      
+        $all_payments = PaymentRecord::select('id','student_id','number','paid_amount','description')->where('invoice_id',$request->invoice_id)->latest()->get();
+        $total_paid = PaymentRecord::select('id')->where('invoice_id',$request->invoice_id)->sum('paid_amount');
+       
+        $paymentSlip = PaymentSlip::where('invoice_id', $request->invoice_id)
+                    ->where('school_id',auth()->user()->school_id)
+                    ->first();
+        $invoice_discount = Invoice::where('id', $request->invoice_id)->first();
+
+        $balance = (int)$paymentSlip->payable-(int)$invoice_discount->discount-(int)$total_paid;
+
         return response()->json([
             'all_payments' => $all_payments,
+            'total_paid' => $total_paid,
+            'balance' => $balance,
         ]);
 
     }

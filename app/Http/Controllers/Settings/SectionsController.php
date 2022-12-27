@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
+use App\Models\Classes;
 use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -60,6 +61,14 @@ class SectionsController extends Controller
 
     public function delete(Request $request){
 
+        $check = Classes::where('section_id', $request->id)->first();
+        if($check)
+        {
+            return response()->json([
+                'status' => 400,
+                'message' => 'School Section has Assigned Class and hence cannot be deleted'
+            ]);
+        }
         $data = Section::find($request->id);
 
         if($data->delete()){

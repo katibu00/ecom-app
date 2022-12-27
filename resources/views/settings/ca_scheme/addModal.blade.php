@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Add a New Class(s)</h5>
+                <h5 class="modal-title">Add a New CA Scheme</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal">
                 </button>
             </div>
@@ -16,17 +16,33 @@
                                  
                                     <div class="mb-2 row">
                                         <div class="col-lg-2">
-                                            <input type="text" class="form-control m-2" name="code[]"  placeholder="CA Code" required>
+                                             <label class="form-label" for="class_ids">Code</label>
+                                            <input type="text" class="form-control m-2" name="code"  placeholder="Code" required>
                                         </div>
                                         <div class="col-lg-4">
-                                            <input type="text" class="form-control m-2" name="desc[]"  placeholder="CA Description" required>
+                                            <label class="form-label" for="class_ids">Description</label>
+                                            <input type="text" class="form-control m-2" name="desc"  placeholder="Description" required>
                                         </div>
                                         <div class="col-lg-2">
-                                            <input type="number" class="form-control m-2" name="marks[]"  placeholder=" marks percentage" required>
+                                            <label class="form-label" for="class_ids">Marks</label>
+                                            <input type="number" class="form-control m-2" name="marks"  placeholder="Marks %" required>
                                         </div>
                                         <div class="col-lg-4">
-                                            <span class="btn btn-success btn-sm addeventmore m-2"><i class="fa fa-plus-circle"></i></span>
+                                            <label class="form-label" for="class_ids">Classes</label>
+                                            <select
+                                            id="class_ids"
+                                            name="class_ids[]"
+                                            class="select2 form-select"
+                                            multiple
+                                            required
+                                          >
+                                            <option value=""></option>
+                                            @foreach ($classes as $class)
+                                              <option value="{{ $class->id }}">{{ $class->name }}</option>
+                                            @endforeach
+                                          </select>
                                         </div>
+                                       
                                     </div>
                                 </div>
                             </div>
@@ -40,33 +56,4 @@
         </form>
         </div>
     </div>
-</div>
-
-<div style="visibility: hidden;">
-    <div class="whole_extra_item_add" id="whole_extra_item_add">
-        <div class="delete_whole_extra_item_add" id="delete_whole_extra_item_add">
-
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="mb-2 row">
-                         <div class="col-lg-2">
-                            <input type="text" class="form-control m-2" name="code[]"  placeholder="CA Code" required>
-                        </div>
-                        <div class="col-lg-4">
-                            <input type="text" class="form-control m-2" name="desc[]"  placeholder="CA Description" required>
-                        </div>
-                        <div class="col-lg-2">
-                            <input type="number" class="form-control m-2" name="marks[]"  placeholder=" marks percentage" required>
-                        </div>
-                        <div class="col-lg-4 d-flex">
-                            <span class="btn btn-success btn-sm addeventmore m-2"><i class="fa fa-plus-circle"></i></span>
-                            <span class="btn btn-danger btn-sm removeeventmore m-2"><i class="fa fa-minus-circle"></i></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
 </div>

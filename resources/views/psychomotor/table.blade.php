@@ -22,16 +22,16 @@
             <td>{{ @$row->name }}</td>
             <td class="text-center">
                @if($psychomotor)
-                 <i class="fa fa-check-square" style="font-size: 22px; color: green"></i> <p class="fst-italic">{{ $psychomotor->created_at->diffForHumans() }}</p>
+                 <i class="ti ti-checkbox" style="font-size: 22px; color: green"></i> <p class="fst-italic">{{ $psychomotor->created_at->diffForHumans() }}</p>
                @else
-                 <i class="fa fa-window-close-o" style="font-size: 22px; color: red"></i>
+                 <i class="ti ti-square-x" style="font-size: 22px; color: red"></i>
                @endif
             </td>
             <td class="text-center">
                 @if($affective)
                  <i class="fa fa-check-square" style="font-size: 22px; color: green"></i> <p class="fst-italic">{{ $affective->created_at->diffForHumans() }}</p>
                @else
-                 <i class="fa fa-window-close-o" style="font-size: 22px; color: red"></i>
+                 <i class="ti ti-square-x" style="font-size: 22px; color: red"></i>
                @endif
                
             </td>

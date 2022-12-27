@@ -47,12 +47,12 @@
                             <table class="table table-bordered table-striped verticle-middle table-responsive-sm">
                                 <thead>
                                     <tr>
-                                        <th>Registration Number</th>
+                                        <th>Roll Number</th>
                                         <th>Student Name</th>
-                                        <th>Position</th>
-                                        <th>Total Marks</th>
-                                        <th>Comment</th>
-                                        <th>Additional Comment</th>
+                                        <th style="width: 5%">Position</th>
+                                        <th style="width: 5%">Total Marks</th>
+                                        <th style="width: 20%">Comment</th>
+                                        <th style="width: 20%">Additional Comment</th>
                                     </tr>
                                 </thead>
                                 <tbody id="marks-generate-tr">

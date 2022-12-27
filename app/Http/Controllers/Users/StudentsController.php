@@ -18,13 +18,16 @@ class StudentsController extends Controller
     public function index()
     {
         $data['classes'] = Classes::select('id', 'name')->where('school_id',auth()->user()->school_id)->get();
-        $data['students'] = User::select('id', 'first_name','middle_name','last_name','login','gender','class_id','parent_id')->where('usertype','std')->where('school_id',auth()->user()->school_id)->where('status',1)->with(['class'])->orderBy('gender', 'desc')->orderBy('first_name')->paginate(5);
+        $data['students'] = User::select('id', 'image','first_name','middle_name','last_name','login','gender','class_id','parent_id')->where('usertype','std')->where('school_id',auth()->user()->school_id)->where('status',1)->with(['class'])->orderBy('gender', 'desc')->orderBy('first_name')->paginate(5);
+        $data['school'] = School::select('username')->where('id',auth()->user()->school_id)->first();
+
         return view('users.students.index',$data);
     }
     public function paginate()
     {
         $data['classes'] = Classes::select('id', 'name')->where('school_id',auth()->user()->school_id)->get();
-        $data['students'] = User::select('id', 'first_name','middle_name','last_name','login','gender','class_id','parent_id')->where('usertype','std')->where('school_id',auth()->user()->school_id)->where('status',1)->with(['class'])->orderBy('gender', 'desc')->orderBy('first_name')->paginate(5);
+        $data['students'] = User::select('id','image', 'first_name','middle_name','last_name','login','gender','class_id','parent_id')->where('usertype','std')->where('school_id',auth()->user()->school_id)->where('status',1)->with(['class'])->orderBy('gender', 'desc')->orderBy('first_name')->paginate(5);
+        $data['school'] = School::select('username')->where('id',auth()->user()->school_id)->first();
         return view('users.students.table',$data)->render();
     }
 
@@ -61,14 +64,16 @@ class StudentsController extends Controller
 
     public function sort(Request $request)
     {
+        // dd($request->all());
         $data['classes'] = Classes::select('id', 'name')->where('school_id',auth()->user()->school_id)->get();
+        $data['school'] = School::select('username')->where('id',auth()->user()->school_id)->first();
 
-        if($request->class_id == 'All')
+        if($request->class_id == 'all')
         {
-            $data['students'] = User::select('id', 'first_name','middle_name','last_name','login','gender','class_id','parent_id')->where('usertype','std')->where('school_id',auth()->user()->school_id)->where('status',1)->with(['class'])->orderBy('gender', 'desc')->orderBy('first_name')->paginate(5);
+            $data['students'] = User::select('id','image','first_name','middle_name','last_name','login','gender','class_id','parent_id')->where('usertype','std')->where('school_id',auth()->user()->school_id)->where('status',1)->with(['class'])->orderBy('gender', 'desc')->orderBy('first_name')->get();
         }else{
 
-            $data['students'] = User::select('id', 'first_name','middle_name','last_name','login','gender','class_id','parent_id')->where('class_id',$request->class_id)->where('usertype','std')->where('school_id',auth()->user()->school_id)->where('status',1)->with(['class'])->orderBy('gender', 'desc')->orderBy('first_name')->paginate(5);
+            $data['students'] = User::select('id','image','first_name','middle_name','last_name','login','gender','class_id','parent_id')->where('class_id',$request->class_id)->where('usertype','std')->where('school_id',auth()->user()->school_id)->where('status',1)->with(['class'])->orderBy('gender', 'desc')->orderBy('first_name')->get();
         }
       
         if( $data['students']->count() > 0)
@@ -167,6 +172,79 @@ class StudentsController extends Controller
     public function save_subjects_offering(Request $request)
     {
         return $request->all();
+    }
+
+
+    public function getStudentDetails(Request $request)
+    {
+        // return $request->all();
+
+        $student = User::find($request->student_id);
+        $school_username = School::select('username')->where('id',auth()->user()->school_id)->first();
+
+        if($student){
+            return response()->json([
+                'student' => $student,
+                'school_username' => $school_username,
+                'status' => 200,
+            ]);  
+        }
+
+        return response()->json([
+            'subjects' => 'Student Not Found',
+            'status' => 404,
+        ]);
+    }
+
+    public function editStudent(Request $request)
+    {
+        // return $request->all();
+        $validator = Validator::make($request->all(), [
+            // 'name'=>'required',
+            // 'school_email' => 'required|email',
+            // 'address'=>'required',
+            // 'school_phone' => 'required',
+            // 'website' => 'required',
+            // 'session_id' => 'required',
+            // 'term' => 'required',
+            // 'motto' => 'required',
+            
+        ]);
+       
+        if($validator->fails()){
+            return response()->json([
+                'status'=>400,
+                'errors'=>$validator->messages(),
+            ]);
+        }
+        $school = School::select('username')->where('id',auth()->user()->school_id)->first();
+       
+        $student = User::find($request->edit_student_id);
+        $student->first_name = $request->first_name;
+        $student->middle_name = $request->middle_name;
+        $student->last_name = $request->last_name;
+        $student->login = $request->roll_number;
+        $student->parent_id = $request->parent_id;
+        $student->gender = $request->gender;
+        $student->dob = $request->dob;
+      
+
+        if ($request->file('image') != null) {
+            $destination = 'uploads/' . $school->username . '/' . $student->image;
+            File::delete($destination);
+            $file = $request->file('image');
+            $extension = $file->getClientOriginalExtension();
+            $filename = time() . '.' . $extension;
+            $file->move('uploads/' . $school->username, $filename);
+            $student->image = $filename;
+        }
+
+        $student->update();
+
+        return response()->json([
+            'status'=>200,
+            'message'=>'Student Profile Updated Successfully',
+        ]);
     }
 
 

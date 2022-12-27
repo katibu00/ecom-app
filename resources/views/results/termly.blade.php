@@ -1,32 +1,19 @@
 @extends('layouts.app')
 @section('PageTitle', 'End of Term Report')
-@section('css')
-{{-- <link href="/vendor/datatables/css/jquery.dataTables.min.css" rel="stylesheet">
-<link href="/vendor/jquery-nice-select/css/nice-select.css" rel="stylesheet"> --}}
-<link href="/vendor/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
-<!-- Clockpicker -->
-<link href="/vendor/clockpicker/css/bootstrap-clockpicker.min.css" rel="stylesheet">
-<!-- asColorpicker -->
-<link href="/vendor/jquery-asColorPicker/css/asColorPicker.min.css" rel="stylesheet">
-<!-- Material color picker -->
-<link href="/vendor/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet">
-<link rel="stylesheet" href="/vendor/pickadate/themes/default.css">
-<link rel="stylesheet" href="/vendor/pickadate/themes/default.date.css">
-<link rel="stylesheet" href="/vendor/pickadate/themes/default.css">
-<link rel="stylesheet" href="/vendor/pickadate/themes/default.date.css">
-<link href="/vendor/jquery-nice-select/css/nice-select.css" rel="stylesheet">
-@endsection
-@section('content')    
-<div class="content-body">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header border-bottom">
-                        <h4 class="card-title">End of Term Report</h4>
-                        
-                    </div>
-                    <div class="card-body my-1 py-50">
+
+
+@section('content')
+
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="row mb-5">
+            <div class="col-md">
+                <div class="card mb-4">
+                    <div class="card-body">
+
+                        <div class="card-title header-elements  d-flex fle4x-row">
+                            <h5 class="m-0 me-2 d-none d-md-block">End of Term Report</h5>
+                        </div>
+
                         <form class="form" action="{{ route('result.termly.index')}}" method="POST" target="_blank">
                             @csrf
                             <div class="row">
@@ -79,55 +66,19 @@
                                         <input type="checkbox" class="form-check-input"  name="psychomotor">Psychomotor
                                     </label>
                                 </div>
-                               
-                                <div class="form-check form-check-inline ">
-                                    <label class="form-check-label">
-                                        <input type="checkbox" class="form-check-input" id="next_term" name="next_term">Next Term
-                                    </label>
-                                </div>
-                                <div class="d-none" id="next_term_date">
-                                    <div class="form-check form-check-inline">
-                                        <input type="text" class="form-control" placeholder="2017-06-04" id="mdate" name="date">
-                                    </div>
-                                </div>
                             </div>
                         </form>
+
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-             
 @endsection
 
 @section('js')
-    {{-- @include('marks.scripts') --}}
-    {{-- <script src="/js/sweetalert.min.js"></script> --}}
-    <script src="/vendor/moment/moment.min.js"></script>
-    <script src="/vendor/bootstrap-daterangepicker/daterangepicker.js"></script>
-    <script src="/vendor/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
-    <script src="/vendor/pickadate/picker.js"></script>
-    <script src="/vendor/pickadate/picker.time.js"></script>
-    <script src="/vendor/pickadate/picker.date.js"></script>
-<script src="/vendor/jquery-nice-select/js/jquery.nice-select.min.js"></script>
-<script src="/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
-<script src="/js/plugins-init/material-date-picker-init.js"></script>
-<!-- Pickdate -->
-<script src="/js/plugins-init/pickadate-init.js"></script>
-
-<script src="/js/plugins-init/pickadate-init.js"></script>
+    @include('marks.scripts')
+    <script src="/js/sweetalert.min.js"></script>
     {!! Toastr::message() !!}
-
-    <script>
-    $(document).on("click", "#next_term", function() { 
-
-        if($(this).prop("checked") == true)
-        {
-            $('#next_term_date').removeClass('d-none');
-        }else{
-            $('#next_term_date').addClass('d-none');
-        }
-    });
-    </script>
 @endsection

@@ -1,12 +1,8 @@
 @extends('layouts.app')
 @section('PageTitle', 'Fee Collection')
-@section('css')
-    <link href="/vendor/jquery-nice-select/css/nice-select.css" rel="stylesheet">
-@endsection
 @section('content')
 
-<div class="content-body">
-    <div class="container-fluid">
+<div class="container-xxl flex-grow-1 container-p-y">
         
         <div class="row">
             <div class="col-xl-12">
@@ -20,10 +16,12 @@
                             
                                 <div class="rounded text-white bg-warning text-black mb-2">
                                     <ul class="list-group list-group-flush">
-                                        <li class="list-group-item d-flex justify-content-between"><h5 class="mb-0 text-muted text-warning fs-14">Transaction Summary</h5></li>
+                                        <li class="list-group-item d-flex justify-content-between"><h5 class="mb-0 text-white fs-14">Transaction Summary</h5></li>
                                         <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Invoice Amount :</span><strong id="total_invoice"></strong></li>
                                         <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Total Amount Payable :</span><strong class="payable"></strong></li>
                                         <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Discount :</span><strong class="discount"></strong></li>
+                                        <li class="list-group-item d-flex justify-content-between d-none" id="discounted_amount_li"><span class="mb-0">Discounted Amount Payable:</span><strong class="discounted_amount"></strong></li>
+                                        <li class="list-group-item d-flex justify-content-between d-none" id="total_paid_li"><span class="mb-0">Total Amount Paid :</span><strong class="total_paid"></strong></li>
                                         <li class="list-group-item d-flex justify-content-between"><span class="mb-0">UNPAID BALANCE :</span><strong class="balance"></strong></li>
                                     </ul>
                                 </div>
@@ -55,6 +53,7 @@
                                     </div>
                                     <input type="hidden" id="hidden_payable"/>
                                     <input type="hidden" id="hidden_balance"/>
+                                    <input type="hidden" id="hidden_modal_balance"/>
                                     <input type="hidden" id="hidden_discount"/>
                                     <div class="d-none" id="bottom_bar">
                                         <hr class="mb-4">
@@ -83,15 +82,10 @@
                 </div>
             </div>
         </div>
-    </div>
 </div>
 
 @endsection
 
 @section('js')
     @include('accounting.fee_collection.scripts')
-    <script src="/js/sweetalert.min.js"></script>
-  
-    <script src="/vendor/jquery-nice-select/js/jquery.nice-select.min.js"></script>
-    {!! Toastr::message() !!}
 @endsection

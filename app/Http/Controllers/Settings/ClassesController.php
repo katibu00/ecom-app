@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Models\Classes;
+use App\Models\Mark;
 use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -63,7 +64,14 @@ class ClassesController extends Controller
     }
 
     public function delete(Request $request){
-
+        $check = Mark::where('class_id', $request->id)->first();
+        if($check)
+        {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Class has marks data and hence cannot be deleted'
+            ]);
+        }
         $data = Classes::find($request->id);
 
         if($data->delete()){

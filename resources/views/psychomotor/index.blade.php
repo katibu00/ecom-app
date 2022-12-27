@@ -1,40 +1,36 @@
 @extends('layouts.app')
 @section('PageTitle', 'Psychomotor Grade')
 @section('content')
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="row mb-5">
+            <div class="col-md">
+                <div class="card mb-4">
+                    <div class="card-body">
 
-<div class="content-body">
-<!-- row -->
-    <div class="container-fluid">
-        <div class="d-flex flex-wrap align-items-center mb-3">
-            <div class="mb-3 me-auto">
-            </div>
-            <a href="" data-bs-toggle="modal" data-bs-target="#addModal" class="btn btn-outline-primary mb-3">+ New Record</a>
-        </div>
+                        <div class="card-header header-elements">
+                            <span class="me-2">Psychomotor Grade</span>
 
-       {{-- content --}}
+                            <div class="card-header-elements ms-auto">
+                                <button type="button" data-bs-toggle="modal" data-bs-target="#addModal"
+                                    class="btn btn-sm btn-primary">
+                                    <span class="tf-icon ti ti-plus ti-xs me-1"></span>Add Psychomotor Grade
+                                </button>
+                            </div>
+                        </div>
 
-       <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">Psychomotor Grade</h4>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    @include('psychomotor.table')
+                        @include('psychomotor.table')
+
+                    </div>
                 </div>
+                @include('psychomotor.addModal')
+                @include('psychomotor.viewCommentsModal')
             </div>
         </div>
     </div>
-        
-        @include('psychomotor.addModal')
-        @include('psychomotor.viewCommentsModal')
-        {{-- @include('settings.assign_subjects.editModal') --}}
-    </div>
-</div>
 @endsection
 
 @section('js')
-<script src="/js/sweetalert.min.js"></script>
-@include('psychomotor.script')
-{!! Toastr::message() !!}
+    <script src="/js/sweetalert.min.js"></script>
+    @include('psychomotor.script')
+    {!! Toastr::message() !!}
 @endsection

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Models\AffectiveCrud;
+use App\Models\PsychomotorGrade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -60,7 +61,14 @@ class AffectiveCrudController extends Controller
     }
 
     public function delete(Request $request){
-
+        $check = PsychomotorGrade::where('grade_id', $request->id)->first();
+        if($check)
+        {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Affective Trait has grades and hence cannot be deleted'
+            ]);
+        }
         $data = AffectiveCrud::find($request->id);
 
         if($data->delete()){

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('marks');
             $table->integer('status')->default('1');
             $table->integer('school_id');
+            $table->string('class_id');
             $table->timestamps();
         });
     }

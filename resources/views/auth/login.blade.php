@@ -1,192 +1,256 @@
 <!DOCTYPE html>
-<html lang="en" class="h-100">
 
-<head>
-    <meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="keywords" content="" />
+<html
+  lang="en"
+  class="light-style customizer-hide"
+  dir="ltr"
+  data-theme="theme-default"
+  data-assets-path="/assets/"
+  data-template="vertical-menu-template"
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+    />
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
-	<meta name="author" content="" />
-	<meta name="robots" content="" />
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="Dompet : Payment Admin Template" />
-	<meta property="og:title" content="Dompet : Payment Admin Template" />
-	<meta property="og:description" content="Dompet : Payment Admin Template" />
-	<meta property="og:image" content="https://dompet.dexignlab.com/xhtml/social-image.png" />
-	<meta name="format-detection" content="telephone=no">
-	
-	<!-- PAGE TITLE HERE -->
-	<title>IntelliSAS : Login</title>
-	
-	<!-- FAVICONS ICON -->
-	<link rel="shortcut icon" type="image/png" href="images/favicon.png" />
-    <link href="/vendor/jquery-nice-select/css/nice-select.css" rel="stylesheet">
-    <link href="/css/style.css" rel="stylesheet">
+   
+    <title>Login | IntelS</title>
 
-</head>
+    <meta name="description" content="" />
 
-<body class="vh-100">
-    <div class="authincation h-100">
-        <div class="container h-100">
-            <div class="row justify-content-center h-100 align-items-center">
-                <div class="col-md-6">
-                    <div class="authincation-content">
-                        <div class="row no-gutters">
-                            <div class="col-xl-12">
-                                <div class="auth-form">
-									<div class="text-center mb-3">
-										<a href="index.html"><img src="/uploads/logo.png" alt="" width="100px"></a>
-									</div>
-                                    <h4 class="text-center mb-4">Sign in to your account</h4>
-                                    <ul id="error_list"></ul>
-                                    <form action="">
-                                        <div class="mb-3">
-                                            <label class="mb-1" for="login"><strong>Email/Login ID</strong></label>
-                                            {{-- <input type="email" class="form-control" id="login" placeholder="Enter your Email/Login ID"> --}}
-                                            <div class="input-group">
-												<span class="input-group-text"> <i class="fa fa-user"></i> </span>
-                                                <input type="text" class="form-control" id="login" placeholder="Enter your Email/Login ID..">
-                                            </div>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="mb-1" for="password"><strong>Password</strong></label>
-                                            {{-- <input type="password" class="form-control" id="password" placeholder="******"> --}}
-                                            <div class="input-group transparent-append">
-												<span class="input-group-text"> <i class="fa fa-lock"></i> </span>
-                                                <input type="password" class="form-control" id="dlab-password" placeholder="********">
-												<span class="input-group-text show-pass"> 
-													<i class="fa fa-eye-slash"></i>
-													<i class="fa fa-eye"></i>
-												</span>
-                                            </div>
-                                        </div>
-                                        <div class="row d-flex justify-content-between mt-4 mb-2">
-                                            <div class="mb-3">
-                                               <div class="form-check custom-checkbox ms-1">
-													<input type="checkbox" class="form-check-input" id="remember">
-													<label class="form-check-label" for="remember">Remember me</label>
-												</div>
-                                            </div>
-                                            <div class="mb-3">
-                                                <a href="#">Forgot Password?</a>
-                                            </div>
-                                        </div>
-                                        <div class="text-center">
-                                            <button type="submit" class="btn btn-primary btn-block login_btn">Sign Me In</button>
-                                        </div>
-                                    </form>
-                                    <div class="new-account mt-3">
-                                        <p>Any Problem or Feedback ? <a class="text-primary" href="tel:+2348037772628">Call Us</a> OR <a class="text-primary" href="https://wa.me/2348037772628?text=My%20school%20name%20is%20%20">WhatsApp Us</a></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/assets/img/favicon/favicon.lico" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Icons -->
+    {{-- <link rel="stylesheet" href="/assets/vendor/fonts/fontawesome.css" /> --}}
+    <link rel="stylesheet" href="/assets/vendor/fonts/tabler-icons.css" />
+    {{-- <link rel="stylesheet" href="/assets/vendor/fonts/flag-icons.css" /> --}}
+
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="/assets/vendor/css/rtl/core.css" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="/assets/vendor/css/rtl/theme-default.css" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="/assets/css/demo.css" />
+
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+    {{-- <link rel="stylesheet" href="/assets/vendor/libs/node-waves/node-waves.css" />
+    <link rel="stylesheet" href="/assets/vendor/libs/typeahead-js/typeahead.css" /> --}}
+    <!-- Vendor -->
+    {{-- <link rel="stylesheet" href="/assets/vendor/libs/formvalidation/dist/css/formValidation.min.css" /> --}}
+
+    <!-- Page CSS -->
+    <!-- Page -->
+    <link rel="stylesheet" href="/assets/vendor/css/pages/page-auth.css" />
+    <!-- Helpers -->
+    <script src="/assets/vendor/js/helpers.js"></script>
+    <script src="/assets/vendor/js/template-customizer.js"></script>
+    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+    <script src="/assets/js/config.js"></script>
+  </head>
+
+  <body>
+    <!-- Content -->
+
+    <div class="container-xxl">
+      <div class="authentication-wrapper authentication-basic container-p-y">
+        <div class="authentication-inner py-4">
+          <!-- Login -->
+          <div class="card">
+            <div class="card-body">
+              <!-- Logo -->
+              <div class="app-brand justify-content-center mb-4 mt-2">
+                <a href="index.html" class="app-brand-link gap-2">
+                  {{-- <span class="app-brand-logo demo">
+                    JSR
+                  </span> --}}
+                  <span class="app-brand-text demo text-body fw-bold ms-1">IntelS</span>
+                </a>
+              </div>
+              <!-- /Logo -->
+              <h4 class="mb-1 pt-2">Welcome to IntelS! 👋</h4>
+              {{-- <p class="mb-4">Please sign-in to your account and start the adventure</p> --}}
+              <ul id="error_list"></ul>
+              <form id="login_form" class="mb-3">
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email or Login ID</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="login"
+                    name="login"
+                    placeholder="Enter your email or Login ID"
+                    autofocus
+                  />
                 </div>
+                <div class="mb-3 form-password-toggle">
+                  <div class="d-flex justify-content-between">
+                    <label class="form-label" for="password">Password</label>
+                    <a href="#">
+                      <small>Forgot Password?</small>
+                    </a>
+                  </div>
+                  <div class="input-group input-group-merge">
+                    <input
+                      type="password"
+                      id="password"
+                      class="form-control"
+                      name="password"
+                      placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                      aria-describedby="password"
+                    />
+                    <span class="input-group-text cursor-pointer"><i class="ti ti-eye-off"></i></span>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="remember" />
+                    <label class="form-check-label" for="remember"> Remember Me </label>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <button class="btn btn-primary d-grid w-100 login_btn" type="submit">Sign in</button>
+                </div>
+              </form>
+
+              {{-- <p class="text-center">
+                <span>New on our platform?</span>
+                <a href="#">
+                  <span>Create an account</span>
+                </a>
+              </p> --}}
             </div>
+          </div>
+          <!-- /Register -->
         </div>
+      </div>
     </div>
 
+    <!-- / Content -->
 
-    <!--**********************************
-        Scripts
-    ***********************************-->
-    <!-- Required vendors -->
-    <script src="./vendor/global/global.min.js"></script>
-    <script src="./js/custom.min.js"></script>
-    <script src="./js/dlabnav-init.js"></script>
-    {{-- <script src="./js/pages/auth.js"></script> --}}
+    <!-- Core JS -->
+    <!-- build:js assets/vendor/js/core.js -->
+    <script src="/assets/vendor/libs/jquery/jquery.js"></script>
+    {{-- <script src="/assets/vendor/libs/popper/popper.js"></script> --}}
+    <script src="/assets/vendor/js/bootstrap.js"></script>
+    {{-- <script src="/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script> --}}
+    {{-- <script src="/assets/vendor/libs/node-waves/node-waves.js"></script> --}}
+
+    {{-- <script src="/assets/vendor/libs/hammer/hammer.js"></script>
+    <script src="/assets/vendor/libs/i18n/i18n.js"></script>
+    <script src="/assets/vendor/libs/typeahead-js/typeahead.js"></script> --}}
+
+    <script src="/assets/vendor/js/menu.js"></script>
+    <!-- endbuild -->
+
+    <!-- Vendors JS -->
+    {{-- <script src="/assets/vendor/libs/formvalidation/dist/js/FormValidation.min.js"></script>
+    <script src="/assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js"></script>
+    <script src="/assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js"></script> --}}
+
+    <!-- Main JS -->
+    <script src="/assets/js/main.js"></script>
+
+    <!-- Page JS -->
+    <script src="/assets/js/pages-auth.js"></script>
     <script>
-        $(document).ready(function () {
-    $(document).on("click", ".login_btn", function (e) {
-        e.preventDefault();
-        var data = {
-            login: $("#login").val(),
-            password: $("#dlab-password").val(),
-            remember: $("#remember").prop("checked") == true ? 1 : 0,
-        };
-        spinner =
-            '<div class="spinner-border" style="height: 20px; width: 20px;" role="status"><span class="sr-only">Loading...</span></div>';
-        $(".login_btn").html(spinner);
-        $(".login_btn").attr("disabled", true);
-       
-        $.ajaxSetup({
-            headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-            },
+        $(document).ready(function() {
+            $(document).on("submit", "#login_form", function(e) {
+                e.preventDefault();
+                var data = {
+                    login: $("#login").val(),
+                    password: $("#password").val(),
+                    remember: $("#remember").prop("checked") == true ? 1 : 0,
+                };
+                spinner =
+                    '<div class="spinner-border" style="height: 20px; width: 20px;" role="status"><span class="sr-only"></span></div>';
+                $(".login_btn").html(spinner);
+                $(".login_btn").attr("disabled", true);
+
+                $.ajaxSetup({
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                    },
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "/login",
+                    data: data,
+                    dataType: "json",
+                    success: function(response) {
+                        if (response.status == 400) {
+                            $("#error_list").html("");
+                            $("#error_list").addClass("alert alert-danger");
+                            $.each(response.errors, function(key, err) {
+                                $("#error_list").append("<li>" + err + "</li>");
+                            });
+                            $(".login_btn").text("Login");
+                            $(".login_btn").attr("disabled", false);
+                        }
+                        if (response.status == 401) {
+                            $("#error_list").html("");
+                            $("#error_list").addClass("alert alert-danger");
+                            $("#error_list").append("<li>" + response.message + "</li>");
+                            $(".login_btn").text("Login");
+                            $(".login_btn").attr("disabled", false);
+                        }
+                        if (response.status == 200) {
+                            $("#error_list").html("");
+                            $("#error_list").removeClass("alert alert-danger");
+                            $("#error_list").addClass("alert alert-success");
+                            $("#error_list").append(
+                                "<li>Login Successful. Redirecting to Dashboard. . .</li>"
+                            );
+
+                           
+                            if (response.user == 'admin') {
+                                window.location.replace('{{ route('admin.home') }}');
+                            }
+                           
+
+                        }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        if (xhr.status === 419) {
+                            Command: toastr["error"](
+                                "Session expired. please login again."
+                            );
+                            toastr.options = {
+                                closeButton: false,
+                                debug: false,
+                                newestOnTop: false,
+                                progressBar: false,
+                                positionClass: "toast-top-right",
+                                preventDuplicates: false,
+                                onclick: null,
+                                showDuration: "300",
+                                hideDuration: "1000",
+                                timeOut: "5000",
+                                extendedTimeOut: "1000",
+                                showEasing: "swing",
+                                hideEasing: "linear",
+                                showMethod: "fadeIn",
+                                hideMethod: "fadeOut",
+                            };
+
+                            setTimeout(() => {
+                                window.location.replace('{{ route('login') }}');
+                            }, 2000);
+                        }
+                    },
+                });
+            });
         });
-        $.ajax({
-            type: "POST",
-            url: "/login",
-            data: data,
-            dataType: "json",
-            success: function (response) {
-                if (response.status == 400) {
-                    $("#error_list").html("");
-                    $("#error_list").addClass("alert alert-danger");
-                    $.each(response.errors, function (key, err) {
-                        $("#error_list").append("<li>" + err + "</li>");
-                    });
-                    $(".login_btn").text("Login");
-                    $(".login_btn").attr("disabled", false);
-                }
-                if (response.status == 401) {
-                    $("#error_list").html("");
-                    $("#error_list").addClass("alert alert-danger");
-                    $("#error_list").append("<li>" + response.message + "</li>");
-                    $(".login_btn").text("Login");
-                    $(".login_btn").attr("disabled", false);
-                }
-                if (response.status == 200) {
-                    $("#error_list").html("");
-                    $("#error_list").removeClass("alert alert-danger");
-                    $("#error_list").addClass("alert alert-success");
-                    $("#error_list").append(
-                        "<li>Login Successful. Redirecting to Dashboard. . .</li>"
-                    );
-
-                    if(response.user == 'intellisas'){
-                        window.location.replace('{{ route('intellisas.home') }}');
-                    }
-                    if(response.user == 'admin'){
-                        window.location.replace('{{ route('admin.home') }}');
-                    }
-                    
-                }
-            },
-            error: function (xhr, ajaxOptions, thrownError) {
-                if (xhr.status === 419) {
-                    Command: toastr["error"](
-                        "Session expired. please login again."
-                    );
-                    toastr.options = {
-                        closeButton: false,
-                        debug: false,
-                        newestOnTop: false,
-                        progressBar: false,
-                        positionClass: "toast-top-right",
-                        preventDuplicates: false,
-                        onclick: null,
-                        showDuration: "300",
-                        hideDuration: "1000",
-                        timeOut: "5000",
-                        extendedTimeOut: "1000",
-                        showEasing: "swing",
-                        hideEasing: "linear",
-                        showMethod: "fadeIn",
-                        hideMethod: "fadeOut",
-                    };
-
-                    setTimeout(() => {
-                           window.location.replace('{{ route('login') }}');
-                    }, 2000);
-                }
-            },
-        });
-    });
-});
-
     </script>
-
-</body>
+  </body>
 </html>

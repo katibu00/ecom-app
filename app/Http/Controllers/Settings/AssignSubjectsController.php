@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Settings;
 use App\Http\Controllers\Controller;
 use App\Models\AssignSubject;
 use App\Models\Classes;
+use App\Models\Mark;
 use App\Models\Subject;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -66,14 +67,14 @@ class AssignSubjectsController extends Controller
     }
 
     public function delete(Request $request){
-
-        $data = Subject::find($request->id);
+       
+        $data = AssignSubject::find($request->id);
 
         if($data->delete()){
 
             return response()->json([
                 'status' => 200,
-                'message' => 'Subject Deleted Successfully'
+                'message' => 'Assign Subject Deleted Successfully'
             ]);
 
         };

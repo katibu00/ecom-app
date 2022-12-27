@@ -34,7 +34,7 @@
             }
 
             spinner =
-                '<div class="spinner-border" style="height: 20px; width: 20px;" role="status"><span class="sr-only">Loading...</span></div> Fetching data . . .'
+                '<div class="spinner-border" style="height: 15px; width: 15px;" role="status"></div>&nbsp; Fetching data . . .'
             $('#search_btn').html(spinner);
             $('#search_btn').attr("disabled", true);
 
@@ -93,7 +93,7 @@
                             .middle_name + ' ' + v.student.last_name + '</td>' +
                             '<td>' + (key + 1) + '</td>' +
                             '<td>' + v.total + '</td>' +
-                            '<td> <select name="comment[]" class="default-select form-control wide " >' +
+                            '<td> <select name="comment[]" class="form-select" >' +
                             '<option value=""></option> <option value="Excellent Result, Keep it up.">Excellent Result, keep it up.</option>' +
                             '<option value="Very Good Result, keep it up.">Very Good Result, keep it up.</option>' +
                             '<option value="Good Result, keep it up.">Good Result, keep it up.</option>' +
@@ -147,7 +147,7 @@
             let formData = new FormData($('#comments_form')[0]);
 
             spinner =
-                '<div class="spinner-border" style="height: 20px; width: 20px;" role="status"><span class="sr-only">Loading...</span></div> Submitting . . .'
+                '<div class="spinner-border" style="height: 15px; width: 15px;" role="status"></div>&nbsp; Submitting . . .'
             $('#submit_btn').html(spinner);
             $('#submit_btn').attr("disabled", true);
 

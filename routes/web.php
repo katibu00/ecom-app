@@ -3,6 +3,7 @@
 use App\Http\Controllers\Accounting\ExpensesController;
 use App\Http\Controllers\Accounting\FeeCollectionController;
 use App\Http\Controllers\Accounting\InvoicesController;
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\HomeController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\Result\CommentsController;
 use App\Http\Controllers\Result\PsychomotorGradeController;
 use App\Http\Controllers\Settings\AffectiveCrudController;
 use App\Http\Controllers\Settings\AssignSubjectsController;
+use App\Http\Controllers\Settings\BankAccountsController;
 use App\Http\Controllers\Settings\BasicSettingsController;
 use App\Http\Controllers\Settings\CASchemeController;
 use App\Http\Controllers\Settings\ClassesController;
@@ -23,7 +25,6 @@ use App\Http\Controllers\Settings\SectionsController;
 use App\Http\Controllers\Settings\SessionsController;
 use App\Http\Controllers\Settings\SubjectsController;
 use App\Http\Controllers\Users\StudentsController;
-use App\Jobs\ReetSchoolAdminPasswordJob;
 use App\Mail\ResetSchoolAdminPassword;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
@@ -122,6 +123,7 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
         Route::get('/assign_subjects/index', [AssignSubjectsController::class, 'index'])->name('settings.assign_subjects.index');
         Route::post('/assign_subjects/index', [AssignSubjectsController::class, 'store']);
         Route::post('/assign_subjects/update', [AssignSubjectsController::class, 'update'])->name('settings.assign_subjects.update');
+        Route::post('/assign_subjects/delete', [AssignSubjectsController::class, 'delete'])->name('settings.assign_subjects.delete');
 
         Route::get('/ca_scheme/index', [CASchemeController::class, 'index'])->name('settings.ca_scheme.index');
         Route::post('/ca_scheme/index', [CASchemeController::class, 'store']);
@@ -143,31 +145,42 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
         Route::post('/fee_category/update', [FeeCategoriesController::class, 'update'])->name('settings.fee_category.update');
         Route::post('/fee_category/delete', [FeeCategoriesController::class, 'delete'])->name('settings.fee_category.delete');
 
+        Route::get('/bank_accounts/index', [BankAccountsController::class, 'index'])->name('settings.banks.index');
+        Route::post('/bank_accounts/index', [BankAccountsController::class, 'store']);
+        Route::post('/bank_accounts/update', [BankAccountsController::class, 'update'])->name('settings.banks.update');
+        Route::post('/bank_accounts/delete', [BankAccountsController::class, 'delete'])->name('settings.banks.delete');
+
         Route::get('/fee_structure/index', [FeeStructuresController::class, 'index'])->name('settings.fee_structure.index');
         Route::post('/fee_structure/index', [FeeStructuresController::class, 'store']);
         Route::post('/fee_structure/update', [FeeStructuresController::class, 'update'])->name('settings.fee_structure.update');
         Route::post('/fee_structure/details', [FeeStructuresController::class, 'details'])->name('settings.fee_structure.details');
         Route::post('/fee_structure/delete', [FeeStructuresController::class, 'delete'])->name('settings.fee_structure.delete');
+        
+        Route::get('/fee_structure/edit', [FeeStructuresController::class, 'edit'])->name('settings.fee_structure.edit');
 
     });
 
     Route::group(['prefix' => 'users', 'middleware' => ['auth','admin']], function(){
         Route::get('/students/index', [StudentsController::class, 'index'])->name('users.students.index');
         Route::get('/students/create', [StudentsController::class, 'create'])->name('users.students.create');
+        Route::post('/students/edit', [StudentsController::class, 'editStudent'])->name('users.students.edit');
         Route::post('/students/store', [StudentsController::class, 'store'])->name('users.students.store');
-        Route::post('/students/sort', [StudentsController::class, 'sort'])->name('users.students.sort');
+
+        Route::get('/students/sort', [StudentsController::class, 'sort'])->name('users.students.sort');
+
         Route::post('/students/details', [StudentsController::class, 'details'])->name('users.students.details');
         Route::get('/students/bulk_update/index', [StudentsController::class, 'bulk_update'])->name('users.students.bulk_update.index');
         Route::post('/students/bulk_update/index', [StudentsController::class, 'bulk_update']);
         Route::post('/students/bulk_update/store', [StudentsController::class, 'bulk_store'])->name('users.students.bulk_update.store');
 
         Route::post('/get-subjects_not_offering', [StudentsController::class, 'get_subjects_offering'])->name('get-subjects_not_offering');
+        Route::post('/get-student_details', [StudentsController::class, 'getStudentDetails'])->name('get-student_details');
         Route::post('/save-subjects_not_offering', [StudentsController::class, 'save_subjects_offering'])->name('save-subjects_not_offering');
     });
 
 
-    Route::get('/paginate-students', [StudentsController::class, 'paginate']);
-    Route::get('/users/students/sort', [StudentsController::class, 'sort']);
+    // Route::get('/paginate-students', [StudentsController::class, 'paginate']);
+    // Route::get('/users/students/sort', [StudentsController::class, 'sort']);
 
     Route::group(['prefix' => 'marks', 'middleware' => ['auth', 'admin']], function(){
         Route::get('/create', [MarksController::class, 'create'])->name('marks.create');
@@ -178,9 +191,9 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
         Route::post('/check-absent-marks-entry',  [MarksController::class, 'checkAbsentMarks'])->name('check-absent-marks-entry');
         Route::post('/uncheck-absent-marks-entry',  [MarksController::class, 'uncheckAbsentMarks'])->name('uncheck-absent-marks-entry');
         Route::get('/submissions/index', [MarksController::class, 'submissionIndex'])->name('marks.submissions.index');
-        Route::post('/submissions/index', [MarksController::class, 'submissionSearch']);
+        Route::post('/submissions/search', [MarksController::class, 'submissionSearch'])->name('marks.submissions.search');
         Route::get('/grade_book/index', [MarksController::class, 'gradeBookIndex'])->name('marks.grade_book.index');
-        Route::post('/grade_book/index', [MarksController::class, 'gradeGookSearch']);
+        Route::post('/grade_book/search', [MarksController::class, 'gradeGookSearch'])->name('marks.grade_book.search');
     });
     //termly result generation
     Route::group(['prefix' => 'result', 'middleware' => ['auth', 'admin']], function(){
@@ -190,22 +203,21 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
         Route::get('/settings/index', [AdminResultController::class, 'settingsIndex'])->name('result.settings');
         Route::post('/settings/index', [AdminResultController::class, 'settingsStore']);
       
-    });
-    ///comments 
-    Route::group(['prefix' => 'comments', 'middleware' => ['auth', 'admin']], function(){
-        Route::get('/index', [CommentsController::class, 'index'])->name('comments.index');
+
+        Route::get('/comments/index', [CommentsController::class, 'index'])->name('comments.index');
         Route::post('/get-comments', [CommentsController::class, 'getComments'])->name('comments.get');
         Route::post('/store-comments', [CommentsController::class, 'storeComments'])->name('comments.store');
         Route::post('/view-comments', [CommentsController::class, 'viewComments'])->name('comments.view');
-    });
-    ///comments 
-    Route::group(['prefix' => 'psychomotor', 'middleware' => ['auth', 'admin']], function(){
+
         Route::get('/index', [PsychomotorGradeController::class, 'index'])->name('psychomotor.index');
         Route::post('/get-psychomotor', [PsychomotorGradeController::class, 'getRecords'])->name('psychomotor.get');
         Route::post('/store-psychomotor', [PsychomotorGradeController::class, 'storePsychomotor'])->name('psychomotor.store');
         Route::post('/view-psychomotor', [PsychomotorGradeController::class, 'viewComments'])->name('psychomotor.view'); 
-      
+
+
     });
+
+
     //fees and billing
     Route::group(['prefix' => 'billing', 'middleware' => ['auth', 'admin']], function(){
         Route::get('/invoices/index', [InvoicesController::class, 'index'])->name('invoices.index');
@@ -228,6 +240,26 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
         Route::post('/expenses/index', [ExpensesController::class, 'store']);
 
       
+    });
+
+
+    Route::group(['prefix' => 'attendance', 'middleware' => ['auth']], function () {
+    
+        Route::get('/take/index', [AttendanceController::class, 'create'])->name('attendance.take.index');
+        Route::post('/take/search', [AttendanceController::class, 'create'])->name('attendance.take.search');
+        Route::post('/take/store', [AttendanceController::class, 'store'])->name('attendance.take.store');
+
+        Route::get('/overview/index', [AttendanceController::class, 'overview'])->name('attendance.overview');
+        
+        Route::post('/get-details', [AttendanceController::class, 'getDetails'])->name('attendance.get-details');
+  
+        Route::get('/report', [AttendanceController::class, 'report'])->name('attendance.report.index');
+        Route::post('/report', [AttendanceController::class, 'report'])->name('attendance.report.search');
+       
+
+        Route::get('/offline/sheet/index', [AttendanceController::class, 'offline_index'])->name('attendance.offline.index');
+        Route::post('/offline/sheet/generate', [AttendanceController::class, 'offline_generate'])->name('attendance.offline.generate');
+
     });
 
 // });

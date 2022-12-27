@@ -1,36 +1,37 @@
 @extends('layouts.app')
 @section('PageTitle', 'Comments Entry')
+
+
 @section('content')
 
-<div class="content-body">
-<!-- row -->
-    <div class="container-fluid">
-        <div class="d-flex flex-wrap align-items-center mb-3">
-            <div class="mb-3 me-auto">
-            </div>
-            <a href="" data-bs-toggle="modal" data-bs-target="#addModal" class="btn btn-outline-primary mb-3">+ New Comments</a>
-        </div>
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="row mb-5">
+            <div class="col-md">
+                <div class="card mb-4">
+                    <div class="card-body">
 
-       {{-- content --}}
+                        <div class="card-header header-elements">
+                            <span class="me-2">Comments Entry</span>
+            
+                            <div class="card-header-elements ms-auto">
+                                <button type="button" data-bs-toggle="modal" data-bs-target="#addModal" class="btn btn-sm btn-primary">
+                                    <span class="tf-icon ti ti-plus ti-xs me-1"></span>Add Comments
+                                </button>
+                            </div>
+                        </div>
 
-       <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">Comments Entry</h4>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    @include('comments.table')
+                       
+                        @include('comments.table')
+                        
+
+                    </div>
                 </div>
+                @include('comments.addModal')
+                @include('comments.viewCommentsModal')
+
             </div>
         </div>
     </div>
-        
-        @include('comments.addModal')
-        @include('comments.viewCommentsModal')
-        {{-- @include('settings.assign_subjects.editModal') --}}
-    </div>
-</div>
 @endsection
 
 @section('js')

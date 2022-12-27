@@ -1,38 +1,31 @@
 @extends('layouts.app')
 @section('PageTitle', 'Classes')
+
+
 @section('content')
-
-<div class="content-body">
-<!-- row -->
-    <div class="container-fluid">
-        <div class="d-flex flex-wrap align-items-center mb-3">
-            <div class="mb-3 me-auto">
-            </div>
-            <a href="" data-bs-toggle="modal" data-bs-target="#addModal" class="btn btn-outline-primary mb-3">+ Add New Class(s)</a>
-        </div>
-
-       {{-- content --}}
-
-       <div class="col-12">
+    <!-- content @s -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <!-- Basic Bootstrap Table -->
         <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">Classes</h4>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    @include('settings.classes.table')
+            <div class="card-header header-elements">
+                <span class="me-2">Classes</span>
+
+                <div class="card-header-elements ms-auto">
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#addNewModal" class="btn btn-sm btn-primary">
+                        <span class="tf-icon ti ti-plus ti-xs me-1"></span>Add Class(s)
+                    </button>
                 </div>
             </div>
+            @include('settings.classes.table')
         </div>
+        <!--/ Basic Bootstrap Table -->
+        @include('settings.classes.add_modal')
+        @include('settings.classes.edit_modal')
     </div>
-        
-        @include('settings.classes.addModal')
-        @include('settings.classes.editModal')
-    </div>
-</div>
+    <!-- content @e -->
 @endsection
 
 @section('js')
-<script src="/js/sweetalert.min.js"></script>
-@include('settings.classes.script')
+    @include('settings.classes.script')
+    <script src="/sweetalert.min.js"></script>
 @endsection

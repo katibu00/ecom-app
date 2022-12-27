@@ -12,7 +12,7 @@
                 }
             });
 
-            spinner = '<div class="spinner-border" style="height: 20px; width: 20px;" role="status"><span class="sr-only">Loading...</span></div> Submitting';
+            spinner = '<div class="spinner-border" style="height: 20px; width: 20px;" role="status"><span class="sr-only"></span></div> &nbsp; Submitting...';          
             $("#submit_btn").html(spinner);
             $("#submit_btn").attr("disabled", true);
 
@@ -59,7 +59,7 @@
 
                         $('#error_list').html("");
                         $('#error_list').removeClass('alert alert-danger');
-                        $('#addModal').modal('hide');
+                        $('#addNewModal').modal('hide');
                         $('#submit_btn').text("Submit");
                         $('#submit_btn').attr("disabled", false);
                         $('#name').val("");
@@ -157,6 +157,9 @@
                                     swal('Deleted', res.message, "success");
                                     $('.table').load(location.href + ' .table');
                                 }
+                                if (res.status == 400) {
+                                    swal('Cannot Delete', res.message, "error");
+                                }
 
                             }
                         });
@@ -190,8 +193,8 @@
                 }
             });
 
-            spinner = '<div class="spinner-border" style="height: 20px; width: 20px;" role="status"><span class="sr-only">Loading...</span></div> Updating. . .';
-            $("#update_btn").html(spinner);
+            spinner = '<div class="spinner-border" style="height: 20px; width: 20px;" role="status"><span class="sr-only"></span></div> &nbsp; Updating...';
+                        $("#update_btn").html(spinner);
             $("#update_btn").attr("disabled", true);
 
             $.ajax({

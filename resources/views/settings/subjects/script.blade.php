@@ -2,12 +2,12 @@
     $(document).ready(function() {
        
         //create
-        $(document).on('submit', '#create_class_form', function(e){
+        $(document).on('submit', '#addNewForm', function(e){
             e.preventDefault();
             
-            let formData = new FormData($('#create_class_form')[0]);
+            let formData = new FormData($('#addNewForm')[0]);
     
-            spinner = '<div class="spinner-border" style="height: 20px; width: 20px;" role="status"><span class="sr-only">Loading...</span></div> Submitting . . .'
+            spinner = '<div class="spinner-border" style="height: 15px; width: 15px;" role="status"></div> &nbsp; Submitting . . .'
                      $('#submit_btn').html(spinner);
                      $('#submit_btn').attr("disabled", true);
     
@@ -27,8 +27,8 @@
     
                         if(response.status == 200){
                             $('.table').load(location.href+' .table');
-                            $('#addModal').modal('hide');
-                            $('#create_class_form')[0].reset();
+                            $('#addNewModal').modal('hide');
+                            $('#addNewForm')[0].reset();
                             Command: toastr["success"](response.message)
                             toastr.options = {
                             "closeButton": false,
@@ -93,6 +93,9 @@
                                     swal('Deleted', res.message, "success");
                                     $('.table').load(location.href + ' .table');
                                 }
+                                if (res.status == 400) {
+                                    swal('Cannot Delete', res.message, "error");
+                                }
 
                             }
                         });
@@ -108,10 +111,7 @@
             let name = $(this).data('name');
             let id = $(this).data('id');
             let status = $(this).data('status');
-            if(status == 1)
-            {
-                $("#status").prop("checked", true)
-            }
+           
          
             $('.modal-title').html('Update '+name);
             $('#edit_name').val(name);

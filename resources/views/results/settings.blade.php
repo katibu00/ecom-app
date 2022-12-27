@@ -1,86 +1,90 @@
 @extends('layouts.app')
 @section('PageTitle', 'Result Settings')
-@section('css')
-    <link href="/vendor/jquery-nice-select/css/nice-select.css" rel="stylesheet">
-@endsection
+
+
 @section('content')
-    <div class="content-body">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header border-bottom">
-                            <h4 class="card-title">Result Settings</h4>
 
+    <div class="container-xxl flex-grow-1 container-p-y">
+
+        <div class="row mb-5">
+
+            <div class="col-md">
+                <div class="card mb-4">
+                    <div class="card-body">
+
+                        <div class="card-title header-elements  d-flex flex-row">
+                            <h5 class="m-0 me-2 d-none d-md-block">Result Settings</h5>
                         </div>
-                        <div class="card-body my-1 py-50">
-                            <form id="settings_form">
 
-                                <div class="mb-3 row">
-                                    <label class="col-sm-3 col-form-label">Show Position</label>
-                                    <div class="col-sm-9">
-                                        <div class="form-check toggle-switch text-end form-switch me-4">
-                                            <input class="form-check-input" {{ $settings->show_position == 1? 'checked': ''}} type="checkbox" id="show_position">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mb-3 row">
-                                    <label class="col-sm-3 col-form-label">Show Attendance</label>
-                                    <div class="col-sm-9">
-                                        <div class="form-check toggle-switch text-end form-switch me-4">
-                                            <input class="form-check-input"  {{ $settings->show_attendance == 1? 'checked': ''}} type="checkbox" id="show_attendance">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mb-3 row">
-                                    <label class="col-sm-3 col-form-label">Show Passport</label>
-                                    <div class="col-sm-9">
-                                        <div class="form-check toggle-switch text-end form-switch me-4">
-                                            <input class="form-check-input"  {{ $settings->show_passport == 1? 'checked': ''}} type="checkbox" id="show_passport">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mb-3 row">
-                                    <label class="col-sm-3 col-form-label">Withhold Defaulter's Result</label>
-                                    <div class="col-sm-9">
-                                        <div class="form-check toggle-switch text-end form-switch me-4">
-                                            <input class="form-check-input"  {{ $settings->withhold == 1? 'checked': ''}} type="checkbox" id="withhold">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mb-3 row {{ $settings->withhold == 1? '': 'd-none'}}" id="minimun_amount_div">
-                                    <label class="col-sm-3 col-form-label">Minimun Amount</label>
-                                    <div class="col-sm-3">
-                                        <input class="form-control" value="{{ @$settings->minimun_amount }}" type="number" id="minimun_amount"
-                                            placeholder="Amount Below which to hold Result">
-                                    </div>
-                                </div>
-                                <div class="mb-3 row">
-                                    <label class="col-sm-3 col-form-label">Grading Style</label>
-                                    <div class="col-sm-3">
-                                        <select class="default-select  form-control wide" id="grading_style">
-                                            <option value="waec"  {{ $settings->grading_style == 'waec'? 'selected': ''}}>WAEC</option>
-                                            <option value="standard" {{ $settings->grading_style == 'standard'? 'selected': ''}}>Standard</option>
-                                        </select>
-                                    </div>
-                                </div>
 
-                                <button type="submit" class="btn btn-primary submit_btn">Save Changes</button>
+                        <form id="settings_form">
 
-                            </form>
-                        </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-3 col-form-label">Show Position</label>
+                                <div class="col-sm-9">
+                                    <div class="form-check toggle-switch text-end form-switch me-4">
+                                        <input class="form-check-input" {{ $settings->show_position == 1? 'checked': ''}} type="checkbox" id="show_position">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-3 col-form-label">Show Attendance</label>
+                                <div class="col-sm-9">
+                                    <div class="form-check toggle-switch text-end form-switch me-4">
+                                        <input class="form-check-input"  {{ $settings->show_attendance == 1? 'checked': ''}} type="checkbox" id="show_attendance">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-3 col-form-label">Show Passport</label>
+                                <div class="col-sm-9">
+                                    <div class="form-check toggle-switch text-end form-switch me-4">
+                                        <input class="form-check-input"  {{ $settings->show_passport == 1? 'checked': ''}} type="checkbox" id="show_passport">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-3 col-form-label">Withhold Defaulter's Result</label>
+                                <div class="col-sm-9">
+                                    <div class="form-check toggle-switch text-end form-switch me-4">
+                                        <input class="form-check-input"  {{ $settings->withhold == 1? 'checked': ''}} type="checkbox" id="withhold">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 row {{ $settings->withhold == 1? '': 'd-none'}}" id="minimun_amount_div">
+                                <label class="col-sm-3 col-form-label">Minimun Amount</label>
+                                <div class="col-sm-3">
+                                    <input class="form-control" value="{{ @$settings->minimun_amount }}" type="number" id="minimun_amount"
+                                        placeholder="Amount Below which to hold Result">
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-3 col-form-label">Grading Style</label>
+                                <div class="col-sm-3">
+                                    <select class="form-select" id="grading_style">
+                                        <option value="waec"  {{ $settings->grading_style == 'waec'? 'selected': ''}}>WAEC</option>
+                                        <option value="standard" {{ $settings->grading_style == 'standard'? 'selected': ''}}>Standard</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary submit_btn">Save Changes</button>
+
+                        </form>
+
                     </div>
                 </div>
             </div>
         </div>
+
+
     </div>
 
 @endsection
 
+
 @section('js')
 
-    <script src="/vendor/jquery-nice-select/js/jquery.nice-select.min.js"></script>
-    <script src="/vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
     {!! Toastr::message() !!}
 
     <script>
@@ -99,7 +103,7 @@
                 };
               
                 spinner =
-                    '<div class="spinner-border" style="height: 20px; width: 20px;" role="status"><span class="sr-only">Loading...</span></div>Saving. . .';
+                    '<div class="spinner-border" style="height: 15px; width: 15px;" role="status"></div>&nbsp; Saving. . .';
                 $(".submit_btn").html(spinner);
                 $(".submit_btn").attr("disabled", true);
 

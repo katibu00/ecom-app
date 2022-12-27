@@ -1,3 +1,4 @@
+<div class="table-responsive text-nowrap">
 <table class="table table-responsive-sm">
     <thead>
         <tr>
@@ -5,6 +6,7 @@
             <th>Code</th>
             <th>Description</th>
             <th>Marks</th>
+            <th>Classes</th>
             <th class="text-center">Status</th>
             <th class="text-center">Action</th>
         </tr>
@@ -16,14 +18,30 @@
             <td>{{ @$value->code }}</td>
             <td>{{ @$value->desc }}</td>
             <td>{{ @$value->marks }}%</td>
-            <td class="text-center">{!! $value->status == 1 ? '  <span class="badge light badge-success">Active</span>': '  <span class="badge light badge-danger">Not Active</span>' !!}</td>
+            @php
+                @$classes = explode(',', @$value->class_id); 
+            @endphp
+            <td>
+                @foreach ($classes as $class)
+                    @php
+                        $name = App\Models\Classes::select('name')->where('id',$class)->first();
+                    @endphp
+                {{ @$name->name }} @if(!$loop->last),@endif
+                @endforeach
+            </td>
+            <td class="text-center">
+                {!! $value->status == 1 ? '  <span class="badge bg-label-primary me-1">Active</span>': '  <span class="badge bg-label-danger me-1">Not Active</span>' !!}
+            </td>
             <td class="text-center">
                 <div>
-                    <a href="#" data-id="{{ $value->id }}" data-code="{{ $value->code }}" data-desc="{{ $value->desc }}" data-marks="{{ $value->marks }}" data-status="{{ $value->status }}" data-bs-toggle="modal" data-bs-target="#editModal" class="btn btn-primary shadow btn-xs sharp me-1 editItem"><i class="fa fa-pencil"></i></a>
-                    <a href="#" data-id="{{ $value->id }}" data-name="{{ $value->code.' '.'('.$value->desc.')' }}" class="btn btn-danger shadow btn-xs sharp deleteItem"><i class="fa fa-trash"></i></a>
+                    
+                    <button type="button"  data-id="{{ $value->id }}" data-name="{{ $value->code }}" class="btn btn-icon btn-outline-danger deleteItem">
+                        <span class="ti ti-trash me-1"></span>
+                    </button>
                 </div>
             </td>
         </tr>
         @endforeach
     </tbody>
 </table>
+</div>

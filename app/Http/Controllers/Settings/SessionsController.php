@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
+use App\Models\Mark;
 use App\Models\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -66,7 +67,17 @@ class SessionsController extends Controller
 
     public function delete(Request $request){
 
+        $marks = Mark::where('session_id', $request->id)->first();
+        if($marks)
+        {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Sesion has marks data and hence cannot be deleted'
+            ]);
+        }
         $data = Session::find($request->id);
+
+        
 
         if($data->delete()){
 

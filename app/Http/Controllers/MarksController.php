@@ -302,12 +302,12 @@ class MarksController extends Controller
 
         if( $data['students']->count() == 0){
             Toastr::error('No Students found in the selected class', 'Warning');
-            return redirect()->back();
+            return redirect()->route('marks.grade_book.index');
         }
 
         if( $data['subjects']->count() == 0){
             Toastr::error('No Subjects have been assigned for the selected class', 'Warning');
-            return redirect()->back();
+            return redirect()->route('marks.grade_book.index');
         }
 
         return view('marks.grade_book', $data);

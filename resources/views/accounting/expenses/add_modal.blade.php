@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Assign Subject(s)</h5>
+                <h5 class="modal-title">Record new Expenditure(s)</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal">
                 </button>
             </div>
@@ -42,7 +42,7 @@
                                         </div>
                                        
                                         <div class="col-lg-2">
-                                            <span class="btn btn-success btn-sm addeventmore "><i class="fa fa-plus-circle"></i></span>
+                                            <span class="btn btn-success btn-sm addeventmore "><i class="ti ti-plus me-1"></i></span>
                                         </div>
                                     </div>
                                 </div>
@@ -91,9 +91,9 @@
                         <div class="col-lg-2">
                             <input type="number" class="form-control mb-2" name="amount[]" placeholder="Amount" >                                    
                         </div>
-                        <div class="col-lg-2 d-flex">
-                            <span class="btn btn-success btn-sm addeventmore m-2"><i class="fa fa-plus-circle"></i></span>
-                            <span class="btn btn-danger btn-sm removeeventmore m-2"><i class="fa fa-minus-circle"></i></span>
+                        <div class="col-lg-2 d-f4lex">
+                            <span class="btn btn-success btn-sm addeventmore"><i class="ti ti-plus me-1"></i></span>
+                            <span class="btn btn-danger btn-sm removeeventmore"><i class="ti ti-minus me-1"></i></span>
                         </div>
                     </div>
                 </div>

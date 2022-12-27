@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Settings;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\CAScheme;
+use App\Models\Classes;
+use App\Models\Mark;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -12,25 +14,22 @@ class CASchemeController extends Controller
 {
     public function index()
     {
-        $data['cas'] = CAScheme::select('id','code','desc','marks','status')->where('school_id',auth()->user()->school_id)->get();
+        $data['cas'] = CAScheme::select('id','code','desc','marks','status','class_id')->where('school_id',auth()->user()->school_id)->get();
+        $data['classes'] = Classes::with('section')->where('school_id',auth()->user()->school_id)->get();
         return view('settings.ca_scheme.index',$data);
     }
 
     public function store(Request $request)
     {
 
-        $classCount = count($request->code);
-        if($classCount != NULL){
-            for ($i=0; $i < $classCount; $i++){
-                $data = new CAScheme();
-                $data->code = $request->code[$i];
-                $data->desc = $request->desc[$i];
-                $data->marks = $request->marks[$i];
-                $data->school_id = auth()->user()->school_id;
-                $data->save();
-            }
-        }
-
+        $data = new CAScheme();
+        $data->code = $request->code;
+        $data->desc = $request->desc;
+        $data->marks = $request->marks;
+        $data->school_id = auth()->user()->school_id;
+        $data->class_id = implode(',', $request->class_ids);
+        $data->save();
+            
         return response()->json([
             'status'=>200,
             'message'=>'CA Scheme(s) Created Successfully',
@@ -67,7 +66,16 @@ class CASchemeController extends Controller
     }
 
     public function delete(Request $request){
-
+      
+        $code = CAScheme::find($request->id)->code;
+        $check = Mark::where('type', $code)->first();
+        if($check)
+        {
+            return response()->json([
+                'status' => 400,
+                'message' => 'CA has marks data and hence cannot be deleted'
+            ]);
+        }
         $data = CAScheme::find($request->id);
 
         if($data->delete()){

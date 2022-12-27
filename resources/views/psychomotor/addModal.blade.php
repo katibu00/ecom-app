@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-dialog-centered modal-fullscreen" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Psychomotor/Affective Entery</h4>
+                <h4 class="modal-title">Psychomotor/Affective Entry</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal">
                 </button>
             </div>

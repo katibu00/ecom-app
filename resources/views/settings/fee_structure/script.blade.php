@@ -1,59 +1,37 @@
 <script>
     $(document).ready(function() {
-       
+
         //create
-        $(document).on('submit', '#create_data_form', function(e){
+        $(document).on('submit', '#create_data_form', function(e) {
             e.preventDefault();
-            
+
             let formData = new FormData($('#create_data_form')[0]);
-    
-            spinner = '<div class="spinner-border" style="height: 20px; width: 20px;" role="status"><span class="sr-only">Loading...</span></div> Submitting . . .'
-                     $('#submit_btn').html(spinner);
-                     $('#submit_btn').attr("disabled", true);
-    
+
+            spinner =
+                '<div class="spinner-border" style="height: 15px; width: 15px;" role="status"></div> &nbsp; Submitting . . .'
+            $('#submit_btn').html(spinner);
+            $('#submit_btn').attr("disabled", true);
+
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-    
+
             $.ajax({
                 type: "POST",
                 url: "{{ route('settings.fee_structure.index') }}",
                 data: formData,
                 contentType: false,
                 processData: false,
-                success: function(response){
-    
-                        if(response.status == 201){
-                            $('.table').load(location.href+' .table');
-                            $('#addModal').modal('hide');
-                            $('#create_data_form')[0].reset();
-                            Command: toastr["success"](response.message)
-                            toastr.options = {
-                            "closeButton": false,
-                            "debug": false,
-                            "newestOnTop": false,
-                            "progressBar": false,
-                            "positionClass": "toast-top-right",
-                            "preventDuplicates": false,
-                            "onclick": null,
-                            "showDuration": "300",
-                            "hideDuration": "1000",
-                            "timeOut": "5000",
-                            "extendedTimeOut": "1000",
-                            "showEasing": "swing",
-                            "hideEasing": "linear",
-                            "showMethod": "fadeIn",
-                            "hideMethod": "fadeOut"
-                            }
+                success: function(response) {
 
-                            $('#submit_btn').text("Submit");
-                            $('#submit_btn').attr("disabled", false);
-                        }
-                        if(response.status == 400){
-                            Command: toastr["error"](response.message)
-                            toastr.options = {
+                    if (response.status == 201) {
+                        $('.table').load(location.href + ' .table');
+                        $('#addModal').modal('hide');
+                        $('#create_data_form')[0].reset();
+                        Command: toastr["success"](response.message)
+                        toastr.options = {
                             "closeButton": false,
                             "debug": false,
                             "newestOnTop": false,
@@ -69,23 +47,46 @@
                             "hideEasing": "linear",
                             "showMethod": "fadeIn",
                             "hideMethod": "fadeOut"
-                            }
-                            $('#submit_btn').text("Submit");
-                            $('#submit_btn').attr("disabled", false);
                         }
+
+                        $('#submit_btn').text("Submit");
+                        $('#submit_btn').attr("disabled", false);
+                    }
+                    if (response.status == 400) {
+                        Command: toastr["error"](response.message)
+                        toastr.options = {
+                            "closeButton": false,
+                            "debug": false,
+                            "newestOnTop": false,
+                            "progressBar": false,
+                            "positionClass": "toast-top-right",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "300",
+                            "hideDuration": "1000",
+                            "timeOut": "5000",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut"
+                        }
+                        $('#submit_btn').text("Submit");
+                        $('#submit_btn').attr("disabled", false);
+                    }
                 }
             });
-    
+
         });
 
-         //delete item
-         $(document).on('click', '.deleteItem', function(e) {
+        //delete item
+        $(document).on('click', '.deleteItem', function(e) {
             e.preventDefault();
-            let id = $(this).data('id');
+            let id = $(this).data('row_id');
             let name = $(this).data('name');
             swal({
-                    title: "Delete " + name + "?",
-                    text: "Once deleted, you will not be able to recover it!",
+                    title: "Unassign " + name + "?",
+                    text: "You may instead make the fee inactive to restore it later!",
                     icon: "warning",
                     buttons: true,
                     dangerMode: true,
@@ -107,7 +108,7 @@
                             },
                             success: function(res) {
                                 if (res.status == 200) {
-                                    swal('Deleted', res.message, "success");
+                                    swal('Unassigned', res.message, "success");
                                     $('.table').load(location.href + ' .table');
                                 }
                             }
@@ -116,20 +117,20 @@
                 });
         });
 
-         //edit item
-         $(document).on('click', '.feeDetails', function() {
+        //fee daetails item
+        $(document).on('click', '.feeDetails', function() {
             let name = $(this).data('name');
             let class_id = $(this).data('class_id');
             let std_type = $(this).data('std_type');
-           
+
             var html = '';
             $("#fee_list").html(html);
 
-            $("#loading_div").removeClass("d-none"); 
-            $("#content_div").addClass("d-none"); 
+            $("#loading_div").removeClass("d-none");
+            $("#content_div").addClass("d-none");
 
-            $('.modal-title').html('Fee Details For  '+name+ ' - '+std_type);
-           
+            $('.modal-title').html('Fee Details For  ' + name + ' - ' + std_type);
+
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -141,7 +142,8 @@
                 type: "POST",
                 url: "{{ route('settings.fee_structure.details') }}",
                 data: {
-                    'class_id':class_id, 'std_type': std_type,
+                    'class_id': class_id,
+                    'std_type': std_type,
                 },
                 dataType: "json",
                 success: function(res) {
@@ -149,7 +151,7 @@
                     if (res.status == 400) {
                         $("#update_error_list").html("");
                         $("#update_error_list").addClass("alert alert-danger");
-                        $.each(res.errors, function (key, err) {
+                        $.each(res.errors, function(key, err) {
                             $("#update_error_list").append("<li>" + err + "</li>");
                         });
                         Command: toastr["error"](
@@ -178,26 +180,28 @@
 
                     if (res.status == 200) {
 
-                        $("#loading_div").addClass("d-none"); 
-                        $("#content_div").removeClass("d-none"); 
+                        $("#loading_div").addClass("d-none");
+                        $("#content_div").removeClass("d-none");
 
                         var html = '';
-                        $.each(res.fees, function (key, fee) {
+                        $.each(res.fees, function(key, fee) {
 
                             html +=
+                                '<tr>' +
+                                '<td>' + fee.fee_category.name + '</td>' +
+                                '<td>' + fee.fee_category.priority.toUpperCase() +
+                                '</td>' +
+                                '<td>' + fee.amount + '</td>' +
+                                '</tr>';
+
+                        });
+                        html +=
                             '<tr>' +
-                            '<td>' + fee.fee_category.name +'</td>'+
-                            '<td>'+ fee.fee_category.priority.toUpperCase() +'</td>'+
-                            '<td>' + fee.amount +'</td>'+
+                            '<td><strong>Total Amount</strong></td>' +
+                            '<td rowspan="2"><strong>' + '&#8358;' + res.amount +
+                            '<strong></td>' +
                             '</tr>';
-                      
-                    });
-                    html +=
-                            '<tr>' +
-                            '<td><strong>Total Amount</strong></td>'+
-                            '<td rowspan="2"><strong>' +'&#8358;'+ res.amount +'<strong></td>'+
-                            '</tr>';
-                    $("#fee_list").html(html);
+                        $("#fee_list").html(html);
                     }
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
@@ -224,7 +228,7 @@
                         };
 
                         setTimeout(() => {
-                               window.location.replace('{{ route('login') }}');
+                            window.location.replace('{{ route('login') }}');
                         }, 2000);
                     }
                 },
@@ -232,20 +236,36 @@
 
         });
 
+
+        //edit item
+        $(document).on('click', '.editItem', function() {
+
+            let amount = $(this).data('amount');
+            let id = $(this).data('row_id');
+            let status = $(this).data('status');
+            if (status == 1) {
+                $("#status").prop("checked", true)
+            }
+
+           
+            $('#edit_amount').val(amount);
+            $('#update_row_id').val(id);
+        });
+
         //update data
         $(document).on('click', '#update_btn', function(e) {
             e.preventDefault();
-            name = $('#edit_name').val()
-            id = $('#update_id').val()
-            priority = $('#edit_priority').val()
-
+            amount = $('#edit_amount').val()
+            id = $('#update_row_id').val()
+        
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
 
-            spinner = '<div class="spinner-border" style="height: 20px; width: 20px;" role="status"><span class="sr-only">Loading...</span></div> Updating. . .';
+            spinner =
+                '<div class="spinner-border" style="height: 15px; width: 15px;" role="status"></div> &nbsp; Updating. . .';
             $("#update_btn").html(spinner);
             $("#update_btn").attr("disabled", true);
 
@@ -253,7 +273,9 @@
                 type: "POST",
                 url: "{{ route('settings.fee_structure.update') }}",
                 data: {
-                    'name': name, 'id':id, 'priority': priority,  status: $("#status").prop("checked") == true ? 1 : 0,
+                    'amount': amount,
+                    'id': id,
+                    status: $("#status").prop("checked") == true ? 1 : 0,
                 },
                 dataType: "json",
                 success: function(res) {
@@ -261,7 +283,7 @@
                     if (res.status == 400) {
                         $("#update_error_list").html("");
                         $("#update_error_list").addClass("alert alert-danger");
-                        $.each(res.errors, function (key, err) {
+                        $.each(res.errors, function(key, err) {
                             $("#update_error_list").append("<li>" + err + "</li>");
                         });
                         Command: toastr["error"](
@@ -295,8 +317,8 @@
                         $('#editModal').modal('hide');
                         $('#update_btn').text("Update");
                         $('#update_btn').attr("disabled", false);
-                        $('.table').load(location.href+' .table');
-                        
+                        $('.table').load(location.href + ' .table');
+
                         Command: toastr["success"](res.message);
                         toastr.options = {
                             closeButton: false,
@@ -345,7 +367,7 @@
                         };
 
                         setTimeout(() => {
-                               window.location.replace('{{ route('login') }}');
+                            window.location.replace('{{ route('login') }}');
                         }, 2000);
                     }
                 },
@@ -353,7 +375,7 @@
         });
 
 
-        
+
     });
 </script>
 
@@ -370,5 +392,4 @@
             counter -= 1;
         });
     });
-
 </script>

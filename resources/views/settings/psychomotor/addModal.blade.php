@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Add a New Class(s)</h5>
+                <h5 class="modal-title">Add a New Psychomotor Skill(s)</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal">
                 </button>
             </div>
@@ -19,7 +19,7 @@
                                             <input type="text" class="form-control m-2" name="name[]"  placeholder="Enter Psychomotor Skill" required>
                                         </div>
                                         <div class="col-lg-4">
-                                            <span class="btn btn-success btn-sm addeventmore m-2"><i class="fa fa-plus-circle"></i></span>
+                                            <span class="btn btn-success btn-sm addeventmore m-2"><i class="ti ti-plus me-1"></i></span>
                                         </div>
                                     </div>
                                 </div>
@@ -47,8 +47,8 @@
                             <input type="text" class="form-control m-2" name="name[]"  placeholder="Enter Psychomotor Skill" required>
                         </div>
                         <div class="col-lg-4 d-flex">
-                            <span class="btn btn-success btn-sm addeventmore m-2"><i class="fa fa-plus-circle"></i></span>
-                            <span class="btn btn-danger btn-sm removeeventmore m-2"><i class="fa fa-minus-circle"></i></span>
+                            <span class="btn btn-success btn-sm addeventmore m-2"><i class="ti ti-plus me-1"></i></span>
+                            <span class="btn btn-danger btn-sm removeeventmore m-2"><i class="ti ti-minus me-1"></i></span>
                         </div>
                     </div>
                 </div>

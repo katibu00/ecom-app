@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Classes;
 use App\Models\FeeCategory;
 use App\Models\FeeStructure;
+use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -21,63 +22,35 @@ class FeeStructuresController extends Controller
 
     public function store(Request $request)
     {
-        // return $request->all();
-
-        $isExist = FeeStructure::where('school_id',auth()->user()->school_id)->where('class_id',$request->class_id)->where('student_type',$request->student_type)->first();
-        if($isExist)
-        {
-            return response()->json([
-                'status'=>400,
-                'message'=>'Fee Structure Already Created',
-            ]);
-        }
+       
 
         $dataCount = count($request->fee_id);
         if($dataCount != NULL){
             for ($i=0; $i < $dataCount; $i++){
-                $data = new FeeStructure();
-                $data->school_id = auth()->user()->school_id;
-                $data->class_id = $request->class_id;
-                $data->student_type = $request->student_type;
-                $data->fee_category_id = $request->fee_id[$i];
-                $data->amount = $request->amount[$i];
-                $data->save();
+
+                $isExist = FeeStructure::where('school_id',auth()->user()->school_id)
+                ->where('class_id',$request->class_id)
+                ->where('student_type',$request->student_type)
+                ->where('fee_category_id',$request->fee_id[$i])
+                ->first();
+                if(!$isExist)
+                {
+                    $data = new FeeStructure();
+                    $data->school_id = auth()->user()->school_id;
+                    $data->class_id = $request->class_id;
+                    $data->student_type = $request->student_type;
+                    $data->fee_category_id = $request->fee_id[$i];
+                    $data->amount = $request->amount[$i];
+                    $data->save();
+                }
+               
             }
         }
 
-        return response()->json([
-            'status'=>201,
-            'message'=>'Fee Structure Created Successfully',
-        ]);
+        Toastr::success('Fee Structure Created Successfully');
+        return redirect()->route('settings.fee_structure.index');
     }
     
-    public function update(Request $request)
-    {
-
-        $validator = Validator::make($request->all(), [
-            'name'=>'required',
-            'priority'=>'required',
-        ]);
-       
-        if($validator->fails()){
-            return response()->json([
-                'status'=>400,
-                'errors'=>$validator->messages(),
-            ]);
-        }
-      
-        $data = FeeStructure::findOrFail($request->id);
-        $data->name = $request->name;
-        $data->priority = $request->priority;
-        $data->status = $request->status;
-        $data->update();
-
-        return response()->json([
-            'status'=>200,
-            'message'=>'Fee Category Updated Successfully',
-        ]);
-    }
-
     public function delete(Request $request){
 
         $data = FeeStructure::find($request->id);
@@ -86,7 +59,7 @@ class FeeStructuresController extends Controller
 
             return response()->json([
                 'status' => 200,
-                'message' => 'Fee Category Deleted Successfully'
+                'message' => 'Fee Category Unassigned Successfully'
             ]);
 
         };
@@ -117,5 +90,37 @@ class FeeStructuresController extends Controller
         ]);
      
 
+    }
+
+    public function edit(Request $request)
+    {
+        $school_id =auth()->user()->school_id;
+        $student_type = '';
+        if($request->student_type == 'regular')
+        {
+            $student_type = 'r';
+        }
+        else
+        {
+            $student_type = 't';
+        };
+        $data['fees'] = FeeCategory::select('id', 'name')->where('school_id',$school_id)->get();
+        $data['rows'] = FeeStructure::with('fee_category')->select('id','fee_category_id', 'amount','status')->where('school_id', $school_id)->where('class_id',$request->class_id)->where('student_type',$student_type)->get();
+        $data['student_type'] = $student_type;
+        $data['class_id'] = $request->class_id;
+        return view('settings.fee_structure.edit',$data);
+    }
+    public function update(Request $request)
+    {
+        $data = FeeStructure::find($request->id);
+        $data->amount = $request->amount;
+        $data->status = $request->status;
+        $data->update();
+
+        return response()->json([
+            'status'=>200,
+            'message'=>'Fee Structure Updated Successfully',
+        ]);
+       
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
+use App\Models\AssignSubject;
+use App\Models\Mark;
 use App\Models\Subject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -59,7 +61,22 @@ class SubjectsController extends Controller
     }
 
     public function delete(Request $request){
-
+        $check = Mark::where('subject_id', $request->id)->first();
+        if($check)
+        {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Subject has marks data and hence cannot be deleted'
+            ]);
+        }
+        $check2 = AssignSubject::where('subject_id', $request->id)->first();
+        if($check2)
+        {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Subject has Assign Subject data and hence cannot be deleted'
+            ]);
+        }
         $data = Subject::find($request->id);
 
         if($data->delete()){

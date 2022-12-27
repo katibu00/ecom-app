@@ -110,8 +110,7 @@
 
                         if (res.student.image != 'default.png') {
                             $("#picture").attr("src", "/uploads/" + res.school_name + '/' +
-                                res
-                                .student.image);
+                                res.student.image);
                         }
 
                         $('#first_name').html(res.student.first_name);
@@ -169,7 +168,6 @@
         //sort by class
         $(document).on('change', '#select_class', function() {
 
-
             var class_id = $('#select_class').val();
             $('#loading_div').removeClass('d-none')
             $('.table').addClass('d-none');
@@ -182,11 +180,9 @@
             });
 
             $.ajax({
-                type: 'POST',
-                url: '{{ route('users.students.sort') }}',
-                data: {
-                    'class_id': class_id
-                },
+                type: 'GET',
+                url: `{{ route('users.students.sort') }}`+ '?class_id='+class_id,
+               
                 success: function(res) {
 
                     $('#loading_div').addClass('d-none');
@@ -217,6 +213,7 @@
                             showMethod: "fadeIn",
                             hideMethod: "fadeOut",
                         };
+                        $('.table').html("No Students Found in the selected class.");
                     }
 
                 },
@@ -383,42 +380,203 @@
         });
 
 
-         //pagination
-         $(document).on('click', '.pagination a', function(e) {
+        //  //pagination
+        //  $(document).on('click', '.pagination a', function(e) {
+        //     e.preventDefault();
+
+        //     let page = $(this).attr('href').split('page=')[1]
+        //     fetchData(page)
+
+        // });
+        // //pagination fetch function
+        // function fetchData(page) {
+
+            
+        //     $.ajax({
+        //         url: "/paginate-students?page=" + page,
+        //         data: {
+        //             // department_id: $('#department-hold').val(),
+        //             // level: $('#level-hold').val(),
+        //             // query: $('#query-hold').val(),
+        //         },
+        //         success: function(res) {
+        //             $('nav').html('');
+        //             $('.table').html(res);
+        //         }
+        //     });
+        //     $.ajax({
+        //         url: "/users/students/sort?page=" + page,
+        //         data: {
+        //             class_id: $('#select_class').val(),
+                   
+        //         },
+        //         success: function(res) {
+        //             $('nav').html('');
+        //             $('.table').html(res);
+        //         }
+        //     });
+        // }
+
+
+         //on click edit students
+         $(document).on('click', '.edit_student', function(e) {
             e.preventDefault();
 
-            let page = $(this).attr('href').split('page=')[1]
-            fetchData(page)
+            let student_id = $(this).data('student_id');
+            let student_name = $(this).data('student_name');
+            $('#edit_student_id').val(student_id);
+
+            $('#edit_loading_div').removeClass('d-none');
+            $('#edit_content_div').addClass('d-none');
+            $('#edit_student_form')[0].reset();
+            $('#edit_parent option:selected').removeAttr('selected');
+            $('#edit_gender option:selected').removeAttr('selected');
+            $("#edit_student_picture").attr("src", "/uploads/default.png");
+            $('#edit_student_modal_title').html('Edit '+student_name+'s Profile');
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('get-student_details') }}',
+                data: {
+                    'student_id': student_id,
+                },
+                success: function(res) {
+                    
+                    if (res.student.image != 'default.png') {
+                            $("#edit_student_picture").attr("src", "/uploads/" + res.school_username.username + '/' +res.student.image);
+                        }
+
+                    $('#edit_loading_div').addClass('d-none');
+                    $('#edit_content_div').removeClass('d-none');
+                    $('#edit_first_name').val(res.student.first_name);
+                    $('#edit_middle_name').val(res.student.middle_name);
+                    $('#edit_last_name').val(res.student.last_name);
+                    $('#edit_dob').val(res.student.dob);
+                    $('#edit_roll_number').val(res.student.login);
+                    $(`#edit_parent option[value="${res.student.parent_id}"]`).attr("selected", "selected");
+                    $(`#edit_gender option[value="${res.student.gender}"]`).attr("selected", "selected");
+                    
+                   
+                    
+                }
+            });
+       
 
         });
 
-        function fetchData(page) {
-
+        //edit students form
+        $(document).on('submit', '#edit_student_form', function(e){
+            e.preventDefault();
             
-            $.ajax({
-                url: "/paginate-students?page=" + page,
-                data: {
-                    // department_id: $('#department-hold').val(),
-                    // level: $('#level-hold').val(),
-                    // query: $('#query-hold').val(),
-                },
-                success: function(res) {
-                    $('nav').html('');
-                    $('.table').html(res);
+            let formData = new FormData($('#edit_student_form')[0]);
+    
+            spinner = '<div class="spinner-border" style="height: 20px; width: 20px;" role="status"><span class="sr-only">Loading...</span></div> Saving . . .'
+                     $('#edit_student_btn').html(spinner);
+                     $('#edit_student_btn').attr("disabled", true);
+    
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+    
             $.ajax({
-                url: "/users/students/sort?page=" + page,
-                data: {
-                    class_id: $('#select_class').val(),
-                   
-                },
-                success: function(res) {
-                    $('nav').html('');
-                    $('.table').html(res);
+                type: "POST",
+                url: "{{ route('users.students.edit') }}",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response){
+                  
+                    if(response.status == 400){
+                            $('#error_list').html("");
+                            $('#error_list').addClass('alert alert-danger');
+                            $.each(response.errors, function (key, err){
+                                $('#error_list').append('<li>'+err+'</li>');
+                            });
+                            $('#edit_student_btn').text("Save Changes");
+                            $('#edit_student_btn').attr("disabled", false);
+                            Command: toastr["error"]("Some Fields are required. Please check your input and try again.")
+    
+                            toastr.options = {
+                            "closeButton": false,
+                            "debug": false,
+                            "newestOnTop": false,
+                            "progressBar": false,
+                            "positionClass": "toast-top-right",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "300",
+                            "hideDuration": "1000",
+                            "timeOut": "5000",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut"
+                            }
+                        }
+    
+                        if(response.status == 200){
+                            Command: toastr["success"](response.message)
+                            toastr.options = {
+                            "closeButton": false,
+                            "debug": false,
+                            "newestOnTop": false,
+                            "progressBar": false,
+                            "positionClass": "toast-top-right",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "300",
+                            "hideDuration": "1000",
+                            "timeOut": "5000",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut"
+                            }
+
+                            $('#edit_student_btn').text("Save Changes");
+                            $('#edit_student_btn').attr("disabled", false);
+                            $('#editModal').modal('hide');
+                            $('.table').load(location.href+' .table');
+                            // $('.table').html(response);
+                        }
                 }
-            });
+            })
+    
+        });
+    
+
+        //change profile picture
+        var readURL = function(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+    
+                reader.onload = function (e) {
+                    $('.profile-pic').attr('src', e.target.result);
+                }
+        
+                reader.readAsDataURL(input.files[0]);
+            }
         }
+        
+    
+        $(".file-upload").on('change', function(){
+            readURL(this);
+        });
+        
+        $(".upload-button").on('click', function() {
+           $(".file-upload").click();
+        });
+
 
     });
 </script>

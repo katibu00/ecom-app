@@ -10,7 +10,7 @@
             <div class="modal-body">
                 <div class="" id="loading_div">
                     <div class="col-12 d-flex align-items-center justify-content-center">
-                    <div class="spinner-border" style="height: 40px; width: 40px; margin: 0 auto; color: #5bcfc5;" role="status"><span class="sr-only">Loading...</span></div>
+                    <div class="spinner-border" style="height: 40px; width: 40px; margin: 0 auto; color: #5bcfc5;" role="status"></div>
                     </div>
                 </div>
     

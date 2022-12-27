@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Models\FeeCategory;
+use App\Models\FeeStructure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -74,7 +75,14 @@ class FeeCategoriesController extends Controller
     }
 
     public function delete(Request $request){
-
+        $check = FeeStructure::where('fee_category_id', $request->id)->first();
+        if($check)
+        {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Fee has been assigned and hence cannot be deleted'
+            ]);
+        }
         $data = FeeCategory::find($request->id);
 
         if($data->delete()){

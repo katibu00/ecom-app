@@ -1,45 +1,31 @@
 @extends('layouts.app')
-@section('PageTitle', 'Sessions')
+@section('PageTitle', 'Sessions ')
 
-@section('css')
-<link href="/vendor/datatables/css/jquery.dataTables.min.css" rel="stylesheet">
-@endsection
 
 @section('content')
-
-<div class="content-body">
-<!-- row -->
-    <div class="container-fluid">
-        <div class="d-flex flex-wrap align-items-center mb-3">
-            <div class="mb-3 me-auto">
-            </div>
-            <a href="" data-bs-toggle="modal" data-bs-target="#addModal" class="btn btn-outline-primary mb-3">+ Add New Session</a>
-        </div>
-
-       {{-- content --}}
-
-       <div class="col-12">
+    <!-- content @s -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <!-- Basic Bootstrap Table -->
         <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">Sessions</h4>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    @include('settings.sessions.table')
+            <div class="card-header header-elements">
+                <span class="me-2">Sessions</span>
+
+                <div class="card-header-elements ms-auto">
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#addNewModal" class="btn btn-sm btn-primary">
+                        <span class="tf-icon ti ti-plus ti-xs me-1"></span>Add New Session
+                    </button>
                 </div>
             </div>
+            @include('settings.sessions.table')
         </div>
+        <!--/ Basic Bootstrap Table -->
+        @include('settings.sessions.add_modal')
+        @include('settings.sessions.edit_modal')
     </div>
-        
-        @include('settings.sessions.addModal')
-        @include('settings.sessions.editModal')
-    </div>
-</div>
+    <!-- content @e -->
 @endsection
 
 @section('js')
-<script src="/vendor/datatables/js/jquery.dataTables.min.js"></script>
-<script src="/js/plugins-init/datatables.init.js"></script>
-<script src="/js/sweetalert.min.js"></script>
-@include('settings.sessions.script')
+    @include('settings.sessions.script')
+    <script src="/sweetalert.min.js"></script>
 @endsection
