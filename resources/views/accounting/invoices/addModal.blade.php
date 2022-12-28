@@ -43,6 +43,7 @@
                                         <th>Registration Number</th>
                                         <th>Full Name</th>
                                         <th>Student Type</th>
+                                        <th>Balance Carried Foward</th>
                                         <th>Discount</th>
                                     </tr>
                                 </thead>

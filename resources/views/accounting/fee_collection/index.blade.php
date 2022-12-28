@@ -18,9 +18,10 @@
                                     <ul class="list-group list-group-flush">
                                         <li class="list-group-item d-flex justify-content-between"><h5 class="mb-0 text-white fs-14">Transaction Summary</h5></li>
                                         <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Invoice Amount :</span><strong id="total_invoice"></strong></li>
-                                        <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Total Amount Payable :</span><strong class="payable"></strong></li>
+                                        <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Balance Brought Forward :</span><strong id="bbf"></strong></li>
+                                        <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Amount Payable (This Invoice) :</span><strong class="payable"></strong></li>
                                         <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Discount :</span><strong class="discount"></strong></li>
-                                        <li class="list-group-item d-flex justify-content-between d-none" id="discounted_amount_li"><span class="mb-0">Discounted Amount Payable:</span><strong class="discounted_amount"></strong></li>
+                                        <li class="list-group-item d-flex justify-content-between d-none" id="discounted_amount_li"><span class="mb-0">Total Amount Payable:</span><strong class="discounted_amount"></strong></li>
                                         <li class="list-group-item d-flex justify-content-between d-none" id="total_paid_li"><span class="mb-0">Total Amount Paid :</span><strong class="total_paid"></strong></li>
                                         <li class="list-group-item d-flex justify-content-between"><span class="mb-0">UNPAID BALANCE :</span><strong class="balance"></strong></li>
                                     </ul>
@@ -36,7 +37,7 @@
                             <div class="col-lg-8 order-lg-1">
                                 <form id="payment_form">
                                     <div class="row">
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-6 mb-2">
                                             <label for="class_id" class="form-label">Class</label>
                                             <select class="default-select form-control wide mb-3" id="class_id">
                                                 <option value="">--select Class --</option>
@@ -45,7 +46,7 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-6 mb-2">
                                             <label for="invoice_id"  class="form-label">Invoice</label>
                                             <select id="invoice_id" class="form-control wide mb-3">
                                             </select>

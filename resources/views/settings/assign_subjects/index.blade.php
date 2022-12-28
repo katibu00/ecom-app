@@ -27,5 +27,4 @@
 
 @section('js')
     @include('settings.assign_subjects.script')
-    <script src="/sweetalert.min.js"></script>
 @endsection

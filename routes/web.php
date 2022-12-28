@@ -3,6 +3,7 @@
 use App\Http\Controllers\Accounting\ExpensesController;
 use App\Http\Controllers\Accounting\FeeCollectionController;
 use App\Http\Controllers\Accounting\InvoicesController;
+use App\Http\Controllers\Accounting\ReportsController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
@@ -29,16 +30,6 @@ use App\Mail\ResetSchoolAdminPassword;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
 Route::get('/', function () {
     
@@ -54,7 +45,20 @@ Route::get('/', function () {
 
     return redirect()->route('login');
     
-})->name('home');
+});
+
+Route::get('/home', function () {
+
+    if(auth()->check()){
+        if(auth()->user()->usertype == 'admin'){
+            return redirect()->route('admin.home');
+        }
+        if(auth()->user()->usertype == 'intellisas'){
+            return redirect()->route('intellisas.home');
+        }
+    };
+    return view('auth.login');
+});
 
 Route::get('/sendmail', function () {
 
@@ -238,6 +242,9 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
 
         Route::get('/expenses/index', [ExpensesController::class, 'index'])->name('expenses.index');
         Route::post('/expenses/index', [ExpensesController::class, 'store']);
+
+        Route::get('/report/index', [ReportsController::class, 'index'])->name('billing.report.index');
+        Route::post('/report/generate', [ReportsController::class, 'generate'])->name('billing.report.generate');
 
       
     });

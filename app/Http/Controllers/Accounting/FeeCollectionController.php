@@ -68,9 +68,9 @@ class FeeCollectionController extends Controller
                 ->where('class_id', $request->class_id)
                 ->where('student_type', 'r')->sum('amount');
 
-            $invoice_discount = Invoice::where('id', $request->invoice_id)->first();
-            $student = User::select('first_name','middle_name','last_name')->where('id',$invoice_discount->student_id)->first();
-            $additional_fees = explode(',', @$paymentSlip->additional); 
+            $invoice = Invoice::where('id', $request->invoice_id)->first();
+            $student = User::select('first_name','middle_name','last_name')->where('id',$invoice->student_id)->first();
+            $additional_fees = explode(',', @$paymentSlip->additional);
           
             $additionals = [];
             foreach($additional_fees as $field){
@@ -84,7 +84,10 @@ class FeeCollectionController extends Controller
             {
                 $total_paid+= $payment->paid_amount;
             }
-            $balance = (int)$paymentSlip->payable-(int)$invoice_discount->discount-(int)$total_paid;
+
+            $total_payable = (int)$paymentSlip->payable+(int)$invoice->pre_balance-(int)$paymentSlip->discount;
+
+            $balance = (int)$total_payable - (int)$total_paid;
 
             return response()->json([
                 'mandatories' => $mandatories,
@@ -97,9 +100,10 @@ class FeeCollectionController extends Controller
                 'total_paid' => $total_paid,
                 'balance' => $balance,
                 'total_payable' => $paymentSlip->payable,
-                'discounted_amount' => $paymentSlip->payable-$paymentSlip->discount,
+                'discounted_amount' => $total_payable,
                 'initial' => 'no',
-                'invoice_discount' => $invoice_discount->discount,
+                'invoice_discount' => $invoice->discount,
+                'bbf' => $invoice->pre_balance,
             ]);
             
         } else {
@@ -136,20 +140,21 @@ class FeeCollectionController extends Controller
             $total_invoice = FeeStructure::where('school_id', auth()->user()->school_id)
                 ->where('class_id', $request->class_id)
                 ->where('student_type', 'r')->sum('amount');
-            $invoice_discount = Invoice::where('id', $request->invoice_id)->first();
-            $student = User::select('first_name','middle_name','last_name')->where('id',$invoice_discount->student_id)->first();
-            $balance = $mandatory_sum- $invoice_discount->discount;
+            $invoice = Invoice::where('id', $request->invoice_id)->first();
+            $student = User::select('first_name','middle_name','last_name')->where('id',$invoice->student_id)->first();
+            $balance = $mandatory_sum + $invoice->pre_balance - $invoice->discount;
             return response()->json([
                 'mandatories' => $mandatories,
                 'recommededs' => $recommededs,
                 'optionals' => $optionals,
                 'additionals' => [],
-                'mandatory_sum' => $mandatory_sum,
+                'mandatory_sum' => $mandatory_sum+$invoice->pre_balance,
                 'total_invoice' => $total_invoice,
                 'balance' => $balance,
                 'student' => $student,
                 'initial' => 'yes',
-                'invoice_discount' => $invoice_discount->discount,
+                'invoice_discount' => $invoice->discount,
+                'bbf' => $invoice->pre_balance,
             ]);
 
         }

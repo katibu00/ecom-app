@@ -27,5 +27,4 @@
 
 @section('js')
     @include('settings.sessions.script')
-    <script src="/sweetalert.min.js"></script>
 @endsection

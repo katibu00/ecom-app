@@ -50,6 +50,7 @@ class InvoicesController extends Controller
                 $data->class_id = $request->class_id;
                 $data->student_id = $request->student_id[$i];
                 $data->student_type = $request->student_type[$i];
+                $data->pre_balance = $request->pre_balance[$i];
 
                 @$number = Invoice::select('number')->where('school_id',$school->id)->where('session_id',$school->session_id)->where('term',$school->term)->orderBy('id','desc')->first()->number;
                

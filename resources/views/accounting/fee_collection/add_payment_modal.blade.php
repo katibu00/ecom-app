@@ -26,14 +26,14 @@
                                 <label class="col-form-label col-sm-3 pt-0">Payment Method</label>
                                 <div class="col-sm-9">
                                     <div class="form-check">
-                                        <input class="form-check-input method" type="radio" name="account" value="cash">
+                                        <input class="form-check-input method" type="radio" name="account" value="cash" required>
                                         <label class="form-check-label">
                                             Cash Transaction
                                         </label>
                                     </div>
                                    @foreach ($accounts as $account)
                                     <div class="form-check">
-                                        <input class="form-check-input method" type="radio" name="account" value="{{ $account->bank }}">
+                                        <input class="form-check-input method" type="radio" name="account" value="{{ $account->bank }}" required>
                                         <label class="form-check-label">
                                             {{ $account->bank }}
                                         </label>

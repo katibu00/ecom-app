@@ -29,7 +29,6 @@
 
 @section('js')
     @include('settings.ca_scheme.script')
-    <script src="/sweetalert.min.js"></script>
     <script src="/assets/vendor/libs/select2/select2.js"></script>
     <script src="/assets/js/modal-edit-user.js"></script>
 @endsection

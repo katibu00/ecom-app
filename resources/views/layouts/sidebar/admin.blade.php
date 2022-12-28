@@ -120,6 +120,11 @@
                 <div data-i18n="Expenditures">Expenditures</div>
             </a>
         </li>
+        <li class="menu-item {{ $route == 'billing.report.index' ? 'active' : '' }} {{ $route == 'billing.report.generate' ? 'active' : '' }}">
+            <a href="{{ route('billing.report.index') }}" class="menu-link">
+                <div data-i18n="Financial Report">Report</div>
+            </a>
+        </li>
     </ul>
 </li>
 

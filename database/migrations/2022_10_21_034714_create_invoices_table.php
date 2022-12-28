@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('student_id');
             $table->string('student_type');
             $table->double('amount');
+            $table->double('pre_balance')->nullable();
             $table->double('discount')->nullable();
             $table->timestamps();
         });

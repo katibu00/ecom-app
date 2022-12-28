@@ -27,5 +27,4 @@
 
 @section('js')
     @include('settings.fee_category.script')
-    <script src="/sweetalert.min.js"></script>
 @endsection

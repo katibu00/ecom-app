@@ -48,6 +48,8 @@
             $('.discount').html('')
             $('#hidden_modal_balance').val(0);
             $('#add_payment_amount').val('');
+            $('#bbf').html('');
+            $('#hidden_discount').val(0);
 
             $.ajaxSetup({
                 headers: {
@@ -98,6 +100,12 @@
                     html = $('#mandatory_fees').html(html);
                     $('.payable').html('&#8358;'+res.mandatory_sum.toLocaleString());
                     $('#total_invoice').html('&#8358;'+res.total_invoice.toLocaleString());
+                    if(res.bbf !== null)
+                    {
+                        $('#bbf').html('&#8358;'+res.bbf.toLocaleString());
+                    }else{
+                        $('#bbf').html('');
+                    }
                     $('#hidden_payable').val(res.mandatory_sum);
                     if(res.invoice_discount > 0)
                     {
@@ -145,7 +153,7 @@
                                         '<td>'+(key+1)+'</td>'+
                                         '<td>&#8358;'+payment.paid_amount.toLocaleString()+'</td>'+
                                         '<td>'+payment.description+'</td>'+
-                                        '<td><a href="'+url+'" class="btn btn-success" target="__blank">Receipt</a></td>'+
+                                        '<td><a href="'+url+'" class="btn btn-success" target="__blank"><i class="ti ti-printer me-2"></i></a></td>'+
                                         '</tr>'
                             });
                              $('#recent_payments_tbl').html(table);
@@ -276,8 +284,10 @@
                             showMethod: "fadeIn",
                             hideMethod: "fadeOut",
                         };
+
                         $('#btn_div').addClass('d-none');
                         $('#add_record_div').removeClass('d-none');
+                        window.location.replace('{{ route('fee_collection.index') }}');
                    }
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
@@ -464,7 +474,7 @@
                                 '<td>'+(key+1)+'</td>'+
                                 '<td>&#8358;'+payment.paid_amount.toLocaleString()+'</td>'+
                                 '<td>'+payment.description+'</td>'+
-                                '<td><a href="'+url+'" class="btn btn-success" target="__blank">Receipt</a></td>'+
+                                '<td><a href="'+url+'" class="btn btn-success" target="__blank"><i class="ti ti-printer me-2"></i></a></td>'+
                                 '</tr>'
                          });
                         $('#recent_payments_tbl').html(table);

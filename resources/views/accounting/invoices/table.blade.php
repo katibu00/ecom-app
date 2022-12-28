@@ -5,6 +5,7 @@
                 <th style="width: 5%;">ID</th>
                 <th>Recipient</th>
                 <th>Amount</th>
+                <th>Balance Brough Forward</th>
                 <th>Discount</th>
                 <th>Date</th>
                 <th></th>
@@ -36,7 +37,8 @@
                     </td>
                     <td><span class="text-black">&#8358;{{ number_format($invoice->amount, 0) }}</span></td>
 
-                    <td>&#8358;{{ number_format($invoice->discount, 0) }}</td>
+                    <td class="text-center">&#8358;{{ number_format($invoice->pre_balance, 0) }}</td>
+                    <td class="text-center">&#8358;{{ number_format($invoice->discount, 0) }}</td>
                     <td><span class="text-black text-nowrap">{{ $invoice->created_at->diffForHumans() }}</span></td>
                     <td>
                         <div class="dropdown">

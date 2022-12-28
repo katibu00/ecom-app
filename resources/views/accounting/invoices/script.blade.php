@@ -92,6 +92,7 @@
                             '<option value=""></option> <option value="r" selected>Regular</option>' +
                             '<option value="t">Transfer</option>' +
                             '<option value="s">Scholarship</option></td>' +
+                            '<td><input type="number" class="form-control" name="pre_balance[]" placeholder="Balance Carried Forward" ></td>' +
                             '<td><input type="number" class="form-control" name="discount[]" placeholder="Discount" ></td>' +
                             '</tr>';
                     });

@@ -27,5 +27,4 @@
 
 @section('js')
     @include('settings.bank_accounts.script')
-    <script src="/sweetalert.min.js"></script>
 @endsection

@@ -18,7 +18,7 @@
                             @csrf
                             <div class="row">
                                 <div class="col-sm-3 mb-1">
-                                    <select class="default-select form-control wide mb-3" name="session_id">
+                                    <select class="form-select mb-2" name="session_id">
                                         <option value="">--select Session--</option>
                                         @foreach ($sessions as $session)
                                             <option value="{{ $session->id }}" {{ $session->id == @$school->session_id ? 'selected':''}}>{{ $session->name }}</option>
@@ -29,7 +29,7 @@
                                     @enderror
                                 </div>
                                 <div class="col-sm-3 mb-1">
-                                    <select class="default-select form-control wide mb-3" name="class_id">
+                                    <select class="form-select mb-2" name="class_id">
                                         <option value="">--Select Class--</option>
                                         @foreach ($classes as $class)
                                             <option value="{{ $class->id }}">{{ $class->name}}</option>
@@ -40,7 +40,7 @@
                                     @enderror
                                 </div>
                                 <div class="col-sm-3 mb-1">
-                                    <select class="default-select form-control wide mb-3" name="term">
+                                    <select class="form-select mb-2" name="term">
                                         <option value="">--Select Term--</option>
                                         <option value="first" {{ $school->term == 'first' ? 'selected':''}}>First</option>
                                         <option value="second" {{ $school->term == 'second' ? 'selected':''}}>Second</option>
