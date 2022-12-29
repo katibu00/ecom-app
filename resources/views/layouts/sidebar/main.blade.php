@@ -25,6 +25,9 @@ $route = Route::current()->getName();
       @if(auth()->user()->usertype == 'admin')
        @include('layouts.sidebar.admin')
       @endif
+      @if(auth()->user()->usertype == 'intellisas')
+       @include('layouts.sidebar.intellisas')
+      @endif
      
   
     </ul>

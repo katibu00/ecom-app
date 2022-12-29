@@ -359,6 +359,7 @@ $school = App\Models\School::select('username','name','logo')->where('id',auth()
     {!! Toastr::message() !!}
     <!-- Main JS -->
     <script src="/assets/js/main.js"></script>
+    <script src="/sweetalert.js"></script>
 
     <!-- Page JS -->
     {{-- <script src="/assets/js/dashboards-analytics.js"></script> --}}

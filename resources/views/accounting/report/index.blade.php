@@ -19,20 +19,18 @@
                                         <label for="">Report Type</label>
                                         <select class="form-select form-select-sm mb-2" name="report">
                                             <option value=""></option>
+                                            <option value="fee_collection_sum"
+                                                {{ @$report == 'fee_collection_sum' ? 'selected' : '' }}>Fee Collection (Summary)</option>
                                             <option value="fee_collection"
-                                                {{ @$report == 'fee_collection' ? 'selected' : '' }}>Fee Collection</option>
-                                            <option value="summary" {{ @$report == 'summary' ? 'selected' : '' }}>Summary
-                                                Report</option>
-                                            <option value="detailed" {{ @$report == 'detailed' ? 'selected' : '' }}>Detailed
-                                                Report</option>
-                                            <option value="expenses" {{ @$report == 'expenses' ? 'selected' : '' }}>Expenses
-                                            </option>
-                                            <option value="payments" {{ @$report == 'payments' ? 'selected' : '' }}>Recent Fee
-                                                Payments</option>
-                                            <option value="accounts" {{ @$report == 'accounts' ? 'selected' : '' }}>Banks
-                                                Accounts</option>
+                                                {{ @$report == 'fee_collection' ? 'selected' : '' }}>Fee Collection (Detailed)</option>
+                                            <option value="optional_fees" {{ @$report == 'optional_fees' ? 'selected' : '' }}>Optional Fees Payment</option>
+                                            <option value="summary" {{ @$report == 'summary' ? 'selected' : '' }}>Summary Report</option>
+                                            <option value="detailed" {{ @$report == 'detailed' ? 'selected' : '' }}>Detailed Report</option>
+                                            <option value="expenses" {{ @$report == 'expenses' ? 'selected' : '' }}>Expenses </option>
+                                            <option value="payments" {{ @$report == 'payments' ? 'selected' : '' }}>Recent Fee Payments</option>
+                                            <option value="accounts" {{ @$report == 'accounts' ? 'selected' : '' }}>Banks Accounts</option>
                                             @foreach ($fee_cats as $fee)
-                                                <option value="{{ $fee->id }}">{{ $fee->name }}</option>
+                                                <option value="{{ $fee->id }}" {{ @$report == $fee->id ? 'selected' : '' }}>{{ $fee->name }}</option>
                                             @endforeach
                                         </select>
                                         @error('report')
@@ -81,9 +79,39 @@
             @if (@$report_type == 'fee_collection')
                 <div class="col-lg-12 col-12 mb-4">
                     <div class="card">
-                        <h5 class="card-header">Fee Collection</h5>
+                        <h5 class="card-header">Fee Collection (Detailed) Report</h5>
                         <div class="card-body">
                             @include('accounting.report.fee_collection_table')
+                        </div>
+                    </div>
+                </div>
+            @endif
+            @if (@$report_type == 'fee_collection_sum')
+                <div class="col-lg-12 col-12 mb-4">
+                    <div class="card">
+                        <h5 class="card-header">Fee Collection (Summary) Report</h5>
+                        <div class="card-body">
+                            @include('accounting.report.fee_collection_sum')
+                        </div>
+                    </div>
+                </div>
+            @endif
+            @if (@$report_type == 'optional_fees')
+                <div class="col-lg-12 col-12 mb-4">
+                    <div class="card">
+                        <h5 class="card-header">Optional Fees Payment Report</h5>
+                        <div class="card-body">
+                            @include('accounting.report.optional_fees_table')
+                        </div>
+                    </div>
+                </div>
+            @endif
+            @if (@$report_type == 'one_optional')
+                <div class="col-lg-12 col-12 mb-4">
+                    <div class="card">
+                        <h5 class="card-header">Optional Fee Report</h5>
+                        <div class="card-body">
+                            @include('accounting.report.optional_fee_table')
                         </div>
                     </div>
                 </div>

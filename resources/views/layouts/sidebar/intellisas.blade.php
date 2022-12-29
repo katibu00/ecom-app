@@ -1,12 +1,15 @@
-<li><a href="{{ route('intellisas.home') }}" class="ai-icon" aria-expanded="false">
-    <i class="flaticon-013-checkmark"></i>
-    <span class="nav-text">Home</span>
-</a>
-</li>
 
-<li><a href="{{ route('schools.index') }}" class="ai-icon" aria-expanded="false">
-    <i class="flaticon-013-checkmark"></i>
-    <span class="nav-text">Schools</span>
-</a>
-</li>
 
+
+<li class="menu-item {{ $route == 'intellisas.home' ? 'active' : '' }}">
+    <a href="{{ route('intellisas.home') }}" class="menu-link">
+        <i class="menu-icon tf-icons ti ti-home"></i>
+        <div data-i18n="Home">Home</div>
+    </a>
+</li>
+<li class="menu-item {{ $route == 'schools.index' ? 'active' : '' }} {{ $route == 'schools.admin.create' ? 'active' : '' }}">
+    <a href="{{ route('schools.index') }}" class="menu-link">
+        <i class="menu-icon tf-icons ti ti-building"></i>
+        <div data-i18n="Schools">Schools</div>
+    </a>
+</li>
