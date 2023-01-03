@@ -17,6 +17,7 @@
                                 <div class="rounded text-white bg-warning text-black mb-2">
                                     <ul class="list-group list-group-flush">
                                         <li class="list-group-item d-flex justify-content-between"><h5 class="mb-0 text-white fs-14">Transaction Summary</h5></li>
+                                        <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Invoice Type :</span><strong id="invoice_type"></strong></li>
                                         <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Invoice Amount :</span><strong id="total_invoice"></strong></li>
                                         <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Balance Brought Forward :</span><strong id="bbf"></strong></li>
                                         <li class="list-group-item d-flex justify-content-between"><span class="mb-0">Amount Payable (This Invoice) :</span><strong class="payable"></strong></li>
@@ -39,7 +40,7 @@
                                     <div class="row">
                                         <div class="col-md-6 mb-2">
                                             <label for="class_id" class="form-label">Class</label>
-                                            <select class="default-select form-control wide mb-3" id="class_id">
+                                            <select class="form-select form-select-sm mb-3" id="class_id">
                                                 <option value="">--select Class --</option>
                                                 @foreach ($classes as $class)
                                                     <option value="{{ $class->id }}">{{ $class->name }}</option>
@@ -48,7 +49,7 @@
                                         </div>
                                         <div class="col-md-6 mb-2">
                                             <label for="invoice_id"  class="form-label">Invoice</label>
-                                            <select id="invoice_id" class="form-control wide mb-3">
+                                            <select id="invoice_id" class="form-select form-select-sm mb-3">
                                             </select>
                                         </div>
                                     </div>

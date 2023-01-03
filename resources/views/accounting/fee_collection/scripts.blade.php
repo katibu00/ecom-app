@@ -99,6 +99,7 @@
                     
                     html = $('#mandatory_fees').html(html);
                     $('.payable').html('&#8358;'+res.mandatory_sum.toLocaleString());
+                    $('#invoice_type').html(res.invoice_type);
                     $('#total_invoice').html('&#8358;'+res.total_invoice.toLocaleString());
                     if(res.bbf !== null)
                     {

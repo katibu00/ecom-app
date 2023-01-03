@@ -20,15 +20,11 @@
         </div>
         <!--/ Basic Bootstrap Table -->
         @include('accounting.invoices.addModal')
-        @include('accounting.invoices.viewCommentsModal')
+        @include('accounting.invoices.editModal')
     </div>
     <!-- content @e -->
 @endsection
 
 @section('js')
-<script src="/js/sweetalert.min.js"></script>
 @include('accounting.invoices.script')
-<script src="/vendor/datatables/js/jquery.dataTables.min.js"></script>
-<script src="/js/plugins-init/datatables.init.js"></script>
-{!! Toastr::message() !!}
 @endsection

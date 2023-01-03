@@ -10,6 +10,7 @@ use App\Models\Invoice;
 use App\Models\PaymentRecord;
 use App\Models\PaymentSlip;
 use App\Models\School;
+use App\Models\StudentType;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -18,7 +19,7 @@ class FeeCollectionController extends Controller
 {
     public function index()
     {
-
+       
         $school = School::select('id', 'term', 'session_id')->where('id', auth()->user()->school_id)->first();
         $data['classes'] = Classes::select('id', 'name')->where('school_id', $school->id)->get();
         $data['accounts'] = BankAccount::where('school_id',$school->id)->where('status',1)->get();
@@ -28,7 +29,7 @@ class FeeCollectionController extends Controller
     public function getInvoices(Request $request)
     {
         $school = School::select('id', 'term', 'session_id')->where('id', auth()->user()->school_id)->first();
-        $invoices = Invoice::select('student_id', 'id', 'number', 'discount')
+        $invoices = Invoice::select('student_id', 'id', 'number')
             ->with('student')
             ->where('school_id', $school->id)
             ->where('session_id', $school->session_id)
@@ -46,6 +47,25 @@ class FeeCollectionController extends Controller
         $paymentSlip = PaymentSlip::where('invoice_id', $request->invoice_id)
                     ->where('school_id',auth()->user()->school_id)
                     ->first();
+        $invoice = Invoice::select('student_type','amount','discount','pre_balance','student_id')->where('id',$request->invoice_id)->first();
+
+        $invoice_type = '';
+        if($invoice->student_type == 'r')
+        {
+            $invoice_type = 'Regular';
+        }
+        else if($invoice->student_type == 't')
+        {
+            $invoice_type = 'Transfer';
+        }
+        else if($invoice->student_type == 's')
+        {
+            $invoice_type = 'Scholarship';
+        }
+        else
+        {
+            $invoice_type = StudentType::select('name')->where('id',$invoice->student_type)->first()->name;
+        }
 
         if ($paymentSlip) {
             $mandatories = FeeStructure::with('fee_category')
@@ -68,7 +88,7 @@ class FeeCollectionController extends Controller
                 ->where('class_id', $request->class_id)
                 ->where('student_type', 'r')->sum('amount');
 
-            $invoice = Invoice::where('id', $request->invoice_id)->first();
+
             $student = User::select('first_name','middle_name','last_name')->where('id',$invoice->student_id)->first();
             $additional_fees = explode(',', @$paymentSlip->additional);
           
@@ -85,9 +105,11 @@ class FeeCollectionController extends Controller
                 $total_paid+= $payment->paid_amount;
             }
 
-            $total_payable = (int)$paymentSlip->payable+(int)$invoice->pre_balance-(int)$paymentSlip->discount;
+            $total_payable = (int)$paymentSlip->payable-(int)$paymentSlip->discount;
 
             $balance = (int)$total_payable - (int)$total_paid;
+
+            
 
             return response()->json([
                 'mandatories' => $mandatories,
@@ -103,6 +125,7 @@ class FeeCollectionController extends Controller
                 'discounted_amount' => $total_payable,
                 'initial' => 'no',
                 'invoice_discount' => $invoice->discount,
+                'invoice_type' => $invoice_type,
                 'bbf' => $invoice->pre_balance,
             ]);
             
@@ -114,35 +137,39 @@ class FeeCollectionController extends Controller
                 })
                 ->where('school_id', auth()->user()->school_id)
                 ->where('class_id', $request->class_id)
-                ->where('student_type', 'r')->get();
+                ->where('student_type', $invoice->student_type)->get();
             $mandatory_sum = FeeStructure::with('fee_category')
                 ->whereHas('fee_category', function ($query) {
                     $query->where('priority', 'm');
                 })
                 ->where('school_id', auth()->user()->school_id)
                 ->where('class_id', $request->class_id)
-                ->where('student_type', 'r')->sum('amount');
+                ->where('student_type', $invoice->student_type)->sum('amount');
+
             $recommededs = FeeStructure::with('fee_category')
                 ->whereHas('fee_category', function ($query) {
                     $query->where('priority', 'r');
                 })
                 ->where('school_id', auth()->user()->school_id)
                 ->where('class_id', $request->class_id)
-                ->where('student_type', 'r')->get();
+                ->where('student_type', $invoice->student_type)->get();
+
             $optionals = FeeStructure::with('fee_category')
                 ->whereHas('fee_category', function ($query) {
                     $query->where('priority', 'o');
                 })
                 ->where('school_id', auth()->user()->school_id)
                 ->where('class_id', $request->class_id)
-                ->where('student_type', 'r')->get();
+                ->where('student_type', $invoice->student_type)->get();
 
             $total_invoice = FeeStructure::where('school_id', auth()->user()->school_id)
                 ->where('class_id', $request->class_id)
-                ->where('student_type', 'r')->sum('amount');
-            $invoice = Invoice::where('id', $request->invoice_id)->first();
+                ->where('student_type', $invoice->student_type)->sum('amount');
+
             $student = User::select('first_name','middle_name','last_name')->where('id',$invoice->student_id)->first();
+
             $balance = $mandatory_sum + $invoice->pre_balance - $invoice->discount;
+            
             return response()->json([
                 'mandatories' => $mandatories,
                 'recommededs' => $recommededs,
@@ -155,6 +182,7 @@ class FeeCollectionController extends Controller
                 'initial' => 'yes',
                 'invoice_discount' => $invoice->discount,
                 'bbf' => $invoice->pre_balance,
+                'invoice_type' => $invoice_type,
             ]);
 
         }

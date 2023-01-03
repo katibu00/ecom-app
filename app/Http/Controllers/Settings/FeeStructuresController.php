@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Classes;
 use App\Models\FeeCategory;
 use App\Models\FeeStructure;
+use App\Models\StudentType;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -17,6 +18,7 @@ class FeeStructuresController extends Controller
         $school_id = auth()->user()->school_id;
         $data['fees'] = FeeCategory::select('id', 'name','priority')->where('school_id',$school_id)->where('status',1)->orderBy('priority', 'asc')->latest()->get();
         $data['classes'] = Classes::select('id','name')->where('school_id',$school_id)->get();
+        $data['student_types'] = StudentType::select('id','name')->where('school_id',$school_id)->where('status',1)->get();
         return view('settings.fee_structure.index', $data);
     }
 
@@ -68,20 +70,22 @@ class FeeStructuresController extends Controller
 
     public function details(Request $request)
     {
-       
+       $school_id = auth()->user()->school_id;
         $student_type = '';
 
         if($request->std_type == 'Regular')
         {
             $student_type = 'r';
         }
-        else
+        else if($request->std_type == 'Transfer')
         {
             $student_type = 't';
+        }else{
+            $student_type = StudentType::where('school_id',$school_id)->where('name',$request->std_type)->first()->id;
         };
 
-        $fees = FeeStructure::with('fee_category')->where('school_id',auth()->user()->school_id)->where('class_id',$request->class_id)->where('student_type',$student_type)->get();
-        $amount = FeeStructure::select('amount')->where('school_id',auth()->user()->school_id)->where('class_id',$request->class_id)->where('student_type',$student_type)->sum('amount');
+        $fees = FeeStructure::with('fee_category')->where('school_id', $school_id)->where('class_id',$request->class_id)->where('student_type',$student_type)->get();
+        $amount = FeeStructure::select('amount')->where('school_id', $school_id)->where('class_id',$request->class_id)->where('student_type',$student_type)->sum('amount');
 
         return response()->json([
             'status'=>200,

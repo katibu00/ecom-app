@@ -7,9 +7,11 @@ use App\Models\Classes;
 use App\Models\FeeStructure;
 use App\Models\Invoice;
 use App\Models\School;
+use App\Models\StudentType;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class InvoicesController extends Controller
 {
@@ -18,16 +20,17 @@ class InvoicesController extends Controller
        
         $school = School::select('id','term','session_id')->where('id', auth()->user()->school_id)->first();
         $data['classes'] = Classes::select('id','name')->where('school_id',$school->id)->get();
-        $data['invoices'] = Invoice::with(['student','class'])->where('school_id',$school->id)->where('session_id',$school->session_id)->where('term',$school->term)->get(); 
+        $data['invoices'] = Invoice::with(['student','class'])->where('school_id',$school->id)->where('session_id',$school->session_id)->where('term',$school->term)->paginate(15); 
         return view('accounting.invoices.index',$data);
     }
 
     public function getRecords(Request $request)
     {
         $students = User::select('first_name','middle_name','last_name','id','login','parent_id')->where('class_id',$request->class_id)->where('usertype','std')->where('school_id',auth()->user()->school_id)->where('status',1)->with('parent')->orderBy('gender', 'desc')->orderBy('first_name')->get();
-      
+        $student_types = StudentType::select('id', 'name')->where('school_id',auth()->user()->school_id)->where('status',1)->get();
         return response()->json([
             'students'=>$students,
+            'student_types'=>$student_types,
         ]);
     }
 
@@ -65,6 +68,10 @@ class InvoicesController extends Controller
                 if($request->student_type[$i] == 't'){
                     $data->amount = $transfer;
                 }
+                if($request->student_type[$i] != 't' && $request->student_type[$i] != 'r' && $request->student_type[$i] != 's'){
+                    $payable = FeeStructure::select('amount')->where('school_id',auth()->user()->school_id)->where('class_id',$request->class_id)->where('student_type', $request->student_type[$i])->sum('amount');
+                    $data->amount = $payable;
+                }
                
                 if($request->student_type[$i] == 's'){
                     $data->discount = $regular;
@@ -79,6 +86,34 @@ class InvoicesController extends Controller
         return response()->json([
             'status'=>200,
             'message'=>'Invoices Generated Successfully',
+        ]);
+    }
+
+     
+    public function updateInvoices(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'id'=>'required',
+            'student_type'=>'required',
+        ]);
+       
+        if($validator->fails()){
+            return response()->json([
+                'status'=>400,
+                'errors'=>$validator->messages(),
+            ]);
+        }
+      
+        $data = Invoice::findOrFail($request->id);
+        $data->pre_balance = $request->pre_balance;
+        $data->student_type = $request->student_type;
+        $data->discount = $request->discount;
+        $data->update();
+
+        return response()->json([
+            'status'=>200,
+            'message'=>'Invoice has been Updated Successfully',
         ]);
     }
 }

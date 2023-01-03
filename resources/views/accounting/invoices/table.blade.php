@@ -1,4 +1,4 @@
-<div class="table-responsive text-nowrap">
+<div class="table-responsive text-nowrap mb-3">
     <table class="table table-hover">
         <thead>
             <tr>
@@ -24,12 +24,18 @@
                                 <h6 class="fs-16 text-black font-w600 mb-0 text-nowrap">
                                     {{ $invoice->student->first_name . ' ' . $invoice->student->middle_name . ' ' . $invoice->student->last_name }}
                                 </h6>
-                                <span class="fs-12">{{ $invoice->class->name }} - @if ($invoice->student_type == 'r')
+                                <span class="fs-12">{{ $invoice->class->name }} -
+                                    @if ($invoice->student_type == 'r')
                                         Regular
                                     @elseif($invoice->student_type == 't')
                                         Transfer
                                     @elseif($invoice->student_type == 's')
                                         Scholarship
+                                    @else
+                                    @php
+                                        $type_name = App\Models\StudentType::select('name')->where('id',$invoice->student_type)->first()->name;
+                                    @endphp
+                                    {{ $type_name }}
                                     @endif
                                 </span>
                             </div>
@@ -61,8 +67,8 @@
                                 </svg>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href="javascript:void(0);">Delete</a>
-                                <a class="dropdown-item" href="javascript:void(0);">Edit</a>
+                                <a class="dropdown-item editItem" data-id="{{ $invoice->id }}" data-student_type="{{ $invoice->student_type }}" data-pre_balance="{{ $invoice->pre_balance }}" data-discount="{{ $invoice->discount }}" data-name=" {{ $invoice->student->first_name . ' ' . $invoice->student->middle_name . ' ' . $invoice->student->last_name }}" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#editModal">Edit</a>
+                                <a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#">SMS Parent</a>
                             </div>
                         </div>
                     </td>
@@ -71,3 +77,4 @@
         </tbody>
     </table>
 </div>
+{{ $invoices->links() }}

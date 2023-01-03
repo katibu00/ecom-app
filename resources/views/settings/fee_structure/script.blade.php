@@ -196,9 +196,9 @@
 
                         });
                         html +=
-                            '<tr>' +
-                            '<td><strong>Total Amount</strong></td>' +
-                            '<td rowspan="2"><strong>' + '&#8358;' + res.amount +
+                            '<tr class="text-center">' +
+                            '<td colspan="2" ><strong>Total Amount</strong></td>' +
+                            '<td><strong>' + '&#8358;' + res.amount +
                             '<strong></td>' +
                             '</tr>';
                         $("#fee_list").html(html);

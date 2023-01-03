@@ -1,14 +1,10 @@
 @extends('layouts.app')
 @section('PageTitle', 'Expenses')
-
-
 @section('content')
 
 <div class="container-xxl flex-grow-1 container-p-y">
-	
 
 	<div class="row mb-5">
-	 
 	  <div class="col-md">
 		<div class="card mb-4">
 		  <div class="card-body">
@@ -42,15 +38,10 @@
 	  </div>
 	</div>
 	<!--/ Header elements -->
-
-
     @include('accounting.expenses.add_modal')
-
-	
   </div>
 
 @endsection
-
 @section('js')
 @include('accounting.expenses.script')
 @endsection

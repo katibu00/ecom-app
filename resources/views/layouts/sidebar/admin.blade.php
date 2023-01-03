@@ -191,7 +191,7 @@
         </li>
 
         <li
-            class="menu-item {{ $route == 'settings.fee_category.index' ? 'active open' : '' }} {{ $route == 'settings.fee_structure.edit' ? 'active open' : '' }} {{ $route == 'settings.fee_structure.index' ? 'active open' : '' }} {{ $route == 'settings.banks.index' ? 'active open' : '' }}">
+            class="menu-item {{ $route == 'settings.fee_category.index' ? 'active open' : '' }} {{ $route == 'settings.student_type.index' ? 'active open' : '' }} {{ $route == 'settings.fee_structure.edit' ? 'active open' : '' }} {{ $route == 'settings.fee_structure.index' ? 'active open' : '' }} {{ $route == 'settings.banks.index' ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <div data-i18n="Fee Settings">Fee Settings</div>
             </a>
@@ -199,6 +199,11 @@
                 <li class="menu-item {{ $route == 'settings.fee_category.index' ? 'active' : '' }}">
                     <a href="{{ route('settings.fee_category.index') }}" class="menu-link">
                         <div data-i18n="Fee Categories">Fee Categories</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ $route == 'settings.student_type.index' ? 'active' : '' }}">
+                    <a href="{{ route('settings.student_type.index') }}" class="menu-link">
+                        <div data-i18n="Student Types">Student Types</div>
                     </a>
                 </li>
                 <li

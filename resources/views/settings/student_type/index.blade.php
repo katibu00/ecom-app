@@ -1,0 +1,30 @@
+@extends('layouts.app')
+@section('PageTitle', 'Student Types')
+
+
+@section('content')
+    <!-- content @s -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <!-- Basic Bootstrap Table -->
+        <div class="card">
+            <div class="card-header header-elements">
+                <span class="me-2">Student Types</span>
+
+                <div class="card-header-elements ms-auto">
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#addNewModal" class="btn btn-sm btn-primary">
+                        <span class="tf-icon ti ti-plus ti-xs me-1"></span>Add Student Type(s)
+                    </button>
+                </div>
+            </div>
+            @include('settings.student_type.table')
+        </div>
+        <!--/ Basic Bootstrap Table -->
+        @include('settings.student_type.addModal')
+        @include('settings.student_type.editModal')
+    </div>
+    <!-- content @e -->
+@endsection
+
+@section('js')
+    @include('settings.student_type.script')
+@endsection

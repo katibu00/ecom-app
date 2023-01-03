@@ -80,6 +80,18 @@
 
                     $('#marks-generate').removeClass('d-none');
 
+                    var options = '';
+                    $.each(res.student_types, function(key2, student_type) {
+                        options += '<option value="'+student_type.id+'">'+student_type.name+'</option>';
+                    });
+                  
+                    var select = '<select name="student_type[]" class="form-select form-select-sm" required>' +
+                                        '<option value=""></option> <option value="r">Regular</option>' +
+                                        '<option value="t">Transfer</option>' +
+                                        '<option value="s">Scholarship</option>'+
+                                        options
+                                '</select>';
+
                     var html = '';
                     $.each(res.students, function(key, student) {
 
@@ -88,12 +100,9 @@
                             '<td>' + student.login +
                             '<input type="hidden" name="student_id[]" value="' + student.id + '"></td>' +
                             '<td>' + student.first_name + ' ' + student.middle_name + ' ' + student.last_name + '</td>' +
-                            '<td> <select name="student_type[]" class="default-select form-control wide " >' +
-                            '<option value=""></option> <option value="r" selected>Regular</option>' +
-                            '<option value="t">Transfer</option>' +
-                            '<option value="s">Scholarship</option></td>' +
-                            '<td><input type="number" class="form-control" name="pre_balance[]" placeholder="Balance Carried Forward" ></td>' +
-                            '<td><input type="number" class="form-control" name="discount[]" placeholder="Discount" ></td>' +
+                            '<td>'+select+'</td>' +
+                            '<td><input type="number" class="form-control form-control-sm" name="pre_balance[]" placeholder="Balance Carried Forward"></td>' +
+                            '<td><input type="number" class="form-control form-control-sm" name="discount[]" placeholder="Discount"></td>' +
                             '</tr>';
                     });
                     html = $('#marks-generate-tr').html(html);
@@ -134,7 +143,7 @@
         });
 
 
-        //store comments
+        //store invoices
         $(document).on('submit', '#invoices_form', function(e) {
             e.preventDefault();
 
@@ -242,48 +251,61 @@
 
         });
 
-        //view comments click modal
-        $(document).on('click', '.viewDetails', function() {
+        //edit items
+        $(document).on('click', '.editItem', function() {
            
-           let class_id = $(this).data('class_id');
-           let class_name = $(this).data('class_name');
-           $('.viewTitle').html('Fetch Comments for Class '+class_name);
-           $('#view_class_id').val(class_id);
-           $('#loading_div').addClass('d-none');
-                        $('#content_div').addClass('d-none');
-                        html = $('#comments-generate-tr').html(null);
+           let id = $(this).data('id');
+           let name = $(this).data('name');
+           let pre_balance = $(this).data('pre_balance');
+           let discount = $(this).data('discount');
+           let student_type = $(this).data('student_type');
+
+           $('.editTitle').html('Edit Invoice for '+name);
+           $('#discount').val(discount);
+           $('#pre_balance').val(pre_balance);
+           $('#update_id').val(id);
+
+           $(`#student_type option[value="${student_type}"]`).attr('selected','selected');
 
        });
 
-        //view comments change select
-        $(document).on('change', '#view_officer', function() {
-           
-           let class_id = $('#view_class_id').val();
-           let officer = $('#view_officer').val();
-           
+       //update invoice
+       $(document).on('click', '#update_btn', function(e) {
+            e.preventDefault();
 
-           $.ajaxSetup({
+           
+            id = $('#update_id').val();
+            discount = $('#discount').val();
+            student_type = $('#student_type').val();
+            pre_balance = $('#pre_balance').val();
+
+            $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
 
+            spinner = '<div class="spinner-border" style="height: 15px; width: 15px;" role="status"></div> &nbsp; Updating. . .';
+            $("#update_btn").html(spinner);
+            $("#update_btn").attr("disabled", true);
+
             $.ajax({
                 type: "POST",
-                url: "{{ route('comments.view') }}",
-                data: {'class_id':class_id, 'officer':officer},
-                beforeSend: function(){
-                    $('#loading_div').removeClass('d-none');
-                    $('#content_div').addClass('d-none');
-                    html = $('#comments-generate-tr').html(null);
+                url: "{{ route('invoices.update') }}",
+                data: {
+                    'discount': discount, 'id':id,'student_type':student_type,'pre_balance':pre_balance,
                 },
-                success: function(data){
+                dataType: "json",
+                success: function(res) {
 
-                    if(!$.trim(data)){
-                       
-                        
+                    if (res.status == 400) {
+                        $("#update_error_list").html("");
+                        $("#update_error_list").addClass("alert alert-danger");
+                        $.each(res.errors, function (key, err) {
+                            $("#update_error_list").append("<li>" + err + "</li>");
+                        });
                         Command: toastr["error"](
-                            "No Comment has been Entered for the Selected Class/officer."
+                            "Check your input and try again."
                         );
                         toastr.options = {
                             closeButton: false,
@@ -302,28 +324,42 @@
                             showMethod: "fadeIn",
                             hideMethod: "fadeOut",
                         };
-                        $('#loading_div').addClass('d-none');
-                        $('#content_div').addClass('d-none');
-                        html = $('#comments-generate-tr').html(null);
-                        
-                        return;
+                        $("#update_btn").text("Update");
+                        $("#update_btn").attr("disabled", false);
                     }
 
-                
-                    var html = '';
-                    $.each( data, function(key, v){
+                    if (res.status == 200) {
 
-                        html +=
-                        '<tr>'+
-                        '<td>'+(key+1)+'</td>'+
-                        '<td>'+v.student.login+'</td>'+
-                        '<td>'+v.student.first_name+' '+v.student.middle_name+' '+v.student.last_name+'</td>'+
-                        '<td>'+v.comment+' '+v.additional+'</td>'+
-                        '</tr>';
-                    });
-                    html = $('#comments-generate-tr').html(html);
-                    $('#loading_div').addClass('d-none');
-                    $('#content_div').removeClass('d-none');
+                        $('#update_error_list').html("");
+                        $('#update_error_list').removeClass('alert alert-danger');
+                        $('#editModal').modal('hide');
+                        $('#update_btn').text("Update");
+                        $('#update_btn').attr("disabled", false);
+                        $('.table').load(location.href+' .table');
+                        
+                        Command: toastr["success"](res.message);
+                        toastr.options = {
+                            closeButton: false,
+                            debug: false,
+                            newestOnTop: false,
+                            progressBar: false,
+                            positionClass: "toast-top-right",
+                            preventDuplicates: false,
+                            onclick: null,
+                            showDuration: "300",
+                            hideDuration: "1000",
+                            timeOut: "5000",
+                            extendedTimeOut: "1000",
+                            showEasing: "swing",
+                            hideEasing: "linear",
+                            showMethod: "fadeIn",
+                            hideMethod: "fadeOut",
+                        };
+                        $("#update_btn").text("Update");
+                        $("#update_btn").attr("disabled", false);
+
+
+                    }
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
                     if (xhr.status === 419) {
@@ -349,13 +385,13 @@
                         };
 
                         setTimeout(() => {
-                            window.location.replace('{{ route('login') }}');
+                               window.location.replace('{{ route('login') }}');
                         }, 2000);
                     }
                 },
             });
-          
-       });
+        });
+  
 
     });
 </script>
