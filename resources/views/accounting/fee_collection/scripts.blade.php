@@ -20,6 +20,32 @@
                     'class_id': class_id,
                 },
                 success: function(res) {
+
+                    if(res.invoices.length == 0)
+                    {
+                        Command: toastr["error"](
+                            "No Invoices Generated for the selected Class."
+                        );
+                        toastr.options = {
+                            closeButton: false,
+                            debug: false,
+                            newestOnTop: false,
+                            progressBar: false,
+                            positionClass: "toast-top-right",
+                            preventDuplicates: false,
+                            onclick: null,
+                            showDuration: "300",
+                            hideDuration: "1000",
+                            timeOut: "5000",
+                            extendedTimeOut: "1000",
+                            showEasing: "swing",
+                            hideEasing: "linear",
+                            showMethod: "fadeIn",
+                            hideMethod: "fadeOut",
+                        };
+                        $('#invoice_id').html('<option value=""></option>');
+                        return
+                    }
                     var html = '<option value="">Select Student</option>';
                     $.each(res.invoices, function(key, invoice) {
                         var middle =  invoice.student.middle_name;
@@ -29,6 +55,34 @@
                         html += '<option value="' + invoice.id + '">' + '#'+invoice.number+' - '+invoice.student.first_name + ' ' + middle + ' ' + invoice.student.last_name+ '</option>';
                     });
                     html = $('#invoice_id').html(html);
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    if (xhr.status === 419) {
+                        Command: toastr["error"](
+                            "Session expired. please login again."
+                        );
+                        toastr.options = {
+                            closeButton: false,
+                            debug: false,
+                            newestOnTop: false,
+                            progressBar: false,
+                            positionClass: "toast-top-right",
+                            preventDuplicates: false,
+                            onclick: null,
+                            showDuration: "300",
+                            hideDuration: "1000",
+                            timeOut: "5000",
+                            extendedTimeOut: "1000",
+                            showEasing: "swing",
+                            hideEasing: "linear",
+                            showMethod: "fadeIn",
+                            hideMethod: "fadeOut",
+                        };
+                        setTimeout(() => {
+                            window.location.replace('{{ route('login') }}');
+                        }, 2000);
+                        $(".card").LoadingOverlay("hide")
+                    }
                 }
             });
 
@@ -36,7 +90,7 @@
 
         //on change invoice
         $(document).on('change', '#invoice_id', function() {
-
+            $(".card").LoadingOverlay("show")
             var class_id = $('#class_id').val();
             var invoice_id = $('#invoice_id').val();
            
@@ -65,6 +119,7 @@
                     'invoice_id': invoice_id,
                 },
                 success: function(res) {
+                    $(".card").LoadingOverlay("hide")
                     var html = '';
                     $.each(res.mandatories, function(key, mandatory) {
                         html += '<div class="form-check custom-checkbox mb-0">' +
@@ -86,17 +141,21 @@
                                     '<label class="form-check-label" for="same-address">'+ optional.fee_category.name+' - Optional - '+ optional.amount.toLocaleString() +'</label>'+
                                 '</div>';
                      });
-                     if(res.additionals.length >= 1)
-                     {
-                        $.each(res.additionals, function(key, additional) {
-                        html += '<div class="form-check custom-checkbox mb-0">' +
-                                    '<input type="checkbox" class="form-check-input optional_fee" checked disabled name="additional_fee" value="'+additional.id+'" data-amount="'+additional.amount+'" >'+
-                                    '<label class="form-check-label" for="same-address">'+ additional.fee_category.name+' - Optional - '+ additional.amount.toLocaleString() +'</label>'+
-                                '</div>';
-                                            
-                         });
-                     }
                     
+                    if (res.additionals[0] != null)
+                    {
+                        if(res.additionals.length >= 1)
+                        {
+                            $.each(res.additionals, function(key, additional) {
+                            html += '<div class="form-check custom-checkbox mb-0">' +
+                                        '<input type="checkbox" class="form-check-input optional_fee" checked disabled name="additional_fee" value="'+additional.id+'" data-amount="'+additional.amount+'" >'+
+                                        '<label class="form-check-label" for="same-address">'+ additional.fee_category.name+' - Optional - '+ additional.amount.toLocaleString() +'</label>'+
+                                    '</div>';
+                                                
+                            });
+                        }
+                      
+                    }
                     html = $('#mandatory_fees').html(html);
                     $('.payable').html('&#8358;'+res.mandatory_sum.toLocaleString());
                     $('#invoice_type').html(res.invoice_type);
@@ -191,6 +250,7 @@
                         setTimeout(() => {
                             window.location.replace('{{ route('login') }}');
                         }, 2000);
+                        $(".card").LoadingOverlay("hide")
                     }
                 }
             });

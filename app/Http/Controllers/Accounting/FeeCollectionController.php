@@ -74,7 +74,7 @@ class FeeCollectionController extends Controller
                 })
                 ->where('school_id', auth()->user()->school_id)
                 ->where('class_id', $request->class_id)
-                ->where('student_type', 'r')->get();
+                ->where('student_type', $invoice->student_type)->get();
 
             $mandatory_sum = FeeStructure::with('fee_category')
                 ->whereHas('fee_category', function ($query) {
@@ -82,11 +82,11 @@ class FeeCollectionController extends Controller
                 })
                 ->where('school_id', auth()->user()->school_id)
                 ->where('class_id', $request->class_id)
-                ->where('student_type', 'r')->sum('amount');
+                ->where('student_type', $invoice->student_type)->sum('amount');
 
             $total_invoice = FeeStructure::where('school_id', auth()->user()->school_id)
                 ->where('class_id', $request->class_id)
-                ->where('student_type', 'r')->sum('amount');
+                ->where('student_type', $invoice->student_type)->sum('amount');
 
 
             $student = User::select('first_name','middle_name','last_name')->where('id',$invoice->student_id)->first();
@@ -286,7 +286,7 @@ class FeeCollectionController extends Controller
 
     public function generateReceipt($id)
     {
-        $payment_record = PaymentRecord::select('number','student_id','session_id','term','invoice_id','paid_amount','description','created_at')->where('id',$id)->first();
+        $payment_record = PaymentRecord::select('number','student_id','session_id','method','term','invoice_id','paid_amount','description','created_at')->where('id',$id)->first();
         $payment_slip = PaymentSlip::select('session_id','term','number','payable','discount','paid')->where('invoice_id',$payment_record->invoice_id)->first();
     
         $school = School::select('name','username','motto','address','phone_first','phone_second','email','website','logo','heading')->where('id', auth()->user()->school_id)->first();

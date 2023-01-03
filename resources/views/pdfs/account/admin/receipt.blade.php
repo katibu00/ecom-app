@@ -15,8 +15,8 @@
             font-size: 0.9em;
             min-width: 400px;
             overflow: hidden;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-            /* box-shadow: 0 2px 12px rgba(22,22,22,0.1); */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            /* box-shadow: 0 2px 12px rgba(22,22,22,0.5); */
             /* border-radius: 12px 12px 0 0; */
             border: 3px solid black;
 
@@ -59,6 +59,15 @@
         }
         p{
             font-size: 1em;
+        },
+        .footer{
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            left: 0;
+            float: left;
+            clear: both;
         }
     </style>
 </head>
@@ -176,7 +185,7 @@
         </div>
 
         <div style="width: 80%; float: right;">
-            {{-- <h4 style="font-size: 18px; text-align: center">The Sum of <span style="text-decoration: line-through; text-decoration-style: double;">N</span>{{number_format($payment->amount,2)}} was paid to {{$school->name}} in respect of {{$school['session']['name']}} Academic Session - {{$school->term}} Term Fee Collection Services via {{$payment['method']['completion']}} on {{$payment->created_at->format('l, jS \of F Y')}}.</h4> --}}
+            <h4 style="font-size: 18px; text-align: center">The Sum of <span style="text-decoration: line-through; text-decoration-style: double;">N</span>{{number_format($payment_record->paid_amount,2)}} was paid to {{$school->name}} in respect of {{$payment_record['session']['name']}} Academic Session - {{ ucfirst($payment_record->term) }} Term Fee Collection Services via {{ ucfirst($payment_record->method) }} on {{$payment_record->created_at->format('l, jS \of F Y')}}.</h4>
         </div>
     </div>
 
@@ -186,7 +195,7 @@
     <div style="border:  2px solid black; width: 100%; clear: both; overflow: auto;">
         <p style="font-size: 14px; text-align: center;">SCHOOL FEES ARE NOT REFUNDABLE AFTER PAYMENT</p>
     </div>
-    <div style=" width: 100%; margin-top: 20px;">
+    <div  class="footer">
         <p style="font-size: 13px; text-align: center">Generated on {{date("l, jS \of F Y ")}} @ {{date("h:i A")}}</p>
     </div>
 

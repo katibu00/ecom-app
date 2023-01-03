@@ -3,6 +3,7 @@
 use App\Http\Controllers\Accounting\ExpensesController;
 use App\Http\Controllers\Accounting\FeeCollectionController;
 use App\Http\Controllers\Accounting\InvoicesController;
+use App\Http\Controllers\Accounting\PaymentsController;
 use App\Http\Controllers\Accounting\ReportsController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Auth\LoginController;
@@ -103,7 +104,6 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
         Route::get('/basic/index', [BasicSettingsController::class, 'index'])->name('settings.basic.index');
         Route::post('/basic/index', [BasicSettingsController::class, 'updateBasic']);
 
-
         Route::get('/sessions/index', [SessionsController::class, 'index'])->name('settings.sessions.index');
         Route::post('/sessions/index', [SessionsController::class, 'store']);
         Route::post('/sessions/delete', [SessionsController::class, 'delete'])->name('settings.session.delete');
@@ -113,7 +113,6 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
         Route::post('/classes/index', [ClassesController::class, 'store']);
         Route::post('/classes/update', [ClassesController::class, 'update'])->name('settings.class.update');
         Route::post('/classes/delete', [ClassesController::class, 'delete'])->name('settings.class.delete');
-
 
         Route::get('/sections/index', [SectionsController::class, 'index'])->name('settings.sections.index');
         Route::post('/sections/index', [SectionsController::class, 'store']);
@@ -248,6 +247,9 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
 
         Route::get('/report/index', [ReportsController::class, 'index'])->name('billing.report.index');
         Route::post('/report/generate', [ReportsController::class, 'generate'])->name('billing.report.generate');
+
+        Route::get('/payments/index', [PaymentsController::class, 'index'])->name('payments.index');
+
 
       
     });

@@ -110,6 +110,11 @@
                 <div data-i18n="Collect Fee">Collect Fee</div>
             </a>
         </li>
+        <li class="menu-item {{ $route == 'payments.index' ? 'active' : '' }} ">
+            <a href="{{ route('payments.index') }}" class="menu-link">
+                <div data-i18n="Payment Records">Payments Records</div>
+            </a>
+        </li>
         <li class="menu-item {{ $route == 'invoices.index' ? 'active' : '' }} ">
             <a href="{{ route('invoices.index') }}" class="menu-link">
                 <div data-i18n="Invoices">Invoices</div>

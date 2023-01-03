@@ -7,9 +7,6 @@
         <div class="row">
             <div class="col-xl-12">
                 <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Fee Collection</h4>
-                    </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-4 order-lg-2 mb-4 d-none" id="sidebar">
@@ -90,4 +87,5 @@
 
 @section('js')
     @include('accounting.fee_collection.scripts')
+    <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
 @endsection
