@@ -9,6 +9,7 @@ use App\Models\Invoice;
 use App\Models\School;
 use App\Models\StudentType;
 use App\Models\User;
+use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -36,7 +37,6 @@ class InvoicesController extends Controller
 
     public function storeInvoices(Request $request)
     {
-        // return $request->all();
 
         $regular = FeeStructure::select('amount')->where('school_id',auth()->user()->school_id)->where('class_id',$request->class_id)->where('student_type','r')->sum('amount');
         $transfer = FeeStructure::select('amount')->where('school_id',auth()->user()->school_id)->where('class_id',$request->class_id)->where('student_type','t')->sum('amount');
@@ -74,6 +74,7 @@ class InvoicesController extends Controller
                 }
                
                 if($request->student_type[$i] == 's'){
+                    $data->amount = $regular;
                     $data->discount = $regular;
                 }else{
                     $data->discount = $request->discount[$i];
@@ -88,8 +89,7 @@ class InvoicesController extends Controller
             'message'=>'Invoices Generated Successfully',
         ]);
     }
-
-     
+  
     public function updateInvoices(Request $request)
     {
 
@@ -116,4 +116,33 @@ class InvoicesController extends Controller
             'message'=>'Invoice has been Updated Successfully',
         ]);
     }
+
+    public function PrintIndex()
+    {
+        $data['classes'] = Classes::select('id','name')->where('school_id',auth()->user()->school_id)->get();
+        return view('accounting.invoices.print_index',$data);
+    }
+
+    public function print(Request $request)
+    {
+        $this->validate($request, [
+            'class_id' => 'required',
+            'name' => 'required',
+            'phone' => 'required',
+        ]);
+        $school = School::with('session')->select('session_id','id','term','name','logo','username','address','phone_first','phone_second','email')->where('id', auth()->user()->school_id)->first();
+        $check = Invoice::where('school_id',$school->id)
+                                    ->where('class_id',$request->class_id)
+                                    ->where('session_id',$school->session_id)
+                                    ->where('term',$school->term)
+                                    ->first();
+        if(!$check)
+        {
+            Toastr::error('Invoices have not been generated for the selected class');
+            return redirect()->route('invoices.print.index');
+        }
+        $class_name = Classes::find($request->class_id)->name;
+        return view('pdfs.account.admin.invoices',['school'=>$school,'class_id'=>$request->class_id,'name'=>$request->name,'phone'=>$request->phone,'class_name'=>$class_name]);
+    }
+
 }

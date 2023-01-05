@@ -88,7 +88,6 @@ class FeeCollectionController extends Controller
                 ->where('class_id', $request->class_id)
                 ->where('student_type', $invoice->student_type)->sum('amount');
 
-
             $student = User::select('first_name','middle_name','last_name')->where('id',$invoice->student_id)->first();
             $additional_fees = explode(',', @$paymentSlip->additional);
           

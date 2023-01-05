@@ -21,7 +21,7 @@
                             @csrf
                             <div class="row">
                                 <div class="col-sm-4 mb-1">
-                                    <select class="default-select form-control wide mb-3" id="class_id" name="class_id">
+                                    <select class="form-select form-select-sm mb-3" id="class_id" name="class_id">
                                         <option value="">--select Class--</option>
                                         @foreach ($classes as $class)
                                             <option value="{{ $class->id }}" {{$class->id == @$class_id? 'selected':''}}>{{ $class->name }}</option>
@@ -34,7 +34,7 @@
                                 
                                 <div class="col-sm-4">
                                     <label class="form-label" for=""></label>
-                                    <button type="submit" class="btn btn-primary">Search Students</button>
+                                    <button type="submit" class="btn btn-sm btn-primary">Search Students</button>
                                 </div>
                             </div>
                         </form>
@@ -57,6 +57,4 @@
 
 @section('js')
     @include('marks.scripts')
-    <script src="/js/sweetalert.min.js"></script>
-    {!! Toastr::message() !!}
 @endsection

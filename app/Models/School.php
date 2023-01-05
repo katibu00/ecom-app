@@ -15,4 +15,7 @@ class School extends Model
     public function admin(){
         return $this->belongsTo(User::class, 'admin_id','id');
     }
+    public function session(){
+        return $this->belongsTo(Session::class, 'session_id','id');
+    }
 }

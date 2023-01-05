@@ -227,10 +227,14 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
 
     //fees and billing
     Route::group(['prefix' => 'billing', 'middleware' => ['auth', 'admin']], function(){
-        Route::get('/invoices/index', [InvoicesController::class, 'index'])->name('invoices.index');
+        Route::get('/invoices/generate/index', [InvoicesController::class, 'index'])->name('invoices.index');
         Route::post('/get-students-invoices', [InvoicesController::class, 'getRecords'])->name('invoices.get.students');
         Route::post('/store-invoices', [InvoicesController::class, 'storeInvoices'])->name('invoices.store');
         Route::post('/update-invoices', [InvoicesController::class, 'updateInvoices'])->name('invoices.update');
+
+        Route::get('/invoices/print/index', [InvoicesController::class, 'PrintIndex'])->name('invoices.print.index');
+        Route::post('/invoices/print/generate', [InvoicesController::class, 'print'])->name('invoices.print.generate');
+
 
         Route::get('/fee_collection/index', [FeeCollectionController::class, 'index'])->name('fee_collection.index');
         Route::post('/get-invoices', [FeeCollectionController::class, 'getInvoices'])->name('get-invoices');

@@ -115,11 +115,28 @@
                 <div data-i18n="Payment Records">Payments Records</div>
             </a>
         </li>
-        <li class="menu-item {{ $route == 'invoices.index' ? 'active' : '' }} ">
-            <a href="{{ route('invoices.index') }}" class="menu-link">
+       
+
+        <li
+            class="menu-item {{ $route == 'invoices.index' ? 'active open' : '' }} {{ $route == 'invoices.print.index' ? 'active open' : '' }}">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <div data-i18n="Invoices">Invoices</div>
             </a>
+            <ul class="menu-sub">
+                <li class="menu-item {{ $route == 'invoices.print.index' ? 'active' : '' }} ">
+                    <a href="{{ route('invoices.print.index') }}" class="menu-link">
+                        <div data-i18n="Print Invoices">Print Invoices</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ $route == 'invoices.index' ? 'active' : '' }} ">
+                    <a href="{{ route('invoices.index') }}" class="menu-link">
+                        <div data-i18n="Generate Invoices">Generate Invoices</div>
+                    </a>
+                </li>
+                
+            </ul>
         </li>
+
         <li class="menu-item {{ $route == 'expenses.index' ? 'active' : '' }} ">
             <a href="{{ route('expenses.index') }}" class="menu-link">
                 <div data-i18n="Expenditures">Expenditures</div>

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('PageTitle', 'Marks Entry')
+@section('PageTitle', 'Gradebook')
 
 
 @section('content')
@@ -13,7 +13,7 @@
                     <div class="card-body">
 
                         <div class="card-title header-elements  d-flex fle4x-row">
-                            <h5 class="m-0 me-2 d-none d-md-block">Marks Entry</h5>
+                            <h5 class="m-0 me-2 d-none d-md-block">Gradebook</h5>
                         </div>
 
 
@@ -22,7 +22,7 @@
                             @csrf
                             <div class="row">
                                 <div class="col-sm-4 mb-1">
-                                    <select class="default-select form-control wide mb-3" id="class_id" name="class_id">
+                                    <select class="form-select form-select-sm mb-3" id="class_id" name="class_id">
                                         <option value="">--select subject--</option>
                                         @foreach ($classes as $class)
                                             <option value="{{ $class->id }}"
@@ -38,7 +38,7 @@
                           
                                 <div class="col-sm-4">
                                     <label class="form-label" for=""></label>
-                                    <button type="submit" class="btn btn-primary">Search Students</button>
+                                    <button type="submit" class="btn btn-sm btn-primary">Search Students</button>
                                 </div>
                             </div>
                         </form>
@@ -80,7 +80,7 @@
                                                 @foreach ($subjects as $key => $subject)
                                                     <tr>
                                                         <td scope="row">{{ $key + 1 }}</td>
-                                                        <td>{{ $subject['subject']['name'] }}</td>
+                                                        <td>{{ @$subject['subject']['name'] }}</td>
 
                                                         @foreach ($cas as $ca)
                                                             @php
