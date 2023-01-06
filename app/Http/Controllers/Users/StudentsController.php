@@ -17,16 +17,17 @@ class StudentsController extends Controller
 {
     public function index()
     {
-        $data['classes'] = Classes::select('id', 'name')->where('school_id',auth()->user()->school_id)->get();
-        $data['students'] = User::select('id', 'image','first_name','middle_name','last_name','login','gender','class_id','parent_id')->where('usertype','std')->where('school_id',auth()->user()->school_id)->where('status',1)->with(['class'])->orderBy('gender', 'desc')->orderBy('first_name')->paginate(5);
-        $data['school'] = School::select('username')->where('id',auth()->user()->school_id)->first();
-
+        $school_id = auth()->user()->school_id;
+        $data['classes'] = Classes::select('id', 'name')->where('school_id', $school_id)->get();
+        $data['students'] = User::select('id', 'image','first_name','middle_name','last_name','login','gender','class_id','parent_id','status','address')->where('usertype','std')->where('school_id',$school_id)->where('status',1)->with(['class','parent'])->orderBy('gender', 'desc')->orderBy('first_name')->paginate(15);
+        $data['parents'] = User::select('id','first_name','last_name','login','status')->where('usertype','parent')->where('school_id',$school_id)->where('status',1)->get();
+        $data['school'] = School::select('username')->where('id',$school_id)->first();
         return view('users.students.index',$data);
     }
     public function paginate()
     {
         $data['classes'] = Classes::select('id', 'name')->where('school_id',auth()->user()->school_id)->get();
-        $data['students'] = User::select('id','image', 'first_name','middle_name','last_name','login','gender','class_id','parent_id')->where('usertype','std')->where('school_id',auth()->user()->school_id)->where('status',1)->with(['class'])->orderBy('gender', 'desc')->orderBy('first_name')->paginate(5);
+        $data['students'] = User::select('id','image', 'first_name','middle_name','last_name','login','gender','class_id','parent_id','status','address')->where('usertype','std')->where('school_id',auth()->user()->school_id)->where('status',1)->with(['class','parent'])->orderBy('gender', 'desc')->orderBy('first_name')->paginate(15);
         $data['school'] = School::select('username')->where('id',auth()->user()->school_id)->first();
         return view('users.students.table',$data)->render();
     }
@@ -70,10 +71,10 @@ class StudentsController extends Controller
 
         if($request->class_id == 'all')
         {
-            $data['students'] = User::select('id','image','first_name','middle_name','last_name','login','gender','class_id','parent_id')->where('usertype','std')->where('school_id',auth()->user()->school_id)->where('status',1)->with(['class'])->orderBy('gender', 'desc')->orderBy('first_name')->get();
+            $data['students'] = User::select('id','image','first_name','middle_name','last_name','login','gender','class_id','parent_id','status','address')->where('usertype','std')->where('school_id',auth()->user()->school_id)->where('status',1)->with(['class','parent'])->orderBy('gender', 'desc')->orderBy('first_name')->paginate(10000);
         }else{
 
-            $data['students'] = User::select('id','image','first_name','middle_name','last_name','login','gender','class_id','parent_id')->where('class_id',$request->class_id)->where('usertype','std')->where('school_id',auth()->user()->school_id)->where('status',1)->with(['class'])->orderBy('gender', 'desc')->orderBy('first_name')->get();
+            $data['students'] = User::select('id','image','first_name','middle_name','last_name','login','gender','class_id','parent_id','status','address')->where('class_id',$request->class_id)->where('usertype','std')->where('school_id',auth()->user()->school_id)->where('status',1)->with(['class','parent'])->orderBy('gender', 'desc')->orderBy('first_name')->paginate(10000);
         }
       
         if( $data['students']->count() > 0)
@@ -87,9 +88,41 @@ class StudentsController extends Controller
         }
     }
 
+    public function search(Request $request)
+    {
+    
+        $school_id = auth()->user()->school_id;
+        $data['classes'] = Classes::select('id', 'name')->where('school_id',$school_id)->get();
+        $data['school'] = School::select('username')->where('id',$school_id)->first();
+
+        $data['students'] = User::select('id','image', 'first_name','middle_name','last_name','login','gender','class_id','parent_id','status','address')
+                                ->where('usertype','std')
+                                ->where('school_id',$school_id)
+                                ->where('status',1)
+                                ->where('login','like','%'.$request['query'].'%')
+                                ->orWhere('first_name','like','%'.$request['query'].'%')
+                                ->orWhere('last_name','like','%'.$request['query'].'%')
+                                ->with(['class','parent'])
+                                ->orderBy('gender', 'desc')
+                                ->orderBy('first_name')
+                                ->paginate(10000);
+
+        if( $data['students']->count() )
+        {
+            return view('users.students.table', $data)->render();
+        }else
+        {
+            return response()->json([
+                'status' => 404,
+            ]);
+        }
+       
+    }
+
     public function details(Request $request)
     {
-        $student = User::with(['class','parent'])->where('id', $request->student_id)->first();
+
+        $student = User::with(['class','parent'])->where('id', $request->student_id)->where('school_id',auth()->user()->school_id)->first();
         $registered = $student->created_at->diffForHumans();
         $school_name = School::select('username')->where('id',auth()->user()->school_id)->first();
        
@@ -156,28 +189,8 @@ class StudentsController extends Controller
         ]);
     }
 
-    public function get_subjects_offering(Request $request)
-    {
-        // return $request->all();
-        $class_id = User::select('class_id')->where('id',$request->student_id)->first()->class_id;
-
-        $subjects = AssignSubject::with('subject')->select('subject_id')->where('class_id',$class_id)->where('school_id', auth()->user()->school_id)->get();
-
-        return response()->json([
-            'subjects' => $subjects,
-            'status' => 200,
-        ]);
-    }
-
-    public function save_subjects_offering(Request $request)
-    {
-        return $request->all();
-    }
-
-
     public function getStudentDetails(Request $request)
     {
-        // return $request->all();
 
         $student = User::find($request->student_id);
         $school_username = School::select('username')->where('id',auth()->user()->school_id)->first();

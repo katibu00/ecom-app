@@ -19,9 +19,9 @@
                         <div class="card-title header-elements  d-flex flex-row">
                             <h5 class="m-0 me-2 d-none d-md-block">Students</h5>
 
-                            <div class="col-md-3 d-none d-md-block mb-1">
+                            <div class="col-md-3 mb-1">
                                 <input type="text" class="form-control form-control-sm" id="search"
-                                    placeholder="Search..." />
+                                    placeholder="Search by name or roll #..." />
                             </div>
 
 
@@ -41,11 +41,9 @@
                                 </a>
                             </div>
                         </div>
+                       
+                         @include('users.students.table')
 
-                        <div class="table-responsive">
-                            @include('users.students.table')
-
-                        </div>
                     </div>
                 </div>
             </div>
@@ -53,9 +51,8 @@
         <!--/ Header elements -->
 
 
-        {{-- @include('users.students.details_modal')
-    @include('users.students.sno_modal')
-    @include('users.students.edit_modal') --}}
+        @include('users.students.details_modal')
+        @include('users.students.edit_modal')
 
     </div>
 

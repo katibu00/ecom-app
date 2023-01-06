@@ -13,7 +13,7 @@
     </thead>
     <tbody>
        
-        @foreach ($payments as $key => $value)
+        @forelse ($payments as $key => $value)
         <tr>
             <td class="text-center">{{ $key + 1 }}</td>
             <td>{{ $value->created_at->diffForHumans() }}</td>
@@ -27,7 +27,11 @@
                 <a href="{{ route("admin.generate.receipt", $value->id)}}" class="btn btn-success" target="__blank"><i class="ti ti-printer me-2"></i></a>
             </td>
         </tr>
-        @endforeach
+        @empty
+            <tr>
+                <td colspan="8">  <div class="alert alert-warning" role="alert">No Payment Record Found - Click on the plus icon above to start.</div></td>
+            </tr>
+        @endforelse
       
     </tbody>
 </table>

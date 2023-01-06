@@ -177,6 +177,8 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
 
         Route::get('/students/sort', [StudentsController::class, 'sort'])->name('users.students.sort');
 
+        Route::post('/students/search', [StudentsController::class, 'search'])->name('users.students.search');
+
         Route::post('/students/details', [StudentsController::class, 'details'])->name('users.students.details');
         Route::get('/students/bulk_update/index', [StudentsController::class, 'bulk_update'])->name('users.students.bulk_update.index');
         Route::post('/students/bulk_update/index', [StudentsController::class, 'bulk_update']);

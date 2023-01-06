@@ -13,8 +13,7 @@
         </tr>
     </thead>
     <tbody>
-        @if($expenses->count() > 0)
-        @foreach ($expenses as $key => $expense)
+        @forelse ($expenses as $key => $expense)
         <tr>
             <td class="text-center">{{ $key + 1 }}</td>
             <td>{{ $expense->date }}</td>
@@ -42,8 +41,11 @@
                 </div>
             </td>
         </tr>
-        @endforeach
-        @endif
+        @empty
+            <tr>
+                <td colspan="9">  <div class="alert alert-warning" role="alert">No Expenses Record Found - Click on the plus icon above to start.</div></td>
+            </tr>
+        @endforelse
     </tbody>
 </table>
 </div>

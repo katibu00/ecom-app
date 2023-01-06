@@ -13,7 +13,7 @@
         </thead>
         <tbody>
 
-            @foreach ($invoices as $key => $invoice)
+            @forelse ($invoices as $key => $invoice)
                 <tr>
                     <td><span class="text-black font-w500">#{{ $invoice->number }}</span></td>
                     <td>
@@ -73,7 +73,11 @@
                         </div>
                     </td>
                 </tr>
-            @endforeach
+            @empty
+            <tr>
+                <td colspan="7">  <div class="alert alert-warning" role="alert">No Invoices have been generated - Click on the plus icon above to start.</div></td>
+            </tr>
+            @endforelse
         </tbody>
     </table>
 </div>

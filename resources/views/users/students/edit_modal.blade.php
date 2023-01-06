@@ -11,7 +11,7 @@
                 <div class="modal-body">
                     <div class="" id="edit_loading_div">
                         <div class="col-12 d-flex align-items-center justify-content-center">
-                        <div class="spinner-border" style="height: 40px; width: 40px; margin: 0 auto; color: #5bcfc5;" role="status"><span class="sr-only">Loading...</span></div>
+                        <div class="spinner-border" style="height: 40px; width: 40px; margin: 0 auto;" role="status"></div>
                         </div>
                     </div>
                     <input type="hidden" id="edit_student_id" name="edit_student_id" />
@@ -53,7 +53,7 @@
                             </div>
                             <div class="col-md-6 mt-2 mt-sm-0">
                                 <label for="edit_gender">Gender</label>
-                                <select class="form-control form-control wide" id="edit_gender" name="gender">
+                                <select class="form-select" id="edit_gender" name="gender">
                                     <option value="">Select Gender...</option>
                                     <option value="m">Male</option>
                                     <option value="f">Female</option>
@@ -63,10 +63,10 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="edit_parent">Parent</label>
-                                <select class="form-control form-control wide" id="edit_parent" name="parent_id">
+                                <select class="form-select" id="edit_parent" name="parent_id">
                                     <option value="">Select Parent...</option>
-                                    @foreach ($students as $parent)
-                                    <option value="{{ $parent->id }}">{{$parent->title.' '.$parent->first_name.' '.$parent->last_name}}</option>
+                                    @foreach ($parents as $parent)
+                                    <option value="{{ $parent->id }}">{{ $parent->first_name.' '.$parent->middle_name.' '.$parent->last_name }}</option>
                                     @endforeach
                                 </select>
                             </div>
