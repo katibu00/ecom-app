@@ -17,6 +17,7 @@ use Illuminate\Support\Str;
 
 class SchoolController extends Controller
 {
+
     public function index(){
 
         $data['schools'] = School::select('name','username','state','service_fee','created_at')->latest()->get();
@@ -139,6 +140,13 @@ class SchoolController extends Controller
             'status'=>400,
             'message'=>'No School Found',
         ]);
+    }
+
+    
+    public function adminsIndex(){
+
+        $data['admins'] = User::select('first_name','middle_name','last_name','school_id','phone')->where('usertype','admin')->get();
+        return view('intellisas.admins', $data);
     }
  
 }

@@ -20,6 +20,7 @@ use App\Http\Controllers\Settings\BankAccountsController;
 use App\Http\Controllers\Settings\BasicSettingsController;
 use App\Http\Controllers\Settings\CASchemeController;
 use App\Http\Controllers\Settings\ClassesController;
+use App\Http\Controllers\Settings\ClassSectionController;
 use App\Http\Controllers\Settings\FeeCategoriesController;
 use App\Http\Controllers\Settings\FeeStructuresController;
 use App\Http\Controllers\Settings\PsychomotorCrudController;
@@ -47,20 +48,18 @@ Route::get('/', function () {
 
     return redirect()->route('login');
     
-});
+})->middleware('guest');
 
 Route::get('/home', function () {
 
-    if(auth()->check()){
         if(auth()->user()->usertype == 'admin'){
             return redirect()->route('admin.home');
         }
         if(auth()->user()->usertype == 'intellisas'){
             return redirect()->route('intellisas.home');
         }
-    };
-    return view('auth.login');
-});
+
+})->middleware('auth');
 
 Route::get('/sendmail', function () {
 
@@ -97,6 +96,8 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
         Route::post('/service/{id}', [SchoolController::class, 'service'])->name('service.record');
         Route::get('/logs/index', [SchoolController::class, 'log_index'])->name('logs.index');
 
+        Route::get('/admins_lists', [SchoolController::class, 'adminsIndex'])->name('admins.index');
+
         Route::post('/get-school-details', [SchoolController::class, 'getScholDetails'])->name('get-school-details');
     });
 
@@ -113,6 +114,11 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
         Route::post('/classes/index', [ClassesController::class, 'store']);
         Route::post('/classes/update', [ClassesController::class, 'update'])->name('settings.class.update');
         Route::post('/classes/delete', [ClassesController::class, 'delete'])->name('settings.class.delete');
+
+        Route::get('/class_section/index', [ClassSectionController::class, 'index'])->name('settings.class_section.index');
+        Route::post('/class_section/index', [ClassSectionController::class, 'store']);
+        Route::post('/class_section/update', [ClassSectionController::class, 'update'])->name('settings.class_section.update');
+        Route::post('/class_section/delete', [ClassSectionController::class, 'delete'])->name('settings.class_section.delete');
 
         Route::get('/sections/index', [SectionsController::class, 'index'])->name('settings.sections.index');
         Route::post('/sections/index', [SectionsController::class, 'store']);

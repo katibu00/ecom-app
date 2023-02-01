@@ -52,7 +52,7 @@
                                 <td>{{ $school->state }}</td>
                                 <td class="text-center">&#x20A6;{{ $school->service_fee }}</td>
                                 <td></td>
-                                <td>{{ $school->created_at->diffForHumans() }}</td>
+                                <td>{{ @$school->created_at->diffForHumans() }}</td>
                                 <td>
                                     <div class="dropdown dropstart text-center">
                                         <a href="javascript:void(0);" class="btn-link" data-bs-toggle="dropdown" aria-expanded="false">

@@ -6,11 +6,13 @@
             e.preventDefault();
 
             var class_id = $('#class_id').val();
+            var class_section_id = $('#class_section_id').val();
            
 
             $('#send_class_id').val(class_id);
+            $('#send_class_section_id').val(class_section_id);
           
-            if (class_id == '') {
+            if (class_id == '' || class_section_id == '') {
                 Command: toastr["error"]("All fields are required")
                 toastr.options = {
                     "closeButton": false,
@@ -47,7 +49,7 @@
                 type: "POST",
                 url: "{{ route('invoices.get.students') }}",
                 data: {
-                    'class_id': class_id
+                    'class_id': class_id, 'class_section_id': class_section_id
                 },
                 success: function(res) {
 

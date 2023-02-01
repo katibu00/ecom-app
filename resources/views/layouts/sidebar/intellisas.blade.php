@@ -13,3 +13,9 @@
         <div data-i18n="Schools">Schools</div>
     </a>
 </li>
+<li class="menu-item {{ $route == 'admins.index' ? 'active' : '' }}">
+    <a href="{{ route('admins.index') }}" class="menu-link">
+        <i class="menu-icon tf-icons ti ti-building"></i>
+        <div data-i18n="Admins">Admins</div>
+    </a>
+</li>

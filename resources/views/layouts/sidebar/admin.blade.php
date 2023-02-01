@@ -5,16 +5,76 @@
     </a>
 </li>
 
-
-<li class="menu-item {{ $prefix == '/users' ? 'active open' : '' }}">
+<li class="menu-item {{ $prefix == '/billing' ? 'active open' : '' }}">
     <a href="javascript:void(0);" class="menu-link menu-toggle">
-        <i class="menu-icon tf-icons ti ti-users"></i>
-        <div data-i18n="Users">Users</div>
+        <i class="menu-icon tf-icons ti ti-cash"></i>
+        <div data-i18n="Fees & Billing">Fees & Billing</div>
     </a>
     <ul class="menu-sub">
-        <li class="menu-item {{ $route == 'users.students.index' ? 'active' : '' }} {{ $route == 'users.students.create' ? 'active' : '' }}">
-            <a href="{{ route('users.students.index') }}" class="menu-link">
-                <div data-i18n="Students">Students</div>
+        <li class="menu-item {{ $route == 'fee_collection.index' ? 'active' : '' }} ">
+            <a href="{{ route('fee_collection.index') }}" class="menu-link">
+                <div data-i18n="Collect Fee">Collect Fee</div>
+            </a>
+        </li>
+        <li class="menu-item {{ $route == 'payments.index' ? 'active' : '' }} ">
+            <a href="{{ route('payments.index') }}" class="menu-link">
+                <div data-i18n="Payment Records">Payments Records</div>
+            </a>
+        </li>
+       
+
+        <li
+            class="menu-item {{ $route == 'invoices.index' ? 'active open' : '' }} {{ $route == 'invoices.print.index' ? 'active open' : '' }}">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <div data-i18n="Invoices">Invoices</div>
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item {{ $route == 'invoices.print.index' ? 'active' : '' }} ">
+                    <a href="{{ route('invoices.print.index') }}" class="menu-link">
+                        <div data-i18n="Print Invoices">Print Invoices</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ $route == 'invoices.index' ? 'active' : '' }} ">
+                    <a href="{{ route('invoices.index') }}" class="menu-link">
+                        <div data-i18n="Generate Invoices">Generate Invoices</div>
+                    </a>
+                </li>
+                
+            </ul>
+        </li>
+
+        <li class="menu-item {{ $route == 'expenses.index' ? 'active' : '' }} ">
+            <a href="{{ route('expenses.index') }}" class="menu-link">
+                <div data-i18n="Expenditures">Expenditures</div>
+            </a>
+        </li>
+        <li class="menu-item {{ $route == 'billing.report.index' ? 'active' : '' }} {{ $route == 'billing.report.generate' ? 'active' : '' }}">
+            <a href="{{ route('billing.report.index') }}" class="menu-link">
+                <div data-i18n="Financial Report">Report</div>
+            </a>
+        </li>
+    </ul>
+</li>
+
+<li class="menu-item {{ $prefix == '/marks' ? 'active open' : '' }}">
+    <a href="javascript:void(0);" class="menu-link menu-toggle">
+        <i class="menu-icon tf-icons ti ti-notebook"></i>
+        <div data-i18n="Marks Entry">Marks Entry</div>
+    </a>
+    <ul class="menu-sub">
+        <li class="menu-item {{ $route == 'marks.create' ? 'active' : '' }}">
+            <a href="{{ route('marks.create') }}" class="menu-link">
+                <div data-i18n="Enter Marks">Enter Marks</div>
+            </a>
+        </li>
+        <li class="menu-item {{ $route == 'marks.grade_book.index' ? 'active' : '' }} {{ $route == 'marks.grade_book.search' ? 'active' : '' }}">
+            <a href="{{ route('marks.grade_book.index') }}" class="menu-link">
+                <div data-i18n="Gradebook">Gradebook</div>
+            </a>
+        </li>
+        <li class="menu-item {{ $route == 'marks.submissions.index' ? 'active' : '' }} {{ $route == 'marks.submissions.search' ? 'active' : '' }}">
+            <a href="{{ route('marks.submissions.index') }}" class="menu-link">
+                <div data-i18n="Submissions">Submissions</div>
             </a>
         </li>
     </ul>
@@ -73,83 +133,19 @@
     </ul>
 </li>
 
-
-
-<li class="menu-item {{ $prefix == '/marks' ? 'active open' : '' }}">
+<li class="menu-item {{ $prefix == '/users' ? 'active open' : '' }}">
     <a href="javascript:void(0);" class="menu-link menu-toggle">
-        <i class="menu-icon tf-icons ti ti-notebook"></i>
-        <div data-i18n="Marks Entry">Marks Entry</div>
+        <i class="menu-icon tf-icons ti ti-users"></i>
+        <div data-i18n="Users">Users</div>
     </a>
     <ul class="menu-sub">
-        <li class="menu-item {{ $route == 'marks.create' ? 'active' : '' }}">
-            <a href="{{ route('marks.create') }}" class="menu-link">
-                <div data-i18n="Enter Marks">Enter Marks</div>
-            </a>
-        </li>
-        <li class="menu-item {{ $route == 'marks.grade_book.index' ? 'active' : '' }} {{ $route == 'marks.grade_book.search' ? 'active' : '' }}">
-            <a href="{{ route('marks.grade_book.index') }}" class="menu-link">
-                <div data-i18n="Gradebook">Gradebook</div>
-            </a>
-        </li>
-        <li class="menu-item {{ $route == 'marks.submissions.index' ? 'active' : '' }} {{ $route == 'marks.submissions.search' ? 'active' : '' }}">
-            <a href="{{ route('marks.submissions.index') }}" class="menu-link">
-                <div data-i18n="Submissions">Submissions</div>
+        <li class="menu-item {{ $route == 'users.students.index' ? 'active' : '' }} {{ $route == 'users.students.create' ? 'active' : '' }}">
+            <a href="{{ route('users.students.index') }}" class="menu-link">
+                <div data-i18n="Students">Students</div>
             </a>
         </li>
     </ul>
 </li>
-
-<li class="menu-item {{ $prefix == '/billing' ? 'active open' : '' }}">
-    <a href="javascript:void(0);" class="menu-link menu-toggle">
-        <i class="menu-icon tf-icons ti ti-cash"></i>
-        <div data-i18n="Fees & Billing">Fees & Billing</div>
-    </a>
-    <ul class="menu-sub">
-        <li class="menu-item {{ $route == 'fee_collection.index' ? 'active' : '' }} ">
-            <a href="{{ route('fee_collection.index') }}" class="menu-link">
-                <div data-i18n="Collect Fee">Collect Fee</div>
-            </a>
-        </li>
-        <li class="menu-item {{ $route == 'payments.index' ? 'active' : '' }} ">
-            <a href="{{ route('payments.index') }}" class="menu-link">
-                <div data-i18n="Payment Records">Payments Records</div>
-            </a>
-        </li>
-       
-
-        <li
-            class="menu-item {{ $route == 'invoices.index' ? 'active open' : '' }} {{ $route == 'invoices.print.index' ? 'active open' : '' }}">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <div data-i18n="Invoices">Invoices</div>
-            </a>
-            <ul class="menu-sub">
-                <li class="menu-item {{ $route == 'invoices.print.index' ? 'active' : '' }} ">
-                    <a href="{{ route('invoices.print.index') }}" class="menu-link">
-                        <div data-i18n="Print Invoices">Print Invoices</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ $route == 'invoices.index' ? 'active' : '' }} ">
-                    <a href="{{ route('invoices.index') }}" class="menu-link">
-                        <div data-i18n="Generate Invoices">Generate Invoices</div>
-                    </a>
-                </li>
-                
-            </ul>
-        </li>
-
-        <li class="menu-item {{ $route == 'expenses.index' ? 'active' : '' }} ">
-            <a href="{{ route('expenses.index') }}" class="menu-link">
-                <div data-i18n="Expenditures">Expenditures</div>
-            </a>
-        </li>
-        <li class="menu-item {{ $route == 'billing.report.index' ? 'active' : '' }} {{ $route == 'billing.report.generate' ? 'active' : '' }}">
-            <a href="{{ route('billing.report.index') }}" class="menu-link">
-                <div data-i18n="Financial Report">Report</div>
-            </a>
-        </li>
-    </ul>
-</li>
-
 
 <li class="menu-item {{ $prefix == '/settings' ? 'active open' : '' }}">
     <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -175,6 +171,11 @@
         <li class="menu-item {{ $route == 'settings.classes.index' ? 'active' : '' }}">
             <a href="{{ route('settings.classes.index') }}" class="menu-link">
                 <div data-i18n="Classes">Classes</div>
+            </a>
+        </li>
+        <li class="menu-item {{ $route == 'settings.class_section.index' ? 'active' : '' }}">
+            <a href="{{ route('settings.class_section.index') }}" class="menu-link">
+                <div data-i18n="Class Section">Class Section</div>
             </a>
         </li>
         <li class="menu-item {{ $route == 'settings.subjects.index' ? 'active' : '' }}">

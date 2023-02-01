@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Accounting;
 
 use App\Http\Controllers\Controller;
 use App\Models\Classes;
+use App\Models\ClassSection;
 use App\Models\FeeStructure;
 use App\Models\Invoice;
 use App\Models\School;
@@ -20,14 +21,24 @@ class InvoicesController extends Controller
     {
        
         $school = School::select('id','term','session_id')->where('id', auth()->user()->school_id)->first();
-        $data['classes'] = Classes::select('id','name')->where('school_id',$school->id)->get();
+        $data['classes'] = Classes::select('id','name')->where('school_id',$school->id)->where('status',1)->get();
+        $data['class_sections'] = ClassSection::select('id','name')->where('school_id',$school->id)->where('status',1)->get();
         $data['invoices'] = Invoice::with(['student','class'])->where('school_id',$school->id)->where('session_id',$school->session_id)->where('term',$school->term)->paginate(15); 
         return view('accounting.invoices.index',$data);
     }
 
     public function getRecords(Request $request)
     {
-        $students = User::select('first_name','middle_name','last_name','id','login','parent_id')->where('class_id',$request->class_id)->where('usertype','std')->where('school_id',auth()->user()->school_id)->where('status',1)->with('parent')->orderBy('gender', 'desc')->orderBy('first_name')->get();
+        $students = User::select('first_name','middle_name','last_name','id','login','parent_id')
+        ->where('class_id',$request->class_id)
+        ->where('class_section_id',$request->class_section_id)
+        ->where('usertype','std')
+        ->where('school_id',auth()->user()->school_id)
+        ->where('status',1)->with('parent')
+        ->orderBy('gender', 'desc')
+        ->orderBy('first_name')
+        ->get();
+
         $student_types = StudentType::select('id', 'name')->where('school_id',auth()->user()->school_id)->where('status',1)->get();
         return response()->json([
             'students'=>$students,

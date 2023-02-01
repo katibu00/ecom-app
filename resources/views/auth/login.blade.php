@@ -216,6 +216,9 @@
                             if (response.user == 'admin') {
                                 window.location.replace('{{ route('admin.home') }}');
                             }
+                            if (response.user == 'intellisas') {
+                                window.location.replace('{{ route('intellisas.home') }}');
+                            }
                            
 
                         }

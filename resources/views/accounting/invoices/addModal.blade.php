@@ -14,16 +14,24 @@
                         <div class="col-xl-12">
 
                             <div class="mb-2 row">
-                                <div class="col-lg-3">
-                                    <select class="default-select form-control wide mb-3" id="class_id">
-                                        <option value="">--Select Class--</option>
+                                <div class="col-lg-2">
+                                    <select class="form-select mb-2" id="class_id">
+                                        <option value="">-- Class--</option>
                                         @foreach ($classes as $class)
                                             <option value="{{ $class->id }}">{{ $class->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
+                                <div class="col-lg-2">
+                                    <select class="form-select mb-2" id="class_section_id">
+                                        <option value="">-- Class Section--</option>
+                                        @foreach ($class_sections as $section)
+                                            <option value="{{ $section->id }}">{{ $section->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
 
-                                <div class="col-lg-4">
+                                <div class="col-lg-3">
                                     <button type="submit" class="btn btn-secondary mb-2" id="search_btn">Fetch
                                         Students</button>
                                 </div>
@@ -37,6 +45,7 @@
                     <div class="row d-none" id="marks-generate">
                         <div class="table-responsive">
                             <input type="hidden" id="send_class_id" name="class_id" />
+                            <input type="hidden" id="send_class_section_id" name="class_section_id" />
 
                             <div class="table-responsive text-nowrap">
                                 <table class="table table-responsive-sm table-bordered table-striped">
