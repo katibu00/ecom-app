@@ -16,7 +16,7 @@
                                 <div class="mb-2 row">
                                     <div class="col-lg-4">
                                         <select class="form-select form-select-sm mb-2" name="class_id" required>
-                                            <option value=""></option>
+                                            <option value="">-- Class --</option>
                                             @foreach ($classes as $class)
                                             <option value="{{ $class->id }}">{{ $class->name }}</option>
                                             @endforeach
@@ -24,7 +24,7 @@
                                     </div>
                                     <div class="col-lg-5">
                                         <select class="form-select form-select-sm mb-2" name="student_type" required>
-                                            <option value=""></option>
+                                            <option value="">-- Student Type --</option>
                                             <option value="r">Rugular</option>
                                             <option value="t">Transfer</option>
                                             @foreach ($student_types as $student_type)
@@ -37,7 +37,7 @@
                                 <div class="mb-2 row">
                                     <div class="col-lg-4">
                                         <select class="form-select form-select-sm mb-2" name="fee_id[]" required>
-                                            <option value=""></option>
+                                            <option value="">-- Fee Category --</option>
                                             @foreach ($fees as $fee)
                                             <option value="{{ $fee->id }}">{{ $fee->name }} (@if(@$fee->priority == 'o') Optional @elseif(@$fee->priority == 'r') Recommended @elseif(@$fee->priority == 'm') Mandatory @endif)</option>
                                             @endforeach
@@ -73,7 +73,7 @@
                     <div class="mb-2 row">
                         <div class="col-lg-4">
                             <select class="form-select form-select-sm mb-2" name="fee_id[]" required>
-                                <option></option>
+                                <option value="">-- Fee Category --</option>
                                 @foreach ($fees as $fee)
                                 <option value="{{ $fee->id }}">{{ $fee->name }} (@if(@$fee->priority == 'o') Optional @elseif(@$fee->priority == 'r') Recommended @elseif(@$fee->priority == 'm') Mandatory @endif)</option>
                                 @endforeach

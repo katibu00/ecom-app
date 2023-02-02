@@ -22,11 +22,19 @@
                                     <div class="col-xl-12">
 
                                         <div class="mb-2 row">
-                                            <div class="col-lg-4">
+                                            <div class="col-lg-2">
                                                 <select class="form-select form-select-sm" name="class_id" required>
-                                                    <option value="">--Select Class--</option>
+                                                    <option value="">-- Class--</option>
                                                     @foreach ($classes as $class)
                                                         <option value="{{ $class->id }}">{{ $class->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <select class="form-select form-select-sm" name="class_section_id" required>
+                                                    <option value="">-- Class Section--</option>
+                                                    @foreach ($class_sections as $section)
+                                                        <option value="{{ $section->id }}">{{ $section->name }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>

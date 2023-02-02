@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Users;
 use App\Http\Controllers\Controller;
 use App\Models\AssignSubject;
 use App\Models\Classes;
+use App\Models\ClassSection;
 use App\Models\School;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -34,7 +35,8 @@ class StudentsController extends Controller
 
     public function create()
     {
-        $data['classes'] = Classes::select('id', 'name')->where('school_id',auth()->user()->school_id)->get();
+        $data['classes'] = Classes::select('id', 'name')->where('school_id',auth()->user()->school_id)->where('status',1)->get();
+        $data['class_sections'] = ClassSection::select('id', 'name')->where('school_id',auth()->user()->school_id)->where('status',1)->get();
         return view('users.students.create', $data);
     }
 
@@ -51,6 +53,7 @@ class StudentsController extends Controller
                 $data->login = $request->roll_number[$i];
                 $data->usertype = 'std';
                 $data->class_id = $request->class_id;
+                $data->class_section_id = $request->class_section_id;
                 $data->school_id = auth()->user()->school_id;
                 $data->password = Hash::make('123');
                 $data->save();

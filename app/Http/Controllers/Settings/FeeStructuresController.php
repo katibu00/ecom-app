@@ -44,6 +44,10 @@ class FeeStructuresController extends Controller
                     $data->fee_category_id = $request->fee_id[$i];
                     $data->amount = $request->amount[$i];
                     $data->save();
+                }else
+                {
+                    Toastr::error('Fee Structure Already Exist in the selected Class and Student Type');
+                    return redirect()->route('settings.fee_structure.index');     
                 }
                
             }
