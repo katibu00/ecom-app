@@ -156,4 +156,23 @@ class InvoicesController extends Controller
         return view('pdfs.account.admin.invoices',['school'=>$school,'class_id'=>$request->class_id,'name'=>$request->name,'phone'=>$request->phone,'class_name'=>$class_name]);
     }
 
+    public function bulk_action(Request $request)
+    {
+        $this->validate($request, [
+            'class_id' => 'required',
+            'action' => 'required',
+        ]);  
+
+        $school = School::select('id','term','session_id')->where('id', auth()->user()->school_id)->first();
+
+
+        if($request->action == 'delete')
+        {
+            Invoice::where('class_id', $request->class_id)->where('school_id',auth()->user()->school_id)->where('session_id', $school->session_id)->where('term',$school->term)->delete();
+            Toastr::success('Invoices Deleted Successfully');
+            return redirect()->route('invoices.index');
+        }
+    }
+    
+
 }

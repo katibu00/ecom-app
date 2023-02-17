@@ -28,7 +28,9 @@ use App\Http\Controllers\Settings\SectionsController;
 use App\Http\Controllers\Settings\SessionsController;
 use App\Http\Controllers\Settings\StudentTypeController;
 use App\Http\Controllers\Settings\SubjectsController;
+use App\Http\Controllers\Users\ParentsController;
 use App\Http\Controllers\Users\StudentsController;
+use App\Http\Controllers\Users\StaffsController;
 use App\Mail\ResetSchoolAdminPassword;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
@@ -186,13 +188,30 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
         Route::post('/students/search', [StudentsController::class, 'search'])->name('users.students.search');
 
         Route::post('/students/details', [StudentsController::class, 'details'])->name('users.students.details');
-        Route::get('/students/bulk_update/index', [StudentsController::class, 'bulk_update'])->name('users.students.bulk_update.index');
-        Route::post('/students/bulk_update/index', [StudentsController::class, 'bulk_update']);
-        Route::post('/students/bulk_update/store', [StudentsController::class, 'bulk_store'])->name('users.students.bulk_update.store');
+        // Route::get('/students/bulk_update/index', [StudentsController::class, 'bulk_update'])->name('users.students.bulk_update.index');
+        // Route::post('/students/bulk_update/index', [StudentsController::class, 'bulk_update']);
+        // Route::post('/students/bulk_update/store', [StudentsController::class, 'bulk_store'])->name('users.students.bulk_update.store');
 
-        Route::post('/get-subjects_not_offering', [StudentsController::class, 'get_subjects_offering'])->name('get-subjects_not_offering');
+        // Route::post('/get-subjects_not_offering', [StudentsController::class, 'get_subjects_offering'])->name('get-subjects_not_offering');
         Route::post('/get-student_details', [StudentsController::class, 'getStudentDetails'])->name('get-student_details');
-        Route::post('/save-subjects_not_offering', [StudentsController::class, 'save_subjects_offering'])->name('save-subjects_not_offering');
+        // Route::post('/save-subjects_not_offering', [StudentsController::class, 'save_subjects_offering'])->name('save-subjects_not_offering');
+
+
+        Route::get('/staffs/index', [StaffsController::class, 'index'])->name('users.staffs.index');
+        Route::get('/staffs/create', [StaffsController::class, 'create'])->name('users.staffs.create');
+        Route::post('/staffs/edit', [StaffsController::class, 'editStudent'])->name('users.staffs.edit');
+        Route::post('/staffs/store', [StaffsController::class, 'store'])->name('users.staffs.store');
+        Route::get('/staffs/sort', [StaffsController::class, 'sort'])->name('users.staffs.sort');
+        Route::post('/staffs/search', [StaffsController::class, 'search'])->name('users.staffs.search');
+        Route::post('/staffs/details', [StaffsController::class, 'details'])->name('users.staffs.details');
+
+        Route::get('/parents/index', [ParentsController::class, 'index'])->name('users.parents.index');
+        Route::get('/parents/create', [ParentsController::class, 'create'])->name('users.parents.create');
+        Route::post('/parents/edit', [ParentsController::class, 'editStudent'])->name('users.parents.edit');
+        Route::post('/parents/store', [ParentsController::class, 'store'])->name('users.parents.store');
+        Route::get('/parents/sort', [ParentsController::class, 'sort'])->name('users.parents.sort');
+        Route::post('/parents/search', [ParentsController::class, 'search'])->name('users.parents.search');
+        Route::post('/parents/details', [ParentsController::class, 'details'])->name('users.parents.details');
     });
 
 
@@ -242,6 +261,7 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
 
         Route::get('/invoices/print/index', [InvoicesController::class, 'PrintIndex'])->name('invoices.print.index');
         Route::post('/invoices/print/generate', [InvoicesController::class, 'print'])->name('invoices.print.generate');
+        Route::post('/invoices/bulk_action', [InvoicesController::class, 'bulk_action'])->name('invoices.bulk_action');
 
 
         Route::get('/fee_collection/index', [FeeCollectionController::class, 'index'])->name('fee_collection.index');

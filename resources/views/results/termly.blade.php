@@ -10,7 +10,7 @@
                 <div class="card mb-4">
                     <div class="card-body">
 
-                        <div class="card-title header-elements  d-flex fle4x-row">
+                        <div class="card-title header-elements  d-flex">
                             <h5 class="m-0 me-2 d-none d-md-block">End of Term Report</h5>
                         </div>
 

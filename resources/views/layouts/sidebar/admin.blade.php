@@ -29,17 +29,16 @@
                 <div data-i18n="Invoices">Invoices</div>
             </a>
             <ul class="menu-sub">
+                 <li class="menu-item {{ $route == 'invoices.index' ? 'active' : '' }} ">
+                    <a href="{{ route('invoices.index') }}" class="menu-link">
+                        <div data-i18n="Generate">Generate</div>
+                    </a>
+                </li>
                 <li class="menu-item {{ $route == 'invoices.print.index' ? 'active' : '' }} ">
                     <a href="{{ route('invoices.print.index') }}" class="menu-link">
-                        <div data-i18n="Print Invoices">Print Invoices</div>
+                        <div data-i18n="Print">Print</div>
                     </a>
                 </li>
-                <li class="menu-item {{ $route == 'invoices.index' ? 'active' : '' }} ">
-                    <a href="{{ route('invoices.index') }}" class="menu-link">
-                        <div data-i18n="Generate Invoices">Generate Invoices</div>
-                    </a>
-                </li>
-                
             </ul>
         </li>
 
@@ -142,6 +141,16 @@
         <li class="menu-item {{ $route == 'users.students.index' ? 'active' : '' }} {{ $route == 'users.students.create' ? 'active' : '' }}">
             <a href="{{ route('users.students.index') }}" class="menu-link">
                 <div data-i18n="Students">Students</div>
+            </a>
+        </li>
+        <li class="menu-item {{ $route == 'users.staffs.index' ? 'active' : '' }} {{ $route == 'users.staffs.create' ? 'active' : '' }}">
+            <a href="{{ route('users.staffs.index') }}" class="menu-link">
+                <div data-i18n="Staffs">Staffs</div>
+            </a>
+        </li>
+        <li class="menu-item {{ $route == 'users.parents.index' ? 'active' : '' }} {{ $route == 'users.parents.create' ? 'active' : '' }}">
+            <a href="{{ route('users.parents.index') }}" class="menu-link">
+                <div data-i18n="Parents">Parents</div>
             </a>
         </li>
     </ul>

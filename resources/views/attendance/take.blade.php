@@ -46,7 +46,7 @@
                             @csrf
                             <div class="row">
                                 <div class="col-sm-4 mb-1">
-                                    <select class="default-select form-control wide mb-3" id="class_id" name="class_id">
+                                    <select class="form-select" id="class_id" name="class_id">
                                         <option value="">--select class--</option>
                                         @foreach ($classes as $class)
                                             <option value="{{ $class->id }}"

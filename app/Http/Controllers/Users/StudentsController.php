@@ -101,10 +101,9 @@ class StudentsController extends Controller
         $data['students'] = User::select('id','image', 'first_name','middle_name','last_name','login','gender','class_id','parent_id','status','address')
                                 ->where('usertype','std')
                                 ->where('school_id',$school_id)
-                                ->where('status',1)
-                                ->where('login','like','%'.$request['query'].'%')
-                                ->orWhere('first_name','like','%'.$request['query'].'%')
-                                ->orWhere('last_name','like','%'.$request['query'].'%')
+                                ->where(function($query) use ($request){
+                                    $query ->where('login','like','%'.$request['query'].'%')->orWhere('first_name','like','%'.$request['query'].'%')->orWhere('last_name','like','%'.$request['query'].'%');
+                                })
                                 ->with(['class','parent'])
                                 ->orderBy('gender', 'desc')
                                 ->orderBy('first_name')
