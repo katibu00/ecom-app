@@ -54,6 +54,15 @@
                 -webkit-print-color-adjust: exact;
             }
         }
+        .footer{
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            left: 0;
+            float: left;
+            clear: both;
+        }
        
     </style>
 </head>
@@ -66,15 +75,26 @@
 
 @foreach($students as $position => $student)
 @php
-    $student_payments = App\Models\PaymentRecord::where('student_id',$student->student_id)
+
+    $withhold = 0;
+    if($settings->withhold == 1)
+    {
+        $student_payments = App\Models\PaymentRecord::where('student_id',$student->student_id)
                 ->where('session_id',$session_id)
                 ->where('term',$term)
                 ->where('class_id',$class_id)
                 ->where('school_id',$school->id)
                 ->sum('paid_amount');
+
+        if($student_payments < $settings->minimun_amount)
+        {
+            $withhold = 1;
+        }
+    }
+ 
                
 @endphp
-<div class="container" style="margin-top: -30px;">
+<div class="container" style="margin-top: 0px;">
 <div class="row">
     <div class="col-md-12">
        <table width="100%">
@@ -97,17 +117,33 @@
     <div style="width: 100%">
         <div style="width: 45%; float: left;">
                 @php
-                    $user = App\Models\user::select('first_name','middle_name','last_name','class_id',)->where('id',$student->student_id)->first();
+                    $user = App\Models\User::select('id','first_name','middle_name','last_name','class_id','login')->where('id',$student->student_id)->first();
                 @endphp
                <p style="margin-top: -15px;"><strong>Roll Number:</strong> {{$user->login}}</p>
                <p style="margin-top: -15px;"><strong>Name:</strong> {{$user->first_name}}  {{$user->middle_name}}  {{$user->last_name}}</p>
-               <p style="margin-top: -15px; "><strong>Class: </strong> {{$user['class']['name']}}</p>
+               <p style="margin-top: -15px; "><strong>Class: </strong> {{ $user->class->name }}</p>
                @if( @$user['parent']['first_name'] != null)<p style="margin-top: -15px;"><strong>Parent/Guardian: </strong> {{ @$user['parent']['title'] }}  {{ @$user['parent']['first_name'] }}  {{ @$user['parent']['last_name'] }}</p>@endif
                @if( @$user['parent']['phone'] != null) <p style="margin-top: -15px;"><strong>Mobile Number: </strong> {{$user['parent']['phone']}}</p>@endif
         </div>
 
-        @php
-            $subjects = App\Models\Mark::select('subject_id')->where('session_id',$session_id)->where('term',$term)->where('class_id',$class_id)->where('school_id',$school->id)->groupBy('subject_id')->get();
+        @php            
+            $compulsorySubjects = App\Models\AssignSubject::where('designation', 1)
+                    ->where('school_id', $school->id)
+                    ->where('class_id', $user->class->id)
+                    ->pluck('subject_id');
+
+                // Fetch the subjects the student is offering
+                $offeredSubjects = App\Models\SubjectOffering::where('student_id', $user->id)
+                    ->where('offering', 1)
+                    ->pluck('subject_id');
+
+                // Merge the compulsory subjects with the offered subjects, and remove duplicates
+                $subjects = App\Models\Subject::whereIn('id', $compulsorySubjects)
+                    ->where('school_id', $school->id)
+                    ->orWhereIn('id', $offeredSubjects)
+                    ->distinct()
+                    ->get();
+
             $subject_number = $subjects->count();
 
             $total = App\Models\ProcessedMark::select('total')->where('session_id',$session_id)->where('class_id',$class_id)->where('term',$term)->where('school_id',$school->id)->where('student_id',$student->student_id)->first();
@@ -125,11 +161,11 @@
                 <p style="margin-top: -15px;"><strong>Class Population:</strong> {{$count}}</p>
 
                 @if($settings->show_position == '1')
-                   <p style="margin-top: -15px;"><strong>Position:</strong> @if($student_payments > $settings->minimun_amount) {{ addOrdinalNumberSuffix($position+1) }} @else Withheld  @endif</p>
+                   <p style="margin-top: -15px;"><strong>Position:</strong> @if($withhold == 0) {{ addOrdinalNumberSuffix($position+1) }} @else Withheld  @endif</p>
                 @endif
 
-                <p style="margin-top: -15px;"><strong>Marks Obtained:</strong>  @if($student_payments > $settings->minimun_amount) {{ $total_marks }} out of   {{ $subject_number*100 }} @else Withheld @endif</p>
-                <p style="margin-top: -15px;"><strong>Average Score:</strong> @if($student_payments > $settings->minimun_amount) {{ number_format($average,2) }} @else Witheld @endif</p>
+                <p style="margin-top: -15px;"><strong>Marks Obtained:</strong>  @if($withhold == 0) {{ $total_marks }} out of   {{ $subject_number*100 }} @else Withheld @endif</p>
+                <p style="margin-top: -15px;"><strong>Average Score:</strong> @if($withhold == 0) {{ number_format($average,2) }} @else Witheld @endif</p>
                 @if($school->show_attendance == 'on')
                      @php
                          $absent = App\Models\Attendance::where('class_id', $class_id)->where('class_section_id',  $class_section_id)->where('school_id',  $school_id)->where('status','!=','present')->where('term',$term)->where('session_id',$session_id)->where('user_id',$user->id)->get()->count();
@@ -153,7 +189,16 @@
                     <tr>
                         <th class="text-center" style="width: 5%;">S/N</th>
                         <th style="width: 25%;">Subject</th>
-                        <th class="text-center"  style="width: 5%;">CA</th>
+                        @if($settings->break_ca == 1)
+                            @php
+                            $class_cas = App\Models\CAScheme::select('id','code')->where('school_id',$school->id)->where('class_id','like','%'.$class_id.'%')->where('status',1)->get();
+                            @endphp
+                            @foreach ($class_cas as $ca)
+                            <th  class="text-center"  style="width: 3%;">{{ $ca->code }}</th>
+                            @endforeach
+                        @else
+                        <th  class="text-center"  style="width: 5%;">CA</th>
+                        @endif                      
                         <th class="text-center" style="width: 5%;" >Exam</th>
                         <th class="text-center"  style="width: 5%;">Total</th>
                         <th class="text-center"  style="width: 5%;">Grade</th>
@@ -168,23 +213,39 @@
                         @endphp
                         <tr>
                             <td class="text-center">{{$key+1}}</td>
-                            <td class="text-left">{{$subject_name->name }}</td>
+                            <td class="text-left">{{ @$subject->name }}</td>
 
-                            @if($student_payments > $settings->minimun_amount)
+                            @if($withhold == 0)
                             @php
-                                 $ca = App\Models\Mark::where('student_id', $student->student_id)->where('class_id',$class_id)->where('term',$term)->where('school_id',$school->id)->where('type','!=', 'exam')->where('subject_id',$subject->subject_id)->sum('marks');
-                                 $exam = App\Models\Mark::where('student_id', $student->student_id)->where('class_id',$class_id)->where('term',$term)->where('school_id',$school->id)->where('type','exam')->where('subject_id',$subject->subject_id)->sum('marks');
+                                 $ca = App\Models\Mark::where('student_id', $student->student_id)->where('class_id',$class_id)->where('term',$term)->where('school_id',$school->id)->where('type','!=', 'exam')->where('subject_id',$subject->id)->sum('marks');
+                                 $exam = App\Models\Mark::where('student_id', $student->student_id)->where('class_id',$class_id)->where('term',$term)->where('school_id',$school->id)->where('type','exam')->where('subject_id',$subject->id)->sum('marks');
                              
                                 $total_score = $exam+$ca;
                                 @$grade_marks = App\Models\Grade::where([['start_mark','<=',(int)$total_score],['end_mark','>=',(int)$total_score]])->where('type',$settings->grading_style)->first();
                                 @$letter_grade = $grade_marks->letter_grade;
                                 @$remark = $grade_marks->remarks;
                             @endphp
-                             <td class="text-center">{{$ca}}</td>
+                           
+                           @if($settings->break_ca == 1)
+                                @foreach ($class_cas as $ca)
+                                    @php
+                                        $ca_score = App\Models\Mark::select('marks')->where('student_id',@$student->student_id)->where('class_id',$class_id)->where('term',$term)->where('school_id',$school->id)->where('type',$ca->code)->where('subject_id',$subject->id)->first();
+                                    @endphp
+                                <td class="text-center">{{ @$ca_score->marks }}</td>
+                                @endforeach
+                            @else
+
+                                <td class="text-center">{{$ca}}</td>
+                            @endif
+
+                            @if($exam == 0)
+                            <td class="text-center" colspan="4">In Progress</td>
+                            @else
                              <td class="text-center">{{$exam}}</td>
                              <td class="text-center">{{$total_score}}</td>
                              <td class="text-center">{{@$letter_grade}}</td>
                              <td class="text-center">{{@$remark}}</td>
+                             @endif
                              @else
                              <td colspan="5">Result Witheld Due to Non-payment of Fees</td>
                              @endif
@@ -221,12 +282,12 @@
                                 <tr>
                                
                                 <td style="text-align: left;">{{ $psychomotor->name}}</td>
-                                @if($student_payments > $settings->minimun_amount)
-                                <td>{!! $score->score == 5? '<i class="fa fa-check"></i>': '' !!}</td>
-                                <td>{!! $score->score == 4? '<i class="fa fa-check"></i>': '' !!}</td>
-                                <td>{!! $score->score == 3? '<i class="fa fa-check"></i>': '' !!}</td>
-                                <td>{!! $score->score == 2? '<i class="fa fa-check"></i>': '' !!}</td>
-                                <td>{!! $score->score == 1? '<i class="fa fa-check"></i>': '' !!}</td>
+                                @if($withhold == 0)
+                                <td>{!! @$score->score == 5? '<i class="fa fa-check"></i>': '' !!}</td>
+                                <td>{!! @$score->score == 4? '<i class="fa fa-check"></i>': '' !!}</td>
+                                <td>{!! @$score->score == 3? '<i class="fa fa-check"></i>': '' !!}</td>
+                                <td>{!! @$score->score == 2? '<i class="fa fa-check"></i>': '' !!}</td>
+                                <td>{!! @$score->score == 1? '<i class="fa fa-check"></i>': '' !!}</td>
                                 @else
                                     <td colspan="5">Witheld</td>
                                 @endif
@@ -234,9 +295,8 @@
                             @endforeach     
                         </tbody>
                     </table>
-                    <p>SCALE:</p>
-                    <p style="margin-top: -12px">5 - Excellent, 4 - Good, 3 - Fair, 2 - Poor, 1 - Very Poor</p>
                 </div>
+
                 <div style="width: 47%; float: right;">
 
                     <table class="styled-table" style="font-size: 14px;">
@@ -256,16 +316,16 @@
                             @endphp
                             @foreach ($affectives as $affective)
                                 @php
-                                    $score = App\Models\PsychomotorGrade::select('score')->where('school_id',$school->id)->where('session_id',@$session_id)->where('term',@$term)->where('class_id',@$class_id)->where('student_id',$student->student_id)->where('grade_id',$psychomotor->id)->first();
+                                    $score = App\Models\PsychomotorGrade::select('score')->where('school_id',$school->id)->where('session_id',@$session_id)->where('term',@$term)->where('class_id',@$class_id)->where('student_id',$student->student_id)->where('grade_id',$affective->id)->first();
                                 @endphp
                                 <tr>
                                 <td style="text-align: left;">{{ $affective->name}}</td>
-                                @if($student_payments > $settings->minimun_amount)
-                                <td>{!! $score->score == 5? '<i class="fa fa-check"></i>': '' !!}</td>
-                                <td>{!! $score->score == 4? '<i class="fa fa-check"></i>': '' !!}</td>
-                                <td>{!! $score->score == 3? '<i class="fa fa-check"></i>': '' !!}</td>
-                                <td>{!! $score->score == 2? '<i class="fa fa-check"></i>': '' !!}</td>
-                                <td>{!! $score->score == 1? '<i class="fa fa-check"></i>': '' !!}</td>
+                                @if($withhold == 0)
+                                <td>{!! @$score->score == 5? '<i class="fa fa-check"></i>': '' !!}</td>
+                                <td>{!! @$score->score == 4? '<i class="fa fa-check"></i>': '' !!}</td>
+                                <td>{!! @$score->score == 3? '<i class="fa fa-check"></i>': '' !!}</td>
+                                <td>{!! @$score->score == 2? '<i class="fa fa-check"></i>': '' !!}</td>
+                                <td>{!! @$score->score == 1? '<i class="fa fa-check"></i>': '' !!}</td>
                                 @else
                                 <td colspan="5">Witheld</td>
                                 @endif
@@ -274,41 +334,50 @@
                         </tbody>
                     </table>
                 </div>
+
             </div>
+            <p style="margin-top: 10px"><strong>SCALE: </strong> 5 - Excellent, 4 - Good, 3 - Fair, 2 - Poor, 1 - Very Poor</p>
+
             @endif
 
             @if(@$comments)
                 @php
-                    $principal = App\Models\Comment::where('school_id', $school->id)
+                    if($withhold == 0)
+                    {
+                        $principal = App\Models\Comment::select('comment','additional')->where('school_id', $school->id)
                         ->where('student_id', $user->id)
                         ->where('session_id', $session_id)
                         ->where('term', $term)
                         ->where('class_id', $class_id)
                         ->where('officer', 'p')
-                        ->first();
-                    $master = App\Models\Comment::where('school_id', $school->id)
+                        ->first(); 
+                    $master = App\Models\Comment::select('comment','additional')->where('school_id', $school->id)
                         ->where('student_id', $user->id)
                         ->where('session_id', $session_id)
                         ->where('term', $term)
                         ->where('class_id', $class_id)
                         ->where('officer', 'fm')
                         ->first();
+                        $principal_comment = $principal->comment.' '.$principal->additional;
+                        $master_comment = $master->comment.' '.$master->additional;
+                        $principal_length = strlen($principal_comment);
+                        $master_length = strlen($master_comment);
+
+                    }
+                   
                 @endphp
-                <div style=" width: 100%; overflow: hidden; clear:both; margin-top: 0px;">
-                    <p style="margin: 0 0px; font-size: 17px; line-height: 1.8em;">Form Master's Comment: <span
-                            style="border-bottom: 1px solid black;  padding: 10px 100px;">
-                            @if($student_payments > $settings->minimun_amount) {{ @$master->comment }} {{ @$master->addmitional }} @else Withheld @endif</span></p>
-                    <p style="margin: 10px 0px; font-size: 17px; line-height: 1.8em;">Principal's Comment: <span
-                            style="border-bottom: 1px solid black;  padding: 5px 100px;">
-                            @if($student_payments > $settings->minimun_amount) {{ @$principal->comment }} {{ @$principal->addmitional }} @else Withheld @endif</span></p>
-                    <p style="margin: 0 70px; font-size: 17px; line-height: 1.8em;"> <span
-                                style="border-bottom: 2px solid black;  padding: 10px 200px;">
-                                </span></p>
+                <div style="width: 100%; overflow: hidden; clear:both; margin-top: 0px;">
+                    <p style="margin: 0 0px; font-size: {{ $principal_length > 100 ? 12 : 15 }}px; line-height: 1.8em;">Form Master's Comment: <span
+                            style="border-bottom: 1px solid black;  padding: 5px 10px;">
+                            @if($withhold == 0) {{ @$master_comment }} @else Withheld @endif</span></p>
+                    <p style="margin: 10px 0px; font-size: {{ $principal_length > 100 ? 12 : 15 }}px; line-height: 1.8em;">Principal's Comment: <span
+                            style="border-bottom: 1px solid black;  padding: 2px 10px;">
+                            @if($withhold == 0) {{ @$principal_comment }} @else Withheld @endif</span></p>
                 </div>
             @endif
 
             @if(@$next_term)
-               <p style="font-size: 14px; margin-top: -10px;">Next Term Begins: {{ \Carbon\Carbon::parse($date)->format('l, d F Y') }}</p>
+               <p style="font-size: 14px; margin-top: 10px;">Next Term Begins: {{ \Carbon\Carbon::parse($date)->format('l, d F Y') }}</p>
             @endif
     </div>
     <div style=" width: 100%; overflow: hidden; clear:both; margin-top: 5px;">
@@ -329,7 +398,7 @@
     <div style=" width: 100%; margin-top: 0px; clear: bo4th;">
             <p style="font-size: 14px; text-align: center; margin-top: -35px;">THIS REPORT DOES NOT REQUIRE SIGNATURE</p>
     </div>
-    <div style=" width: 100%; margin-top: -5px;">
+    <div class="footer">
         <p style="font-size: 13px; text-align: center">Generated on {{date("l, jS \of F Y ")}} @ {{date("h:i A")}} | intellisas</p>
     </div>
 

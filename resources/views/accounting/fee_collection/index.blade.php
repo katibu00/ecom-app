@@ -63,7 +63,7 @@
                                     </div>
                                     <div class="d-none" id="btn_div">
                                         <hr class="mb-4">
-                                        <button class="btn btn-primary btn-lg btn-block" type="submit" id="initialize_btn">Initialize Payment</button>
+                                        <button class="btn btn-primary btn-lg btn-block" type="submit" id="initialize_btn">Generate Payment Slip</button>
                                     </div>
                                 </form>
 

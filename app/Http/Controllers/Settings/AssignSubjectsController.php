@@ -17,7 +17,7 @@ class AssignSubjectsController extends Controller
     {
         $data['classes'] = Classes::select('id','name')->where('school_id',auth()->user()->school_id)->where('status',1)->get();
         $data['subjects'] = Subject::select('id','name')->where('school_id',auth()->user()->school_id)->get();
-        $data['staffs'] = User::select('id','title','first_name','last_name')->where('usertype','!=','student')->where('usertype','!=','parent')->get();
+        $data['staffs'] = User::select('id','first_name','last_name')->where('usertype','!=','student')->where('usertype','!=','parent')->get();
         return view('settings.assign_subjects.index',$data);
     }
 
@@ -31,6 +31,7 @@ class AssignSubjectsController extends Controller
                 $data->class_id = $request->class_id;
                 $data->subject_id = $request->subject_id[$i];
                 $data->teacher_id = $request->teacher_id[$i];
+                $data->designation = $request->designation[$i];
                 $data->school_id = auth()->user()->school_id;
                 $data->save();
             }
@@ -47,6 +48,7 @@ class AssignSubjectsController extends Controller
 
         $validator = Validator::make($request->all(), [
             'teacher_id'=>'required',
+            'designation'=>'required',
         ]);
        
         if($validator->fails()){
@@ -58,11 +60,12 @@ class AssignSubjectsController extends Controller
       
         $data = AssignSubject::findOrFail($request->id);
         $data->teacher_id = $request->teacher_id;
+        $data->designation = $request->designation;
         $data->update();
 
         return response()->json([
             'status'=>200,
-            'message'=>'Subject Teacher Updated Successfully',
+            'message'=>'Subject Assignment Updated Successfully',
         ]);
     }
 

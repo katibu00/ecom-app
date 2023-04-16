@@ -35,16 +35,24 @@
                                 </div>
 
                                 <div class="mb-2 row">
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-3">
                                         <select class="form-select form-select-sm mb-2" name="fee_id[]" required>
                                             <option value="">-- Fee Category --</option>
                                             @foreach ($fees as $fee)
-                                            <option value="{{ $fee->id }}">{{ $fee->name }} (@if(@$fee->priority == 'o') Optional @elseif(@$fee->priority == 'r') Recommended @elseif(@$fee->priority == 'm') Mandatory @endif)</option>
+                                            <option value="{{ $fee->id }}">{{ $fee->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-lg-5">
+                                    <div class="col-lg-3">
                                         <input type="text" class="form-control form-control-sm mb-2" name="amount[]"  placeholder="Amount" required>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <select class="form-select form-select-sm mb-3" name="priority[]" required>
+                                            <option  value="">--Priority--</option>
+                                            <option value="m">Mandatory</option>
+                                            <option value="r">Recommeded</option>
+                                            <option value="o">Optional</option>
+                                        </select>
                                     </div>
                                     <div class="col-lg-3">
                                         <span class="btn btn-success btn-sm addeventmore"><i class="ti ti-plus me-2"></i></span>
@@ -71,16 +79,24 @@
             <div class="row">
                 <div class="col-xl-12">
                     <div class="mb-2 row">
-                        <div class="col-lg-4">
+                        <div class="col-lg-3">
                             <select class="form-select form-select-sm mb-2" name="fee_id[]" required>
                                 <option value="">-- Fee Category --</option>
                                 @foreach ($fees as $fee)
-                                <option value="{{ $fee->id }}">{{ $fee->name }} (@if(@$fee->priority == 'o') Optional @elseif(@$fee->priority == 'r') Recommended @elseif(@$fee->priority == 'm') Mandatory @endif)</option>
+                                <option value="{{ $fee->id }}">{{ $fee->name }} </option>
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-lg-5">
+                        <div class="col-lg-3">
                             <input type="text" class="form-control form-control-sm mb-2" name="amount[]"  placeholder="Amount" required>
+                        </div>
+                        <div class="col-lg-3">
+                            <select class="form-select form-select-sm mb-3" name="priority[]" required>
+                                <option  value="">--Priority--</option>
+                                <option value="m">Mandatory</option>
+                                <option value="r">Recommeded</option>
+                                <option value="o">Optional</option>
+                            </select>
                         </div>
                         <div class="col-lg-3">
                             <span class="btn btn-success btn-sm addeventmore me-1"><i class="ti ti-plus"></i></span>

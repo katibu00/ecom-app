@@ -122,7 +122,7 @@
         @php
             $session = App\Models\Session::select('name')->where('id',$payment_record->session_id)->first()
         @endphp
-        <h2 style="font-size: 20px; text-align: center; font-style:oblique; ">{{ $session->name }} {{ ucfirst($payment_record->term) }} Term Fee Collection - Student Payment Receipt</h2>
+        <h2 style="font-size: 20px; text-align: center; font-style:oblique; ">{{ @$session->name }} {{ ucfirst($payment_record->term) }} Term Fee Collection - Student Payment Receipt</h2>
     </div>
 
 
@@ -185,7 +185,8 @@
         </div>
 
         <div style="width: 80%; float: right;">
-            <h4 style="font-size: 18px; text-align: center">The Sum of <span style="text-decoration: line-through; text-decoration-style: double;">N</span>{{number_format($payment_record->paid_amount,2)}} was paid to {{$school->name}} in respect of {{$payment_record['session']['name']}} Academic Session - {{ ucfirst($payment_record->term) }} Term Fee Collection Services via {{ ucfirst($payment_record->method) }} on {{$payment_record->created_at->format('l, jS \of F Y')}}.</h4>
+            <h4 style="font-size: 18px; text-align: center">The Sum of <span style="text-decoration: line-through; text-decoration-style: double;">N</span>{{ number_format(@$payment_record->paid_amount,2) }} was paid to {{ @$school->name }} in respect of {{ @$payment_record->session->name }} Academic Session - {{ ucfirst(@$payment_record->term) }} Term Fee Collection Services via {{ ucfirst(@$payment_record->method) }} on {{ @$payment_record->created_at->format('l, jS \of F Y')}}.</h4>
+
         </div>
     </div>
 

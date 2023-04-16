@@ -1,14 +1,14 @@
 <script>
     $(document).ready(function() {
 
-        ///student details
-        $(document).on('click', '.student_details', function() {
+        ///staff details
+        $(document).on('click', '.staff_details', function() {
 
             $('#details_content_div').addClass('d-none');
             $('#details_loading_div').removeClass('d-none');
 
-            let student_name = $(this).data('student_name');
-            let student_id = $(this).data('student_id');
+            let staff_name = $(this).data('staff_name');
+            let staff_id = $(this).data('staff_id');
 
             $.ajaxSetup({
                 headers: {
@@ -19,36 +19,27 @@
 
             $.ajax({
                 type: "POST",
-                url: "{{ route('users.students.details') }}",
+                url: "{{ route('users.staff.details') }}",
                 data: {
-                    'student_id': student_id
+                    'staff_id': staff_id
                 },
                 dataType: "json",
                 success: function(res) {
 
                     if (res.status == 200) {
 
-                        if (res.student.image != 'default.png') {
+                        if (res.staff.image != 'default.png') {
                             $("#picture").attr("src", "/uploads/" + res.school_name + '/' +
-                                res.student.image);
+                                res.staff.image);
                         }
 
-                        $('#first_name').html(res.student.first_name);
-                        $('#middle_name').html(res.student.middle_name);
-                        $('#last_name').html(res.student.last_name);
-                        $('#roll_number').html(res.student.login);
-                        $('#class').html(res.student.class.name);
+                        $('#first_name').html(res.staff.first_name);
+                        $('#last_name').html(res.staff.last_name);
+                        $('#roll_number').html(res.staff.login);
 
                         $('#registered').html(res.registered);
-                        if(res.student.parent)
-                        {
-                            $('#parent_name').html(res.student.parent.title + ' ' + res.student.parent.first_name + ' ' + res.student.parent.last_name);
-                            $('#parent_email').html(res.student.parent.email);
-                            $('#parent_phone').html(res.student.parent.phone);
-                            $('#parent_address').html(res.student.parent.name);
-                        }
-
-                        $('.modal-title').html('Details for ' + student_name);
+                       
+                        $('.modal-title').html('Details for ' + staff_name);
                         $('#details_content_div').removeClass('d-none');
                         $('#details_loading_div').addClass('d-none');
 
@@ -212,21 +203,21 @@
         });
 
 
-        //on click edit students
-        $(document).on('click', '.edit_student', function(e) {
+        //on click edit staffs
+        $(document).on('click', '.edit_staff', function(e) {
             e.preventDefault();
 
-            let student_id = $(this).data('student_id');
-            let student_name = $(this).data('student_name');
-            $('#edit_student_id').val(student_id);
+            let staff_id = $(this).data('staff_id');
+            let staff_name = $(this).data('staff_name');
+            $('#edit_staff_id').val(staff_id);
 
             $('#edit_loading_div').removeClass('d-none');
             $('#edit_content_div').addClass('d-none');
-            $('#edit_student_form')[0].reset();
+            $('#edit_staff_form')[0].reset();
             $('#edit_parent option:selected').removeAttr('selected');
             $('#edit_gender option:selected').removeAttr('selected');
-            $("#edit_student_picture").attr("src", "/uploads/default.png");
-            $('#edit_student_modal_title').html('Edit ' + student_name + 's Profile');
+            $("#edit_staff_picture").attr("src", "/uploads/default.png");
+            $('#edit_staff_modal_title').html('Edit ' + staff_name + 's Profile');
 
             $.ajaxSetup({
                 headers: {
@@ -236,27 +227,27 @@
 
             $.ajax({
                 type: 'POST',
-                url: '{{ route('get-student_details') }}',
+                url: '{{ route('get-staff_details') }}',
                 data: {
-                    'student_id': student_id,
+                    'staff_id': staff_id,
                 },
                 success: function(res) {
 
-                    if (res.student.image != 'default.png') {
-                        $("#edit_student_picture").attr("src", "/uploads/" + res
-                            .school_username.username + '/' + res.student.image);
+                    if (res.staff.image != 'default.png') {
+                        $("#edit_staff_picture").attr("src", "/uploads/" + res
+                            .school_username.username + '/' + res.staff.image);
                     }
 
                     $('#edit_loading_div').addClass('d-none');
                     $('#edit_content_div').removeClass('d-none');
-                    $('#edit_first_name').val(res.student.first_name);
-                    $('#edit_middle_name').val(res.student.middle_name);
-                    $('#edit_last_name').val(res.student.last_name);
-                    $('#edit_dob').val(res.student.dob);
-                    $('#edit_roll_number').val(res.student.login);
-                    $(`#edit_parent option[value="${res.student.parent_id}"]`).attr(
+                    $('#edit_first_name').val(res.staff.first_name);
+                    $('#edit_middle_name').val(res.staff.middle_name);
+                    $('#edit_last_name').val(res.staff.last_name);
+                    $('#edit_dob').val(res.staff.dob);
+                    $('#edit_roll_number').val(res.staff.login);
+                    $(`#edit_parent option[value="${res.staff.parent_id}"]`).attr(
                         "selected", "selected");
-                    $(`#edit_gender option[value="${res.student.gender}"]`).attr("selected",
+                    $(`#edit_gender option[value="${res.staff.gender}"]`).attr("selected",
                         "selected");
 
 
@@ -267,16 +258,16 @@
 
         });
 
-        //edit students form
-        $(document).on('submit', '#edit_student_form', function(e) {
+        //edit staffs form
+        $(document).on('submit', '#edit_staff_form', function(e) {
             e.preventDefault();
 
-            let formData = new FormData($('#edit_student_form')[0]);
+            let formData = new FormData($('#edit_staff_form')[0]);
 
             spinner =
                 '<div class="spinner-border" style="height: 15px; width: 15px;" role="status"></div>&nbsp; Saving . . .'
-            $('#edit_student_btn').html(spinner);
-            $('#edit_student_btn').attr("disabled", true);
+            $('#edit_staff_btn').html(spinner);
+            $('#edit_staff_btn').attr("disabled", true);
 
             $.ajaxSetup({
                 headers: {
@@ -286,7 +277,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "{{ route('users.students.edit') }}",
+                url: "{{ route('users.staffs.edit') }}",
                 data: formData,
                 contentType: false,
                 processData: false,
@@ -298,8 +289,8 @@
                         $.each(response.errors, function(key, err) {
                             $('#error_list').append('<li>' + err + '</li>');
                         });
-                        $('#edit_student_btn').text("Save Changes");
-                        $('#edit_student_btn').attr("disabled", false);
+                        $('#edit_staff_btn').text("Save Changes");
+                        $('#edit_staff_btn').attr("disabled", false);
                         Command: toastr["error"](
                             "Some Fields are required. Please check your input and try again."
                             )
@@ -343,8 +334,8 @@
                             "hideMethod": "fadeOut"
                         }
 
-                        $('#edit_student_btn').text("Save Changes");
-                        $('#edit_student_btn').attr("disabled", false);
+                        $('#edit_staff_btn').text("Save Changes");
+                        $('#edit_staff_btn').attr("disabled", false);
                         $('#editModal').modal('hide');
                         $('.table').load(location.href + ' .table');
                         // $('.table').html(response);

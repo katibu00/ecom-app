@@ -44,6 +44,22 @@
                                 </div>
                             </div>
                             <div class="mb-3 row">
+                                <label class="col-sm-3 col-form-label" for="show_scores">Show Highest, Lowest and Average Scores</label>
+                                <div class="col-sm-9">
+                                    <div class="form-check toggle-switch text-end form-switch me-4">
+                                        <input class="form-check-input"  {{ $settings->show_scores == 1? 'checked': ''}} type="checkbox" id="show_scores">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-sm-3 col-form-label" for="break_ca">Break CA</label>
+                                <div class="col-sm-9">
+                                    <div class="form-check toggle-switch text-end form-switch me-4">
+                                        <input class="form-check-input"  {{ $settings->break_ca == 1? 'checked': ''}} type="checkbox" id="break_ca">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
                                 <label class="col-sm-3 col-form-label">Withhold Defaulter's Result</label>
                                 <div class="col-sm-9">
                                     <div class="form-check toggle-switch text-end form-switch me-4">
@@ -100,6 +116,8 @@
                     withhold: $("#withhold").prop("checked") == true ? 1 : 0,
                     minimun_amount: $("#minimun_amount").val(),
                     grading_style: $("#grading_style").val(),
+                    show_scores: $("#show_scores").prop("checked") == true ? 1 : 0,
+                    break_ca: $("#break_ca").prop("checked") == true ? 1 : 0,
                 };
               
                 spinner =

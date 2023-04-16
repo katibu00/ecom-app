@@ -5,6 +5,7 @@
                 <th class="text-center">S/N</th>
                 <th>Class</th>
                 <th>Subject</th>
+                <th>Designation</th>
                 <th>Teacher</th>
                 <th class="text-center">Action</th>
             </tr>
@@ -28,6 +29,7 @@
                 <td></td>
                 <td>{{ @$row+1 }}</td>
                 <td>{{  @$subject->subject->name }}</td>
+                <td>{{  @$subject->designation == 1 ? 'Compulsory':'Optional' }}</td>
                 <td>{{  @$subject->teacher->title }} {{  @$subject->teacher->first_name }} {{  @$subject->teacher->last_name }}</td>
                 <td class="text-center">
                     <div>

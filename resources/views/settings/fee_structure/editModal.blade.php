@@ -20,6 +20,14 @@
                                 <input type="number" id="edit_amount" class="form-control" placeholder="Enter Fee Amount" />
                             </div>
                         </div>
+                        <div class="col-md-12">
+                            <select class="form-select form-select-sm mb-3" id="edit_priority" required>
+                                <option  value="">--Priority--</option>
+                                <option value="m">Mandatory</option>
+                                <option value="r">Recommeded</option>
+                                <option value="o">Optional</option>
+                            </select>
+                        </div>
                         <div class="form-group">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="status">

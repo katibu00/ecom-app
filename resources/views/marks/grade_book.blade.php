@@ -5,18 +5,13 @@
 @section('content')
 
     <div class="container-xxl flex-grow-1 container-p-y">
-
         <div class="row mb-5">
-
             <div class="col-md">
                 <div class="card mb-4">
                     <div class="card-body">
-
                         <div class="card-title header-elements  d-flex fle4x-row">
                             <h5 class="m-0 me-2 d-none d-md-block">Gradebook</h5>
                         </div>
-
-
                         
                         <form action="{{ route('marks.grade_book.search')}}" method="POST">
                             @csrf
@@ -48,6 +43,14 @@
                             <div class="row">
                                 <div class="col-md-12">
 
+                                    @php
+                                         $compulsorySubjects = App\Models\AssignSubject::select('subject_id')->where('school_id', $school->id)
+                                                        ->where('class_id', $class_id)
+                                                        ->where('designation', 1)
+                                                        ->get(); 
+                                        $cas = App\Models\CAScheme::where('school_id', $school->id)->get();
+                                    @endphp
+
                                     @foreach (@$students as $student)
                                     <div class="table-responsive">
                                         <table class="table table-sm table-hover">
@@ -58,11 +61,9 @@
                                                 <tr>
                                                     <th scope="col">S/N</th>
                                                     <th scope="col">Subject</th>
-                                                    @php
-                                                        $cas = App\Models\CAScheme::where('school_id', $school->id)->get();
-                                                    @endphp
+                                                   
                                                     @foreach ($cas as $ca)
-                                                        <th scope="col">{{ $ca->code }}/{{ $ca->marks }}</th>
+                                                        <th>{{ $ca->code }}/{{ $ca->marks }}</th>
                                                     @endforeach
                                                     <th scope="col">Exams</th>
                                                     <th scope="col">Total</th>
@@ -72,15 +73,17 @@
                                             <tbody>
                                                 @php
                                                    
-                                                    $subjects = App\Models\AssignSubject::with('class','subject')->where('school_id', $school->id)
-                                                        ->where('class_id', $class_id)
+                                                    $optionalSubjects = App\Models\SubjectOffering::select('subject_id')->where('school_id', $school->id)
+                                                        ->where('student_id', $student->id)
+                                                        ->where('offering', 1)
                                                         ->get(); 
+                                                        $allSubjects = $compulsorySubjects->concat($optionalSubjects);
                                                         $total_ca = 0;
                                                 @endphp
-                                                @foreach ($subjects as $key => $subject)
+                                                @foreach ($allSubjects as $key => $subject)
                                                     <tr>
                                                         <td scope="row">{{ $key + 1 }}</td>
-                                                        <td>{{ @$subject['subject']['name'] }}</td>
+                                                        <td>{{ @$subject->subject->name }}</td>
 
                                                         @foreach ($cas as $ca)
                                                             @php

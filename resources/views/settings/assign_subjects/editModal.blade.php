@@ -6,7 +6,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal">
                 </button>
             </div>
-            <form>
+            <form id="update_form">
                 <div class="modal-body">
                 
                         <ul id="error_list"></ul>
@@ -17,13 +17,29 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <div class="col-lg-8">
-                                        <select class="default-select form-control wide mb-3" id="update_teacher_id" required>
-                                            <option value="">--Select Teacher--</option>
+                                        <select class="form-select form-control wide mb-3" id="update_teacher_id" required>
+                                            <option value=""></option>
                                             @foreach ($staffs as $staff)
                                                 <option value="{{ $staff->id }}">{{ $staff->title }} {{ $staff->first_name }} {{ $staff->last_name }}</option>
                                             @endforeach
                                         </select> 
                                         <input type="hidden" id="update_id">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <div class="mb-3 row">
+                                    <label class="col-lg-4 col-form-label" for="name">Designation
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="col-lg-8">
+                                        <select class="form-select form-control wide mb-3" id="update_designation" required>
+                                            <option value=""></option>
+                                            <option value="1">Compulsory</option>
+                                            <option value="0">Optional</option>
+                                        </select> 
                                     </div>
                                 </div>
                             </div>

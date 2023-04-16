@@ -37,5 +37,4 @@
 @section('js')
 <script src="/js/sweetalert.min.js"></script>
 @include('comments.script')
-{!! Toastr::message() !!}
 @endsection

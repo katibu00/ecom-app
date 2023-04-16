@@ -17,7 +17,7 @@
                     <div class="mb-2">
                         <img alt="student picture" id="logo" class="rounded mr-sm-4 mr-0" width="130" src="/uploads/default.png">
                     </div>
-                    <h4 class="text-primary mb-2">Student Information</h4>
+                    <h4 class="text-primary mb-2">Staff Information</h4>
                     <div class="row mb-2">
                         <div class="col-4">
                             <h5 class="f-w-500">First Name <span class="pull-right">:</span>
@@ -26,14 +26,7 @@
                         <div class="col-8"><span id="first_name"></span>
                         </div>
                     </div>
-                    <div class="row mb-2">
-                        <div class="col-4">
-                            <h5 class="f-w-500">Middle Name <span class="pull-right">:</span>
-                            </h5>
-                        </div>
-                        <div class="col-8"><span id="middle_name"></span>
-                        </div>
-                    </div>
+                  
                     <div class="row mb-2">
                         <div class="col-4">
                             <h5 class="f-w-500">Last Name <span class="pull-right">:</span>
@@ -67,7 +60,7 @@
                         </div>
                     </div>
              
-                    <h5 class="text-primary">Parent's Information</h5>
+                    {{-- <h5 class="text-primary">Parent's Information</h5>
                     <div class="row mb-2">
                         <div class="col-4">
                             <h5 class="f-w-500">Name <span class="pull-right">:</span>
@@ -99,7 +92,7 @@
                         </div>
                         <div class="col-8"><span id="parent_phone"></span>
                         </div>
-                    </div>
+                    </div> --}}
                    
                 </div>
                    

@@ -12,8 +12,8 @@
     <tbody>
         @foreach ($classes as $key => $row)
         @php
-        $principal = App\Models\CommentSubmit::where('school_id', $school->id)->where('session_id', $school->session_id)->where('term',$school->term)->where('class_id',$row->id)->where('officer','p')->first(); 
-        $form_master = App\Models\CommentSubmit::where('school_id', $school->id)->where('session_id', $school->session_id)->where('term',$school->term)->where('class_id',$row->id)->where('officer','fm')->first(); 
+        $principal = App\Models\Comment::where('school_id', $school->id)->where('session_id', $school->session_id)->where('term',$school->term)->where('class_id',$row->id)->where('officer','p')->first(); 
+        $form_master = App\Models\Comment::where('school_id', $school->id)->where('session_id', $school->session_id)->where('term',$school->term)->where('class_id',$row->id)->where('officer','fm')->first(); 
         @endphp
 
         <tr>
@@ -38,7 +38,7 @@
             <td class="text-center">
                 <div class="dropdown">
                     <button type="button" class="btn btn-primary light sharp" data-bs-toggle="dropdown">
-                        <svg width="18px" height="18px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"/><circle fill="#000000" cx="5" cy="12" r="2"/><circle fill="#000000" cx="12" cy="12" r="2"/><circle fill="#000000" cx="19" cy="12" r="2"/></g></svg>
+                        <svg width="18px" height="18px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"/><circle fill="#fff" cx="5" cy="12" r="2"/><circle fill="#fff" cx="12" cy="12" r="2"/><circle fill="#fff" cx="19" cy="12" r="2"/></g></svg>
                     </button>
                     <div class="dropdown-menu dropdown-menu-end">
                         <a class="dropdown-item viewDetails" href="#" data-class_id="{{ $row->id }}" data-class_name="{{ $row->name }}" data-bs-toggle="modal" data-bs-target="#viewCommentsModal"><i class="ti ti-eye text-primary me-2"></i>View Comments</a>

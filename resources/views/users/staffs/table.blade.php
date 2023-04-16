@@ -56,11 +56,11 @@
                                 <i class="ti ti-dots-vertical"></i>
                             </button>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item student_details" href="javascript:void(0);"
-                                    data-student_id="{{ $staff->id }}" data-student_name="{{ @$staff->first_name . ' ' . @$staff->middle_name . ' ' . @$staff->last_name }}" data-bs-toggle="modal"
+                                <a class="dropdown-item staff_details" href="javascript:void(0);"
+                                    data-staff_id="{{ $staff->id }}" data-staff_name="{{ @$staff->first_name . ' ' . @$staff->last_name }}" data-bs-toggle="modal"
                                     data-bs-target="#detailsModal"><i class="ti ti-user me-1"></i> Details</a>
-                                <a class="dropdown-item edit_student" href="javascript:void(0);"
-                                    data-student_id="{{ $staff->id }}" data-student_name="{{ @$staff->first_name . ' ' . @$staff->middle_name . ' ' . @$staff->last_name }}" data-bs-toggle="modal"
+                                <a class="dropdown-item edit_staff" href="javascript:void(0);"
+                                    data-staff_id="{{ $staff->id }}" data-staff_name="{{ @$staff->first_name . ' ' . @$staff->last_name }}" data-bs-toggle="modal"
                                     data-bs-target="#editModal"><i class="ti ti-pencil me-1"></i> Edit</a>
                                
                             </div>

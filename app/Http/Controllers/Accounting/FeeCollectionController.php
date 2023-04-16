@@ -69,17 +69,13 @@ class FeeCollectionController extends Controller
 
         if ($paymentSlip) {
             $mandatories = FeeStructure::with('fee_category')
-                ->whereHas('fee_category', function ($query) {
-                    $query->where('priority', 'm');
-                })
+                ->where('priority','m')
                 ->where('school_id', auth()->user()->school_id)
                 ->where('class_id', $request->class_id)
                 ->where('student_type', $invoice->student_type)->get();
 
             $mandatory_sum = FeeStructure::with('fee_category')
-                ->whereHas('fee_category', function ($query) {
-                    $query->where('priority', 'm');
-                })
+                ->where('priority','m')
                 ->where('school_id', auth()->user()->school_id)
                 ->where('class_id', $request->class_id)
                 ->where('student_type', $invoice->student_type)->sum('amount');
@@ -131,32 +127,24 @@ class FeeCollectionController extends Controller
         } else {
 
             $mandatories = FeeStructure::with('fee_category')
-                ->whereHas('fee_category', function ($query) {
-                    $query->where('priority', 'm');
-                })
+                ->where('priority','m')
                 ->where('school_id', auth()->user()->school_id)
                 ->where('class_id', $request->class_id)
                 ->where('student_type', $invoice->student_type)->get();
             $mandatory_sum = FeeStructure::with('fee_category')
-                ->whereHas('fee_category', function ($query) {
-                    $query->where('priority', 'm');
-                })
+                ->where('priority','m')
                 ->where('school_id', auth()->user()->school_id)
                 ->where('class_id', $request->class_id)
                 ->where('student_type', $invoice->student_type)->sum('amount');
 
             $recommededs = FeeStructure::with('fee_category')
-                ->whereHas('fee_category', function ($query) {
-                    $query->where('priority', 'r');
-                })
+                ->where('priority','r')
                 ->where('school_id', auth()->user()->school_id)
                 ->where('class_id', $request->class_id)
                 ->where('student_type', $invoice->student_type)->get();
 
             $optionals = FeeStructure::with('fee_category')
-                ->whereHas('fee_category', function ($query) {
-                    $query->where('priority', 'o');
-                })
+                ->where('priority','o')
                 ->where('school_id', auth()->user()->school_id)
                 ->where('class_id', $request->class_id)
                 ->where('student_type', $invoice->student_type)->get();

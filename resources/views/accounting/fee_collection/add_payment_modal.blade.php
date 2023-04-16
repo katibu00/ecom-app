@@ -10,7 +10,7 @@
                 <div class="modal-body">
                     <div class="basic-form">
                         <div class="mb-3 row">
-                            <label class="col-sm-3 col-form-label">Payment Amount</label>
+                            <label class="col-sm-3 col-form-label">Payment Amount<span class="text-danger"> *</span></label>
                             <div class="col-sm-9">
                                 <input type="number" class="form-control" id="add_payment_amount" placeholder="Payment Amount">
                             </div>
@@ -23,17 +23,17 @@
                         </div>
                         <fieldset class="mb-3">
                             <div class="row">
-                                <label class="col-form-label col-sm-3 pt-0">Payment Method</label>
+                                <label class="col-form-label col-sm-3 pt-0">Payment Method<span class="text-danger"> *</span></label>
                                 <div class="col-sm-9">
                                     <div class="form-check">
-                                        <input class="form-check-input method" type="radio" name="account" value="cash" required>
+                                        <input class="form-check-input method" type="radio" name="account" value="cash">
                                         <label class="form-check-label">
                                             Cash Transaction
                                         </label>
                                     </div>
                                    @foreach ($accounts as $account)
                                     <div class="form-check">
-                                        <input class="form-check-input method" type="radio" name="account" value="{{ $account->bank }}" required>
+                                        <input class="form-check-input method" type="radio" name="account" value="{{ $account->bank }}">
                                         <label class="form-check-label">
                                             {{ $account->bank }}
                                         </label>
@@ -42,18 +42,6 @@
                                 </div>
                             </div>
                         </fieldset>
-                        {{-- <div class="mb-3 row">
-                            <div class="col-sm-3">Total Amount Payable</div>
-                            <div class="col-sm-9">
-                                <h5 class="payable"></h5>
-                            </div>
-                        </div>
-                        <div class="mb-3 row">
-                            <div class="col-sm-3">Discount Allowed</div>
-                            <div class="col-sm-9">
-                                <h5 class="discount"></h5>
-                            </div>
-                        </div> --}}
                         <div class="mb-3 row">
                             <div class="col-sm-3">Remaining Balance</div>
                             <div class="col-sm-9">

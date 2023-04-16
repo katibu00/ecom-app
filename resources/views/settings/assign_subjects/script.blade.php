@@ -64,8 +64,8 @@
             let name = $(this).data('name');
 
             swal({
-                    title: "Delete " + name + "?",
-                    text: "Once deleted, you will not be able to recover it!",
+                    title: "Unassign " + name + "?",
+                    text: "Once Unassigned, All Exams record for the selected Subject will also be deleted!",
                     icon: "warning",
                     buttons: true,
                     dangerMode: true,
@@ -90,11 +90,11 @@
                             success: function(res) {
 
                                 if (res.status == 200) {
-                                    swal('Deleted', res.message, "success");
+                                    swal('Unassigned', res.message, "success");
                                     $('.table').load(location.href + ' .table');
                                 }
                                 if (res.status == 400) {
-                                    swal('Cannot Delete', res.message, "error");
+                                    swal('Cannot Unassign', res.message, "error");
                                 }
 
                             }
@@ -126,7 +126,8 @@
         $(document).on('click', '#update_btn', function(e) {
             e.preventDefault();
 
-            teacher_id = $('#update_teacher_id').val()
+            teacher_id = $('#update_teacher_id').val();
+            designation = $('#update_designation').val();
             id = $('#update_id').val()
 
             $.ajaxSetup({
@@ -143,7 +144,7 @@
                 type: "POST",
                 url: "{{ route('settings.assign_subjects.update') }}",
                 data: {
-                    'teacher_id': teacher_id, 'id':id,
+                    'teacher_id': teacher_id, 'id':id,'designation':designation,
                 },
                 dataType: "json",
                 success: function(res) {
@@ -176,6 +177,7 @@
                         };
                         $("#update_btn").text("Update");
                         $("#update_btn").attr("disabled", false);
+                        
                     }
 
                     if (res.status == 200) {
@@ -207,6 +209,8 @@
                         };
                         $("#update_btn").text("Update");
                         $("#update_btn").attr("disabled", false);
+                        $("#update_form")[0].reset();
+                        // $(".form-select").prop('selectedIndex', 0);
 
 
                     }

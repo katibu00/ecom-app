@@ -18,8 +18,8 @@
                     <table class="table table-bordered table-sm" style="width: 100%">
                         <thead>
                             <th>Fee Category</th>
+                            <th>Amount (&#8358;)</th>
                             <th>Priority</th>
-                            <th>Amount</th>
                         </thead>
                         <tbody id="fee_list"></tbody>
                     </table>

@@ -26,23 +26,31 @@
                                     </div>
 
                                     <div class="mb-2 row">
-                                        <div class="col-lg-4">
-                                            <select class="default-select form-control wide mb-3" name="subject_id[]" required>
+                                        <div class="col-lg-3">
+                                            <select class="form-select form-control wide mb-3" name="subject_id[]" required>
                                                 <option value="">--Select Subject--</option>
                                                 @foreach ($subjects as $subject)
                                                     <option value="{{ $subject->id }}">{{ $subject->name }}</option>
                                                 @endforeach
                                             </select>                                      
                                           </div>
-                                        <div class="col-lg-4">
-                                            <select class="default-select form-control wide mb-3" name="teacher_id[]" required>
+                                        <div class="col-lg-3">
+                                            <select class="form-select form-control wide mb-3" name="teacher_id[]" required>
                                                 <option value="">--Select Teacher--</option>
                                                 @foreach ($staffs as $staff)
                                                     <option value="{{ $staff->id }}">{{ $staff->title }} {{ $staff->first_name }} {{ $staff->last_name }}</option>
                                                 @endforeach
                                             </select>                                      
                                           </div>
-                                        <div class="col-lg-4">
+                                        <div class="col-lg-3">
+                                            <select class="form-select form-control wide mb-3" name="designation[]" required>
+                                                <option value="">--Designation--</option>
+                                                <option value="1">Compulsory</option>
+                                                <option value="0">Optional</option>
+                                                
+                                            </select>                                      
+                                          </div>
+                                        <div class="col-lg-3">
                                             <span class="btn btn-success btn-sm addeventmore "><i class="ti ti-plus me-1"></i></span>
                                         </div>
                                     </div>
@@ -67,23 +75,31 @@
             <div class="row">
                 <div class="col-xl-12">
                     <div class="mb-2 row">
-                        <div class="col-lg-4">
-                            <select class="default-select form-control wide mb-3" name="subject_id[]" required>
+                        <div class="col-lg-3">
+                            <select class="form-select form-control wide mb-3" name="subject_id[]" required>
                                 <option value="">--Select Subject--</option>
                                 @foreach ($subjects as $subject)
                                     <option value="{{ $subject->id }}">{{ $subject->name }}</option>
                                 @endforeach
                             </select>                                      
                           </div>
-                        <div class="col-lg-4">
-                            <select class="default-select form-control wide mb-3" name="teacher_id[]" required>
+                        <div class="col-lg-3">
+                            <select class="form-select form-control wide mb-3" name="teacher_id[]" required>
                                 <option value="">--Select Teacher--</option>
                                 @foreach ($staffs as $staff)
                                     <option value="{{ $staff->id }}">{{ $staff->title }} {{ $staff->first_name }} {{ $staff->last_name }}</option>
                                 @endforeach
                             </select>                                      
                           </div>
-                        <div class="col-lg-4 d-flex">
+                          <div class="col-lg-3">
+                            <select class="form-select form-control wide mb-3" name="designation[]" required>
+                                <option value="">--Designation--</option>
+                                <option value="1">Compulsory</option>
+                                <option value="0">Optional</option>
+                                
+                            </select>                                      
+                          </div>
+                        <div class="col-lg-3 d-flex">
                             <span class="btn btn-success btn-sm addeventmore m-2"><i class="ti ti-plus me-1"></i></span>
                             <span class="btn btn-danger btn-sm removeeventmore m-2"><i class="ti ti-minus me-1"></i></span>
                         </div>

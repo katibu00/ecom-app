@@ -16,7 +16,7 @@ class FeeStructuresController extends Controller
     public function index()
     {
         $school_id = auth()->user()->school_id;
-        $data['fees'] = FeeCategory::select('id', 'name','priority')->where('school_id',$school_id)->where('status',1)->orderBy('priority', 'asc')->latest()->get();
+        $data['fees'] = FeeCategory::select('id', 'name')->where('school_id',$school_id)->where('status',1)->orderBy('name')->latest()->get();
         $data['classes'] = Classes::select('id','name')->where('school_id',$school_id)->get();
         $data['student_types'] = StudentType::select('id','name')->where('school_id',$school_id)->where('status',1)->get();
         return view('settings.fee_structure.index', $data);
@@ -43,6 +43,7 @@ class FeeStructuresController extends Controller
                     $data->student_type = $request->student_type;
                     $data->fee_category_id = $request->fee_id[$i];
                     $data->amount = $request->amount[$i];
+                    $data->priority = $request->priority[$i];
                     $data->save();
                 }else
                 {
@@ -87,14 +88,19 @@ class FeeStructuresController extends Controller
         }else{
             $student_type = StudentType::where('school_id',$school_id)->where('name',$request->std_type)->first()->id;
         };
+        $fees = FeeStructure::with('fee_category')
+                    ->where('school_id', $school_id)
+                    ->where('class_id', $request->class_id)
+                    ->where('student_type', $student_type)
+                    ->where('status', 1)
+                    ->select('fee_category_id','priority','amount')
+                    ->get();
 
-        $fees = FeeStructure::with('fee_category')->where('school_id', $school_id)->where('class_id',$request->class_id)->where('student_type',$student_type)->get();
-        $amount = FeeStructure::select('amount')->where('school_id', $school_id)->where('class_id',$request->class_id)->where('student_type',$student_type)->sum('amount');
+      
 
         return response()->json([
             'status'=>200,
             'fees'=>$fees,
-            'amount'=>number_format($amount,0),
         ]);
      
 
@@ -108,12 +114,15 @@ class FeeStructuresController extends Controller
         {
             $student_type = 'r';
         }
-        else
+        else if($request->student_type == 'transfer')
         {
             $student_type = 't';
+        }else
+        {
+            $student_type = StudentType::where('school_id',$school_id)->where('id',$request->student_type)->select('id')->first()->id;
         };
         $data['fees'] = FeeCategory::select('id', 'name')->where('school_id',$school_id)->get();
-        $data['rows'] = FeeStructure::with('fee_category')->select('id','fee_category_id', 'amount','status')->where('school_id', $school_id)->where('class_id',$request->class_id)->where('student_type',$student_type)->get();
+        $data['rows'] = FeeStructure::with('fee_category')->select('id','fee_category_id', 'amount','status','priority')->where('school_id', $school_id)->where('class_id',$request->class_id)->where('student_type',$student_type)->get();
         $data['student_type'] = $student_type;
         $data['class_id'] = $request->class_id;
         return view('settings.fee_structure.edit',$data);
@@ -122,6 +131,7 @@ class FeeStructuresController extends Controller
     {
         $data = FeeStructure::find($request->id);
         $data->amount = $request->amount;
+        $data->priority = $request->priority;
         $data->status = $request->status;
         $data->update();
 

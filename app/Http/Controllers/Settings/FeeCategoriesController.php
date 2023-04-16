@@ -12,7 +12,10 @@ class FeeCategoriesController extends Controller
 {
     public function index()
     {
-        $data['fee_categories'] = FeeCategory::select('id', 'name','priority','status')->where('school_id',auth()->user()->school_id)->orderBy('priority', 'asc')->latest()->get();
+        $data['fee_categories'] = FeeCategory::select('id', 'name', 'status')
+                        ->where('school_id', auth()->user()->school_id)
+                        ->orderBy('name')
+                        ->get();
         return view('settings.fee_category.index', $data);
     }
 
@@ -35,7 +38,6 @@ class FeeCategoriesController extends Controller
             for ($i=0; $i < $dataCount; $i++){
                 $data = new FeeCategory();
                 $data->name = $request->name[$i];
-                $data->priority = $request->priority[$i];
                 $data->school_id = auth()->user()->school_id;
                 $data->save();
             }
@@ -52,7 +54,6 @@ class FeeCategoriesController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name'=>'required',
-            'priority'=>'required',
         ]);
        
         if($validator->fails()){
@@ -64,7 +65,6 @@ class FeeCategoriesController extends Controller
       
         $data = FeeCategory::findOrFail($request->id);
         $data->name = $request->name;
-        $data->priority = $request->priority;
         $data->status = $request->status;
         $data->update();
 

@@ -17,7 +17,7 @@
         <tr>
             <td class="text-center">{{ $key + 1 }}</td>
             <td>{{ $expense->date }}</td>
-            <td>{{ @$expense->payer->title }} {{ $expense->payer->first_name }} {{ $expense->payer->last_name }}</td>
+            <td>{{ @$expense->payer->title }} {{ @$expense->payer->first_name }} {{ @$expense->payer->last_name }}</td>
            
             <td class="text-center">{{ @$expense->payee_id }}</td>
             <td>{{ @$expense->description }}</td>

@@ -17,7 +17,7 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <div class="col-lg-8">
-                                        <select class="default-select form-control wide mb-3" id="update_teacher_id" required>
+                                        <select class="form-select form-select-sm mb-3" id="update_teacher_id" required>
                                             <option value="">--Select Teacher--</option>
                                             @foreach ($staffs as $staff)
                                                 <option value="{{ $staff->id }}">{{ $staff->title }} {{ $staff->first_name }} {{ $staff->last_name }}</option>

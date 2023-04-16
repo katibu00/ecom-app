@@ -102,14 +102,12 @@
             let name = $(this).data('name');
             let id = $(this).data('id');
             let status = $(this).data('status');
-            let priority = $(this).data('priority');
             if(status == 1)
             {
                 $("#status").prop("checked", true)
             }
             $('#edit_name').val(name);
             $('#update_id').val(id);
-            $(`#edit_priority option[value=${priority}]`).prop('selected', true);
         });
 
         //update data
@@ -117,7 +115,6 @@
             e.preventDefault();
             name = $('#edit_name').val()
             id = $('#update_id').val()
-            priority = $('#edit_priority').val()
 
             $.ajaxSetup({
                 headers: {
@@ -133,7 +130,7 @@
                 type: "POST",
                 url: "{{ route('settings.fee_category.update') }}",
                 data: {
-                    'name': name, 'id':id, 'priority': priority,  status: $("#status").prop("checked") == true ? 1 : 0,
+                    'name': name, 'id':id, status: $("#status").prop("checked") == true ? 1 : 0,
                 },
                 dataType: "json",
                 success: function(res) {

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
-use App\Models\AssignSubject;
 use App\Models\Classes;
 use App\Models\ClassSection;
 use App\Models\School;
@@ -11,7 +10,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File as File;
 
 class StudentsController extends Controller
@@ -36,7 +34,6 @@ class StudentsController extends Controller
     public function create()
     {
         $data['classes'] = Classes::select('id', 'name')->where('school_id',auth()->user()->school_id)->where('status',1)->get();
-        $data['class_sections'] = ClassSection::select('id', 'name')->where('school_id',auth()->user()->school_id)->where('status',1)->get();
         return view('users.students.create', $data);
     }
 

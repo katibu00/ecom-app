@@ -13,10 +13,10 @@
                     <div class="col-xl-12">
                         <div class="mb-2 row">
                             <div class="col-lg-4">
-                                <select class="default-select form-control wide mb-3" id="view_officer">
-                                    <option value="">--Select Officer--</option>
-                                    <option value="fm">Form Master</option>
-                                    <option value="p">Principal/Director</option>
+                                <select class="form-select form-select-sm mb-3" id="select_type">
+                                    <option value="">--Select Type--</option>
+                                    <option value="1">Psychomotor Skills</option>
+                                    <option value="2">Affective Traits</option>
                                 </select>
                             </div>
                         </div>

@@ -61,9 +61,14 @@
         <div data-i18n="Marks Entry">Marks Entry</div>
     </a>
     <ul class="menu-sub">
-        <li class="menu-item {{ $route == 'marks.create' ? 'active' : '' }}">
+        <li class="menu-item {{ $route == 'marks.create' ? 'active' : '' }} {{ $route == 'marks.create.fetch' ? 'active' : '' }}">
             <a href="{{ route('marks.create') }}" class="menu-link">
                 <div data-i18n="Enter Marks">Enter Marks</div>
+            </a>
+        </li>
+        <li class="menu-item {{ $route == 'psychomotor.index' ? 'active' : '' }}">
+            <a href="{{ route('psychomotor.index') }}" class="menu-link">
+                <div data-i18n="Socio-emotional skills">Socio-emotional skills</div>
             </a>
         </li>
         <li class="menu-item {{ $route == 'marks.grade_book.index' ? 'active' : '' }} {{ $route == 'marks.grade_book.search' ? 'active' : '' }}">
@@ -119,11 +124,7 @@
                 <div data-i18n="Comments">Comments</div>
             </a>
         </li>
-        <li class="menu-item {{ $route == 'psychomotor.index' ? 'active' : '' }}">
-            <a href="{{ route('psychomotor.index') }}" class="menu-link">
-                <div data-i18n="Psychomotor/Affective">Psychomotor/Affective</div>
-            </a>
-        </li>
+       
         <li class="menu-item {{ $route == 'result.settings' ? 'active' : '' }}">
             <a href="{{ route('result.settings') }}" class="menu-link">
                 <div data-i18n="Result Settings">Result Settings</div>
@@ -141,6 +142,11 @@
         <li class="menu-item {{ $route == 'users.students.index' ? 'active' : '' }} {{ $route == 'users.students.create' ? 'active' : '' }}">
             <a href="{{ route('users.students.index') }}" class="menu-link">
                 <div data-i18n="Students">Students</div>
+            </a>
+        </li>
+        <li class="menu-item {{ $route == 'subjects_offering.index' ? 'active' : '' }} {{ $route == 'get-subjects_offering' ? 'active' : '' }}">
+            <a href="{{ route('subjects_offering.index') }}" class="menu-link">
+                <div data-i18n="Subjects Offering">Subjects Offering</div>
             </a>
         </li>
         <li class="menu-item {{ $route == 'users.staffs.index' ? 'active' : '' }} {{ $route == 'users.staffs.create' ? 'active' : '' }}">

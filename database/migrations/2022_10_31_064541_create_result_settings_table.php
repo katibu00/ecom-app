@@ -16,12 +16,15 @@ return new class extends Migration
         Schema::create('result_settings', function (Blueprint $table) {
             $table->id();
             $table->integer('school_id');
-            $table->tinyInteger('show_position')->default(1);
+            $table->tinyInteger('show_position')->default(0);
             $table->tinyInteger('show_attendance')->default(1);
             $table->tinyInteger('show_passport')->default(1);
             $table->tinyInteger('withhold')->default(0);
             $table->integer('minimun_amount')->nullable();
             $table->string('grading_style')->default('waec');
+            $table->tinyInteger('show_scores')->default(1);
+            $table->tinyInteger('break_ca')->default(0);
+
             $table->timestamps();
         });
     }

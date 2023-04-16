@@ -8,7 +8,9 @@ use App\Models\User;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File as File;
 
 class StaffsController extends Controller
 {
@@ -28,10 +30,17 @@ class StaffsController extends Controller
     }
     public function paginate()
     {
-        $data['classes'] = Classes::select('id', 'name')->where('school_id',auth()->user()->school_id)->get();
-        $data['students'] = User::select('id','image', 'first_name','middle_name','last_name','login','gender','class_id','parent_id','status','address')->where('usertype','std')->where('school_id',auth()->user()->school_id)->where('status',1)->with(['class','parent'])->orderBy('gender', 'desc')->orderBy('first_name')->paginate(15);
-        $data['school'] = School::select('username')->where('id',auth()->user()->school_id)->first();
-        return view('users.students.table',$data)->render();
+        $school_id = auth()->user()->school_id;
+        $data['staffs'] = User::select('id', 'image','first_name','phone','last_name','login','usertype','status')
+                                    ->where('usertype','!=','std')
+                                    ->where('usertype','!=','parent')
+                                    ->where('usertype','!=','intellisas')
+                                    ->where('school_id',$school_id)
+                                    ->where('status',1)
+                                    ->orderBy('first_name')
+                                    ->paginate(15);       
+         $data['school'] = School::select('username')->where('id',auth()->user()->school_id)->first();
+        return view('users.staffs.table',$data)->render();
     }
 
     public function create()
@@ -141,15 +150,15 @@ class StaffsController extends Controller
     public function details(Request $request)
     {
 
-        $student = User::with(['class','parent'])->where('id', $request->student_id)->where('school_id',auth()->user()->school_id)->first();
-        $registered = $student->created_at->diffForHumans();
+        $staff = User::where('id', $request->staff_id)->where('school_id',auth()->user()->school_id)->first();
+        $registered = $staff->created_at->diffForHumans();
         $school_name = School::select('username')->where('id',auth()->user()->school_id)->first();
        
-        if($student)
+        if($staff)
         {
             return response()->json([
                 'status'=>200,
-                'student'=>$student,
+                'staff'=>$staff,
                 'registered'=>$registered,
                 'school_name'=>$school_name,
             ]);
@@ -165,27 +174,27 @@ class StaffsController extends Controller
 
  
 
-    public function getStudentDetails(Request $request)
+    public function getStaffDetails(Request $request)
     {
 
-        $student = User::find($request->student_id);
+        $staff = User::find($request->staff_id);
         $school_username = School::select('username')->where('id',auth()->user()->school_id)->first();
 
-        if($student){
+        if($staff){
             return response()->json([
-                'student' => $student,
+                'staff' => $staff,
                 'school_username' => $school_username,
                 'status' => 200,
             ]);  
         }
 
         return response()->json([
-            'subjects' => 'Student Not Found',
+            'subjects' => 'staff Not Found',
             'status' => 404,
         ]);
     }
 
-    public function editStudent(Request $request)
+    public function editstaff(Request $request)
     {
         // return $request->all();
         $validator = Validator::make($request->all(), [
@@ -208,31 +217,27 @@ class StaffsController extends Controller
         }
         $school = School::select('username')->where('id',auth()->user()->school_id)->first();
        
-        $student = User::find($request->edit_student_id);
-        $student->first_name = $request->first_name;
-        $student->middle_name = $request->middle_name;
-        $student->last_name = $request->last_name;
-        $student->login = $request->roll_number;
-        $student->parent_id = $request->parent_id;
-        $student->gender = $request->gender;
-        $student->dob = $request->dob;
+        $staff = User::find($request->edit_staff_id);
+        $staff->first_name = $request->first_name;
+        $staff->last_name = $request->last_name;
+        $staff->login = $request->roll_number;
       
 
         if ($request->file('image') != null) {
-            $destination = 'uploads/' . $school->username . '/' . $student->image;
+            $destination = 'uploads/' . $school->username . '/' . $staff->image;
             File::delete($destination);
             $file = $request->file('image');
             $extension = $file->getClientOriginalExtension();
             $filename = time() . '.' . $extension;
             $file->move('uploads/' . $school->username, $filename);
-            $student->image = $filename;
+            $staff->image = $filename;
         }
 
-        $student->update();
+        $staff->update();
 
         return response()->json([
             'status'=>200,
-            'message'=>'Student Profile Updated Successfully',
+            'message'=>'staff Profile Updated Successfully',
         ]);
     }
 }

@@ -19,44 +19,72 @@ class InvoicesController extends Controller
 {
     public function index()
     {
-       
-        $school = School::select('id','term','session_id')->where('id', auth()->user()->school_id)->first();
-        $data['classes'] = Classes::select('id','name')->where('school_id',$school->id)->where('status',1)->get();
-        $data['class_sections'] = ClassSection::select('id','name')->where('school_id',$school->id)->where('status',1)->get();
-        $data['invoices'] = Invoice::with(['student','class'])->where('school_id',$school->id)->where('session_id',$school->session_id)->where('term',$school->term)->paginate(15); 
-        return view('accounting.invoices.index',$data);
+
+        $school = School::select('id', 'term', 'session_id')
+            ->where('id', auth()->user()->school_id)
+            ->first();
+
+        $data['classes'] = Classes::select('id', 'name')
+            ->where('school_id', $school->id)
+            ->where('status', 1)
+            ->get();
+
+        $data['invoices'] = Invoice::with(['student', 'class'])
+            ->where('school_id', $school->id)
+            ->where('session_id', $school->session_id)
+            ->where('term', $school->term)
+            ->paginate(15);
+
+        return view('accounting.invoices.index', $data);
+
     }
 
     public function getRecords(Request $request)
     {
-        $students = User::select('first_name','middle_name','last_name','id','login','parent_id')
-        ->where('class_id',$request->class_id)
-        ->where('class_section_id',$request->class_section_id)
-        ->where('usertype','std')
-        ->where('school_id',auth()->user()->school_id)
-        ->where('status',1)->with('parent')
-        ->orderBy('gender', 'desc')
-        ->orderBy('first_name')
-        ->get();
+        $students = User::select('first_name', 'middle_name', 'last_name', 'id', 'login', 'parent_id')
+            ->where('class_id', $request->class_id)
+            ->where('usertype', 'std')
+            ->where('school_id', auth()->user()->school_id)
+            ->where('status', 1)->with('parent')
+            ->orderBy('gender', 'desc')
+            ->orderBy('first_name')
+            ->get();
 
-        $student_types = StudentType::select('id', 'name')->where('school_id',auth()->user()->school_id)->where('status',1)->get();
+        $student_types = StudentType::select('id', 'name')->where('school_id', auth()->user()->school_id)->where('status', 1)->get();
         return response()->json([
-            'students'=>$students,
-            'student_types'=>$student_types,
+            'students' => $students,
+            'student_types' => $student_types,
         ]);
     }
 
     public function storeInvoices(Request $request)
     {
+        $school = School::select('id', 'session_id', 'term')->where('id', Auth::user()->school_id)->first();
 
-        $regular = FeeStructure::select('amount')->where('school_id',auth()->user()->school_id)->where('class_id',$request->class_id)->where('student_type','r')->sum('amount');
-        $transfer = FeeStructure::select('amount')->where('school_id',auth()->user()->school_id)->where('class_id',$request->class_id)->where('student_type','t')->sum('amount');
+        $regular = FeeStructure::where('school_id', $school->id)
+            ->where('class_id', $request->class_id)
+            ->where('student_type', 'r')
+            ->sum('amount');
+        $transfer = FeeStructure::where('school_id', $school->id)
+            ->where('class_id', $request->class_id)
+            ->where('student_type', 't')
+            ->sum('amount');
+      
+        $invoices = Invoice::where('school_id', $school->id)
+            ->where('session_id', $school->session_id)
+            ->where('term', $school->term)
+            ->where('class_id', $request->class_id)
+            ->first();
+        if ($invoices) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Invoices has already been generated for the selected',
+            ]);
+        }
 
-        $school = School::select('id','session_id','term',)->where('id', Auth::user()->school_id)->first();
-        
         $rowCount = count($request->student_id);
-        if($rowCount != NULL){
-            for ($i=0; $i < $rowCount; $i++){
+        if ($rowCount != null) {
+            for ($i = 0; $i < $rowCount; $i++) {
                 $data = new Invoice();
                 $data->school_id = $school->id;
                 $data->session_id = $school->session_id;
@@ -66,56 +94,81 @@ class InvoicesController extends Controller
                 $data->student_type = $request->student_type[$i];
                 $data->pre_balance = $request->pre_balance[$i];
 
-                @$number = Invoice::select('number')->where('school_id',$school->id)->where('session_id',$school->session_id)->where('term',$school->term)->orderBy('id','desc')->first()->number;
-               
-                if(!$number){
-                    $number = 0;
+                $number = Invoice::where('school_id', $school->id)
+                    ->where('session_id', $school->session_id)
+                    ->where('term', $school->term)
+                    ->orderBy('id', 'desc')
+                    ->first();
+
+                if ($number) {
+                    $data->number = $number->number + 1;
+                } else {
+                    $data->number = 1;
                 }
-                $data->number = $number+1;
-          
-                if($request->student_type[$i] == 'r' || $request->student_type[$i] == 's'){
+
+                if ($request->student_type[$i] == 'r' || $request->student_type[$i] == 's') {
                     $data->amount = $regular;
-                }
-                if($request->student_type[$i] == 't'){
+                    if ($regular == 0) {
+                        return response()->json([
+                            'status' => 404,
+                            'message' => 'Fee Structure Not Found for Regular Students',
+                        ]);
+                    }
+                } elseif ($request->student_type[$i] == 't') {
                     $data->amount = $transfer;
-                }
-                if($request->student_type[$i] != 't' && $request->student_type[$i] != 'r' && $request->student_type[$i] != 's'){
-                    $payable = FeeStructure::select('amount')->where('school_id',auth()->user()->school_id)->where('class_id',$request->class_id)->where('student_type', $request->student_type[$i])->sum('amount');
+                   
+                    if ($transfer == 0) {
+                        return response()->json([
+                            'status' => 404,
+                            'message' => 'Fee Structure Not Found for Transfer Students',
+                        ]);
+                    }
+                } else {
+                    $payable = FeeStructure::where('school_id', auth()->user()->school_id)
+                        ->where('class_id', $request->class_id)
+                        ->where('student_type', $request->student_type[$i])
+                        ->sum('amount');
+
+                    if ($payable == 0) {
+                        return response()->json([
+                            'status' => 404,
+                            'message' => 'Fee Structure Not found for a particular student type.',
+                        ]);
+                    }
                     $data->amount = $payable;
                 }
-               
-                if($request->student_type[$i] == 's'){
-                    $data->amount = $regular;
+
+                if ($request->student_type[$i] == 's') {
                     $data->discount = $regular;
-                }else{
+                } else {
                     $data->discount = $request->discount[$i];
                 }
-               
+
                 $data->save();
             }
-        };
+        }
 
         return response()->json([
-            'status'=>200,
-            'message'=>'Invoices Generated Successfully',
+            'status' => 200,
+            'message' => 'Invoices Generated Successfully',
         ]);
     }
-  
+
     public function updateInvoices(Request $request)
     {
 
         $validator = Validator::make($request->all(), [
-            'id'=>'required',
-            'student_type'=>'required',
+            'id' => 'required',
+            'student_type' => 'required',
         ]);
-       
-        if($validator->fails()){
+
+        if ($validator->fails()) {
             return response()->json([
-                'status'=>400,
-                'errors'=>$validator->messages(),
+                'status' => 400,
+                'errors' => $validator->messages(),
             ]);
         }
-      
+
         $data = Invoice::findOrFail($request->id);
         $data->pre_balance = $request->pre_balance;
         $data->student_type = $request->student_type;
@@ -123,37 +176,35 @@ class InvoicesController extends Controller
         $data->update();
 
         return response()->json([
-            'status'=>200,
-            'message'=>'Invoice has been Updated Successfully',
+            'status' => 200,
+            'message' => 'Invoice has been Updated Successfully',
         ]);
     }
 
     public function PrintIndex()
     {
-        $data['classes'] = Classes::select('id','name')->where('school_id',auth()->user()->school_id)->get();
-        return view('accounting.invoices.print_index',$data);
+        $data['classes'] = Classes::select('id', 'name')->where('school_id', auth()->user()->school_id)->get();
+        return view('accounting.invoices.print_index', $data);
     }
 
-    public function print(Request $request)
-    {
+    function print(Request $request) {
         $this->validate($request, [
             'class_id' => 'required',
             'name' => 'required',
             'phone' => 'required',
         ]);
-        $school = School::with('session')->select('session_id','id','term','name','logo','username','address','phone_first','phone_second','email')->where('id', auth()->user()->school_id)->first();
-        $check = Invoice::where('school_id',$school->id)
-                                    ->where('class_id',$request->class_id)
-                                    ->where('session_id',$school->session_id)
-                                    ->where('term',$school->term)
-                                    ->first();
-        if(!$check)
-        {
+        $school = School::with('session')->select('session_id', 'id', 'term', 'name', 'logo', 'username', 'address', 'phone_first', 'phone_second', 'email')->where('id', auth()->user()->school_id)->first();
+        $check = Invoice::where('school_id', $school->id)
+            ->where('class_id', $request->class_id)
+            ->where('session_id', $school->session_id)
+            ->where('term', $school->term)
+            ->first();
+        if (!$check) {
             Toastr::error('Invoices have not been generated for the selected class');
             return redirect()->route('invoices.print.index');
         }
         $class_name = Classes::find($request->class_id)->name;
-        return view('pdfs.account.admin.invoices',['school'=>$school,'class_id'=>$request->class_id,'name'=>$request->name,'phone'=>$request->phone,'class_name'=>$class_name]);
+        return view('pdfs.account.admin.invoices', ['school' => $school, 'class_id' => $request->class_id, 'name' => $request->name, 'phone' => $request->phone, 'class_name' => $class_name]);
     }
 
     public function bulk_action(Request $request)
@@ -161,18 +212,15 @@ class InvoicesController extends Controller
         $this->validate($request, [
             'class_id' => 'required',
             'action' => 'required',
-        ]);  
+        ]);
 
-        $school = School::select('id','term','session_id')->where('id', auth()->user()->school_id)->first();
+        $school = School::select('id', 'term', 'session_id')->where('id', auth()->user()->school_id)->first();
 
-
-        if($request->action == 'delete')
-        {
-            Invoice::where('class_id', $request->class_id)->where('school_id',auth()->user()->school_id)->where('session_id', $school->session_id)->where('term',$school->term)->delete();
+        if ($request->action == 'delete') {
+            Invoice::where('class_id', $request->class_id)->where('school_id', auth()->user()->school_id)->where('session_id', $school->session_id)->where('term', $school->term)->delete();
             Toastr::success('Invoices Deleted Successfully');
             return redirect()->route('invoices.index');
         }
     }
-    
 
 }

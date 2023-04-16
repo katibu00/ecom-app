@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('number');
             $table->double('paid_amount');
             $table->string('method');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }

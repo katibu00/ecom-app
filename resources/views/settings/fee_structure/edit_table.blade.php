@@ -4,8 +4,8 @@
             <tr>
                 <th class="text-center">S/N</th>
                 <th>Fee Category</th>
-                <th>Priority</th>
                 <th>Amount (&#8358;)</th>
+                <th>Priority</th>
                 <th>Status</th>
                 <th class="text-center">Action</th>
             </tr>
@@ -15,14 +15,14 @@
             <tr>
                 <td class="text-center">{{ $key + 1 }}</td>
                 <td><strong>{{ @$row->fee_category->name }}</strong></td>
-                <td>@if( @$row->fee_category->priority == 'm') Mandatory @elseif( @$row->fee_category->priority == 'o') Optional @elseif( @$row->fee_category->priority == 'r') Recommended @endif</td>
                 <td>{{ number_format(@$row->amount,0) }}</td>
+                <td>@if( @$row->priority == 'm') Mandatory @elseif( @$row->priority == 'o') Optional @elseif( @$row->priority == 'r') Recommended @endif</td>
                 <td>
                     {!! @$row->status == 1 ? '  <span class="badge bg-label-primary me-1">Active</span>': '  <span class="badge bg-label-danger me-1">Not Active</span>' !!}
                 </td>
                 <td class="text-center">
                     <div>
-                        <button type="button" data-row_id="{{ @$row->id }}" data-amount="{{ @$row->amount }}" data-status="{{ @$row->status }}" class="btn btn-icon btn-outline-primary editItem"
+                        <button type="button" data-row_id="{{ @$row->id }}" data-amount="{{ @$row->amount }}" data-status="{{ @$row->status }}" data-priority="{{ @$row->priority }}" class="btn btn-icon btn-outline-primary editItem"
                             data-bs-toggle="modal" data-bs-target="#editModal">
                             <span class="ti ti-pencil me-1"></span>
                         </button>

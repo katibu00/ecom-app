@@ -179,30 +179,40 @@
                     }
 
                     if (res.status == 200) {
-
                         $("#loading_div").addClass("d-none");
                         $("#content_div").removeClass("d-none");
 
                         var html = '';
+                        var totalAmount = 0;
                         $.each(res.fees, function(key, fee) {
+                            var priorityText = '';
+                            if (fee.priority === 'm') {
+                                priorityText = 'Mandatory';
+                            } else if (fee.priority === 'o') {
+                                priorityText = 'Optional';
+                            } else if (fee.priority === 'r') {
+                                priorityText = 'Recommended';
+                            }
 
                             html +=
                                 '<tr>' +
                                 '<td>' + fee.fee_category.name + '</td>' +
-                                '<td>' + fee.fee_category.priority.toUpperCase() +
-                                '</td>' +
-                                '<td>' + fee.amount + '</td>' +
+                                '<td>' + fee.amount.toLocaleString('en-US') + '</td>' +
+                                '<td>' + priorityText + '</td>' +
                                 '</tr>';
-
+                                totalAmount += fee.amount;
                         });
+
                         html +=
                             '<tr class="text-center">' +
-                            '<td colspan="2" ><strong>Total Amount</strong></td>' +
-                            '<td><strong>' + '&#8358;' + res.amount +
+                            '<td colspan="2"><strong>Total Amount</strong></td>' +
+                            '<td><strong>' + '&#8358;' + totalAmount.toLocaleString('en-US') +
                             '<strong></td>' +
                             '</tr>';
+
                         $("#fee_list").html(html);
                     }
+
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
                     if (xhr.status === 419) {
@@ -239,25 +249,27 @@
 
         //edit item
         $(document).on('click', '.editItem', function() {
-
             let amount = $(this).data('amount');
             let id = $(this).data('row_id');
             let status = $(this).data('status');
+            let priority = $(this).data('priority');
             if (status == 1) {
-                $("#status").prop("checked", true)
+                $("#status").prop("checked", true);
             }
-
-           
             $('#edit_amount').val(amount);
+            $('#edit_priority').val(priority);
             $('#update_row_id').val(id);
+            $('#edit_priority').trigger('change');
         });
+
 
         //update data
         $(document).on('click', '#update_btn', function(e) {
             e.preventDefault();
-            amount = $('#edit_amount').val()
-            id = $('#update_row_id').val()
-        
+            amount = $('#edit_amount').val();
+            id = $('#update_row_id').val();
+            priority = $('#edit_priority').val();
+
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -274,6 +286,7 @@
                 url: "{{ route('settings.fee_structure.update') }}",
                 data: {
                     'amount': amount,
+                    'priority': priority,
                     'id': id,
                     status: $("#status").prop("checked") == true ? 1 : 0,
                 },

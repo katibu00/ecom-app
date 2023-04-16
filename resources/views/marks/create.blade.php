@@ -34,14 +34,14 @@
                         </div>
 
 
-                        <form class="form" action="{{ route('marks.create')}}" method="POST">
+                        <form class="form" action="{{ route('marks.create.fetch')}}" method="POST">
                             @csrf
                             <div class="row">
                                 <div class="col-sm-4 mb-1">
-                                    <select class="default-select form-control wide mb-3" id="assign_id" name="assign_id">
+                                    <select class="form-select form-select-sm mb-3" id="assign_id" name="assign_id">
                                         <option value="">--select subject--</option>
                                         @foreach ($subjects as $subject)
-                                            <option value="{{ $subject->id }}" {{$subject->id == @$assign_id? 'selected':''}}>{{ @$subject->subject->name }} - {{ @$subject->class->name }}</option>
+                                            <option value="{{ $subject->id }}" {{$subject->id == @$assign_id? 'selected':''}}>{{ @$subject->subject->name }} - {{ @$subject->class->name }} - {{ $subject->designation == 1? 'Compulsory': 'Optional' }}</option>
                                         @endforeach
                                     </select>
                                     @error('assign_id')
@@ -49,7 +49,7 @@
                                     @enderror
                                 </div>
                                 <div class="col-sm-4 mb-1">
-                                    <select id="marks_category" class="default-select form-control wide mb-3" name="marks_category">
+                                    <select id="marks_category" class="form-select form-select-sm mb-3" name="marks_category">
                                         <option value="">--Select Marks Category--</option>
                                         @foreach ($cas as $ca)
                                             <option value="{{ $ca->code }}" {{@$marks_category == $ca->code? 'selected':''}}>{{ $ca->code .' ('.$ca->desc.')'}}</option>

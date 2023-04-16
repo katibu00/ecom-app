@@ -49,8 +49,19 @@ class User extends Authenticatable
     public function class(){
         return $this->hasOne('App\Models\Classes','id','class_id');
     }
+    // public function subjectOfferings(){
+    //     return $this->hasOne('App\Models\SubjectOffering','student_id');
+    // }
 
     public function parent(){
         return $this->belongsTo(User::class, 'parent_id','id');
+    }
+    // public function subjectOfferings(){
+    //     return $this->belongsTo(SubjectOffering::class, 'student_id','id');
+    // }
+
+    public function subjectOfferings()
+    {
+        return $this->hasMany(SubjectOffering::class, 'student_id');
     }
 }

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('term');
             $table->integer('class_id');
             $table->integer('student_id');
+            $table->string('type');
             $table->integer('grade_id');
             $table->integer('score');
             $table->timestamps();

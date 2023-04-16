@@ -12,7 +12,7 @@
 
                             <div class="col-md-3 mb-1">
                                 <input type="text" class="form-control form-control-sm" id="search"
-                                    placeholder="Search by name or roll #..." />
+                                    placeholder="Search by name or roll number..." />
                             </div>
                             <div class="card-title-elements ms-auto">
                                 <select class="form-select form-select-sm w-auto" id="select_class">

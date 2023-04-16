@@ -1,14 +1,14 @@
 <script>
     $(document).ready(function() {
 
-        ///student details
-        $(document).on('click', '.student_details', function() {
+        ///parent details
+        $(document).on('click', '.parent_details', function() {
 
             $('#details_content_div').addClass('d-none');
             $('#details_loading_div').removeClass('d-none');
 
-            let student_name = $(this).data('student_name');
-            let student_id = $(this).data('student_id');
+            let parent_name = $(this).data('parent_name');
+            let parent_id = $(this).data('parent_id');
 
             $.ajaxSetup({
                 headers: {
@@ -19,36 +19,28 @@
 
             $.ajax({
                 type: "POST",
-                url: "{{ route('users.students.details') }}",
+                url: "{{ route('users.parents.details') }}",
                 data: {
-                    'student_id': student_id
+                    'parent_id': parent_id
                 },
                 dataType: "json",
                 success: function(res) {
 
                     if (res.status == 200) {
 
-                        if (res.student.image != 'default.png') {
+                        if (res.parent.image != 'default.png') {
                             $("#picture").attr("src", "/uploads/" + res.school_name + '/' +
-                                res.student.image);
+                                res.parent.image);
                         }
 
-                        $('#first_name').html(res.student.first_name);
-                        $('#middle_name').html(res.student.middle_name);
-                        $('#last_name').html(res.student.last_name);
-                        $('#roll_number').html(res.student.login);
-                        $('#class').html(res.student.class.name);
+                        $('#first_name').html(res.parent.first_name);
+                        $('#middle_name').html(res.parent.middle_name);
+                        $('#last_name').html(res.parent.last_name);
 
                         $('#registered').html(res.registered);
-                        if(res.student.parent)
-                        {
-                            $('#parent_name').html(res.student.parent.title + ' ' + res.student.parent.first_name + ' ' + res.student.parent.last_name);
-                            $('#parent_email').html(res.student.parent.email);
-                            $('#parent_phone').html(res.student.parent.phone);
-                            $('#parent_address').html(res.student.parent.name);
-                        }
+                       
 
-                        $('.modal-title').html('Details for ' + student_name);
+                        $('.modal-title').html('Details for ' + parent_name);
                         $('#details_content_div').removeClass('d-none');
                         $('#details_loading_div').addClass('d-none');
 
@@ -86,9 +78,9 @@
         });
 
         //sort by class
-        $(document).on('change', '#sort_staffs', function() {
+        $(document).on('change', '#sort_parents', function() {
 
-            var sort_staffs = $('#sort_staffs').val();
+            var sort_parents = $('#sort_parents').val();
             $('nav').html('');
 
             $('#content_div').addClass('d-none');
@@ -102,7 +94,7 @@
 
             $.ajax({
                 type: 'GET',
-                url: `{{ route('users.parents.sort') }}` + '?sort_staffs=' + sort_staffs,
+                url: `{{ route('users.parents.sort') }}` + '?sort_parents=' + sort_parents,
 
                 success: function(res) {
 
@@ -212,21 +204,21 @@
         });
 
 
-        //on click edit students
-        $(document).on('click', '.edit_student', function(e) {
+        //on click edit parents
+        $(document).on('click', '.edit_parent', function(e) {
             e.preventDefault();
 
-            let student_id = $(this).data('student_id');
-            let student_name = $(this).data('student_name');
-            $('#edit_student_id').val(student_id);
+            let parent_id = $(this).data('parent_id');
+            let parent_name = $(this).data('parent_name');
+            $('#edit_parent_id').val(parent_id);
 
             $('#edit_loading_div').removeClass('d-none');
             $('#edit_content_div').addClass('d-none');
-            $('#edit_student_form')[0].reset();
+            $('#edit_parent_form')[0].reset();
             $('#edit_parent option:selected').removeAttr('selected');
             $('#edit_gender option:selected').removeAttr('selected');
-            $("#edit_student_picture").attr("src", "/uploads/default.png");
-            $('#edit_student_modal_title').html('Edit ' + student_name + 's Profile');
+            $("#edit_parent_picture").attr("src", "/uploads/default.png");
+            $('#edit_parent_modal_title').html('Edit ' + parent_name + 's Profile');
 
             $.ajaxSetup({
                 headers: {
@@ -236,27 +228,25 @@
 
             $.ajax({
                 type: 'POST',
-                url: '{{ route('get-student_details') }}',
+                url: '{{ route('get-parent_details') }}',
                 data: {
-                    'student_id': student_id,
+                    'parent_id': parent_id,
                 },
                 success: function(res) {
 
-                    if (res.student.image != 'default.png') {
-                        $("#edit_student_picture").attr("src", "/uploads/" + res
-                            .school_username.username + '/' + res.student.image);
+                    if (res.parent.image != 'default.png') {
+                        $("#edit_parent_picture").attr("src", "/uploads/" + res
+                            .school_username.username + '/' + res.parent.image);
                     }
 
                     $('#edit_loading_div').addClass('d-none');
                     $('#edit_content_div').removeClass('d-none');
-                    $('#edit_first_name').val(res.student.first_name);
-                    $('#edit_middle_name').val(res.student.middle_name);
-                    $('#edit_last_name').val(res.student.last_name);
-                    $('#edit_dob').val(res.student.dob);
-                    $('#edit_roll_number').val(res.student.login);
-                    $(`#edit_parent option[value="${res.student.parent_id}"]`).attr(
+                    $('#edit_first_name').val(res.parent.first_name);
+                    $('#edit_last_name').val(res.parent.last_name);
+                    $('#edit_roll_number').val(res.parent.login);
+                    $(`#edit_parent option[value="${res.parent.parent_id}"]`).attr(
                         "selected", "selected");
-                    $(`#edit_gender option[value="${res.student.gender}"]`).attr("selected",
+                    $(`#edit_gender option[value="${res.parent.gender}"]`).attr("selected",
                         "selected");
 
 
@@ -267,16 +257,16 @@
 
         });
 
-        //edit students form
-        $(document).on('submit', '#edit_student_form', function(e) {
+        //edit parents form
+        $(document).on('submit', '#edit_parent_form', function(e) {
             e.preventDefault();
 
-            let formData = new FormData($('#edit_student_form')[0]);
+            let formData = new FormData($('#edit_parent_form')[0]);
 
             spinner =
                 '<div class="spinner-border" style="height: 15px; width: 15px;" role="status"></div>&nbsp; Saving . . .'
-            $('#edit_student_btn').html(spinner);
-            $('#edit_student_btn').attr("disabled", true);
+            $('#edit_parent_btn').html(spinner);
+            $('#edit_parent_btn').attr("disabled", true);
 
             $.ajaxSetup({
                 headers: {
@@ -286,7 +276,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "{{ route('users.students.edit') }}",
+                url: "{{ route('users.parents.edit') }}",
                 data: formData,
                 contentType: false,
                 processData: false,
@@ -298,8 +288,8 @@
                         $.each(response.errors, function(key, err) {
                             $('#error_list').append('<li>' + err + '</li>');
                         });
-                        $('#edit_student_btn').text("Save Changes");
-                        $('#edit_student_btn').attr("disabled", false);
+                        $('#edit_parent_btn').text("Save Changes");
+                        $('#edit_parent_btn').attr("disabled", false);
                         Command: toastr["error"](
                             "Some Fields are required. Please check your input and try again."
                             )
@@ -343,8 +333,8 @@
                             "hideMethod": "fadeOut"
                         }
 
-                        $('#edit_student_btn').text("Save Changes");
-                        $('#edit_student_btn').attr("disabled", false);
+                        $('#edit_parent_btn').text("Save Changes");
+                        $('#edit_parent_btn').attr("disabled", false);
                         $('#editModal').modal('hide');
                         $('.table').load(location.href + ' .table');
                         // $('.table').html(response);

@@ -176,7 +176,7 @@
                     $('.payable').html('&#8358;' + res.mandatory_sum.toLocaleString());
                     $('#invoice_type').html(res.invoice_type);
                     $('#total_invoice').html('&#8358;' + res.total_invoice
-                .toLocaleString());
+                        .toLocaleString());
                     if (res.bbf !== null) {
                         $('#bbf').html('&#8358;' + res.bbf.toLocaleString());
                     } else {
@@ -185,7 +185,7 @@
                     $('#hidden_payable').val(res.mandatory_sum);
                     if (res.invoice_discount > 0) {
                         $('.discount').html('&#8358;' + res.invoice_discount
-                        .toLocaleString());
+                            .toLocaleString());
                     } else {
                         $('.discount').html('')
                     }
@@ -205,7 +205,7 @@
                         $('#btn_div').removeClass('d-none');
                         $('#table_div').addClass('d-none');
                         $('#add_record_div').addClass('d-none');
-                        $('#initialize_btn').html('Initialize Record');
+                        $('#initialize_btn').html('Generate Payment Slip');
                         $('#initialize_btn').attr('disabled', false);
                     }
                     if (res.initial == 'no') {
@@ -224,14 +224,21 @@
                                 var url =
                                     '{{ route('admin.generate.receipt', ':id') }}';
                                 url = url.replace(':id', payment.id);
+                                var truncatedDescription = payment.description ?
+                                    payment.description.substring(0, 20) :
+                                    ''; // Handle null description
+                                if (payment.description && payment.description
+                                    .length > 20) { // Handle null description
+                                    truncatedDescription += ' ...';
+                                }
                                 table += '<tr>' +
                                     '<td>' + (key + 1) + '</td>' +
                                     '<td>&#8358;' + payment.paid_amount
                                     .toLocaleString() + '</td>' +
-                                    '<td>' + payment.description + '</td>' +
+                                    '<td>' + truncatedDescription + '</td>' +
                                     '<td><a href="' + url +
                                     '" class="btn btn-success" target="__blank"><i class="ti ti-printer me-2"></i></a></td>' +
-                                    '</tr>'
+                                    '</tr>';
                             });
                             $('#recent_payments_tbl').html(table);
                             $('#table_div').removeClass('d-none');
@@ -239,6 +246,7 @@
                             $('#recent_payments_tbl').html("No Records");
                             $('#table_div').removeClass('d-none');
                         }
+
                     }
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
@@ -290,9 +298,11 @@
                 $('.payable').html('&#8358;' + (parseInt(amount) + parseInt(total_amount))
                     .toLocaleString());
                 $('#hidden_payable').val(parseInt(amount) + parseInt(total_amount));
-                $('#hidden_balance').val(parseInt(amount) + parseInt(total_amount) - parseInt(balance));
-                $('.balance').html('&#8358;' + (parseInt(amount) + parseInt(total_amount) - parseInt(
-                    discount)).toLocaleString());
+                $('#hidden_balance').val(parseInt(amount) + parseInt(total_amount) - parseInt(
+                    balance));
+                $('.balance').html('&#8358;' + (parseInt(amount) + parseInt(total_amount) -
+                    parseInt(
+                        discount)).toLocaleString());
 
 
             } else {
@@ -301,8 +311,9 @@
                     .toLocaleString());
                 $('#hidden_payable').val(parseInt(total_amount) - parseInt(amount));
                 $('#hidden_balance').val(parseInt(amount) - parseInt(total_amount));
-                $('.balance').html('&#8358;' + ((parseInt(total_amount) - parseInt(amount)) - parseInt(
-                    discount)).toLocaleString())
+                $('.balance').html('&#8358;' + ((parseInt(total_amount) - parseInt(amount)) -
+                    parseInt(
+                        discount)).toLocaleString())
 
             }
 
@@ -313,7 +324,7 @@
             e.preventDefault();
 
             swal({
-                    title: "Initialize Payment?",
+                    title: "Generate Payment Slip?",
                     text: "Please ensure all inputs are accurate before continuing.",
                     icon: "warning",
                     buttons: true,
@@ -344,7 +355,8 @@
 
                         $.ajaxSetup({
                             headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                    'content')
                             }
                         });
 
@@ -426,8 +438,34 @@
             description = $('#description').val();
             method = $(".method:checked").val();
 
-            if (paid_amount == '' || description == '') {
-                Command: toastr["error"]('All input fields are required');
+            if (paid_amount == '') {
+                Command: toastr["error"]('Payment Amount fields is required');
+                toastr.options = {
+                    closeButton: false,
+                    debug: false,
+                    newestOnTop: false,
+                    progressBar: false,
+                    positionClass: "toast-top-right",
+                    preventDuplicates: false,
+                    onclick: null,
+                    showDuration: "300",
+                    hideDuration: "1000",
+                    timeOut: "5000",
+                    extendedTimeOut: "1000",
+                    showEasing: "swing",
+                    hideEasing: "linear",
+                    showMethod: "fadeIn",
+                    hideMethod: "fadeOut",
+                };
+                $('#add_payment_amount').addClass('is-invalid')
+                return;
+            }
+            else {
+                $('#add_payment_amount').removeClass('is-invalid')
+            }
+            if ($('.method:checked').length === 0) {
+                $('.method').addClass('is-invalid');
+                Command: toastr["error"]('Payment Method fields is required');
                 toastr.options = {
                     closeButton: false,
                     debug: false,
@@ -446,6 +484,8 @@
                     hideMethod: "fadeOut",
                 };
                 return;
+            } else {
+                $('.method').removeClass('is-invalid');
             }
 
             spinner =
@@ -545,10 +585,10 @@
 
         //update table
         function updateTable() {
-
-            data = {
+            var data = {
                 'invoice_id': $('#invoice_id').val(),
-            }
+            };
+
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -560,18 +600,25 @@
                 url: "{{ route('refresh-table') }}",
                 data: data,
                 success: function(res) {
-
                     var table = '';
                     $.each(res.all_payments, function(key, payment) {
                         var url = '{{ route('admin.generate.receipt', ':id') }}';
                         url = url.replace(':id', payment.id);
+                        var truncatedDescription = payment.description ? payment
+                            .description
+                            .substring(0, 20) : ''; // Handle null description
+                        if (payment.description && payment.description.length >
+                            20) { // Handle null description
+                            truncatedDescription += '...';
+                        }
                         table += '<tr>' +
                             '<td>' + (key + 1) + '</td>' +
-                            '<td>&#8358;' + payment.paid_amount.toLocaleString() + '</td>' +
-                            '<td>' + payment.description + '</td>' +
+                            '<td>&#8358;' + payment.paid_amount.toLocaleString() +
+                            '</td>' +
+                            '<td>' + truncatedDescription + '</td>' +
                             '<td><a href="' + url +
                             '" class="btn btn-success" target="__blank"><i class="ti ti-printer me-2"></i></a></td>' +
-                            '</tr>'
+                            '</tr>';
                     });
                     $('#recent_payments_tbl').html(table);
                     $('#table_div').removeClass('d-none');
@@ -579,7 +626,6 @@
                     $('.balance').html('&#8358;' + res.balance.toLocaleString());
                     $('.modal_balance').html('&#8358;' + res.balance.toLocaleString());
                     $('#hidden_modal_balance').val(res.balance);
-
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
                     if (xhr.status === 419) {
@@ -610,6 +656,8 @@
                 },
             });
         }
+
+
 
     });
 </script>

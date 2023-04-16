@@ -15,7 +15,7 @@
 
                                 <div class="mb-2 row">
                                     <div class="col-lg-3">
-                                        <select class="default-select form-control wide mb-3" id="class_id">
+                                        <select class="form-select form-select-sm mb-3" id="class_id">
                                             <option value="">--Select Class--</option>
                                             @foreach ($classes as $class)
                                                 <option value="{{ $class->id }}">{{ $class->name }}</option>
@@ -23,7 +23,7 @@
                                         </select>
                                     </div>
                                     <div class="col-lg-3">
-                                        <select class="default-select form-control wide mb-3" id="officer">
+                                        <select class="form-select form-select-sm mb-3" id="officer">
                                             <option value="">--Select Officer--</option>
                                             <option value="fm">Form Master</option>
                                             <option value="p">Principal/Director</option>

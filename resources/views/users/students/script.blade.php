@@ -122,7 +122,7 @@
                         $('#registered').html(res.registered);
                         if(res.student.parent)
                         {
-                            $('#parent_name').html(res.student.parent.title + ' ' + res.student.parent.first_name + ' ' + res.student.parent.last_name);
+                            $('#parent_name').html(res.student.parent.first_name + ' ' + res.student.parent.last_name);
                             $('#parent_email').html(res.student.parent.email);
                             $('#parent_phone').html(res.student.parent.phone);
                             $('#parent_address').html(res.student.parent.name);

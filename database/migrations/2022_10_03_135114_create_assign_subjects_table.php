@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('class_id');
             $table->integer('subject_id');
             $table->integer('teacher_id');
+            $table->tinyInteger('designation');
             $table->integer('school_id');
             $table->timestamps();
         });

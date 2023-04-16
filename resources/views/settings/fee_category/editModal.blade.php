@@ -22,19 +22,6 @@
                                     </div>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label class="col-lg-4 col-form-label" for="name">Priority
-                                        <span class="text-danger">*</span>
-                                    </label>
-                                    <div class="col-lg-8">
-                                        <select class="form-control wide mb-3" id="edit_priority">
-                                            <option>--Select Priority--</option>
-                                            <option value="m">Mandatory</option>
-                                            <option value="r">Recommeded</option>
-                                            <option value="o">Optional</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="mb-3 row">
                                     <div class="col-sm-4">Active Status</div>
                                     <div class="col-sm-8">
                                         <div class="form-check">

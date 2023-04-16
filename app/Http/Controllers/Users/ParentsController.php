@@ -9,7 +9,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Brian2694\Toastr\Facades\Toastr;
-
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
 
 class ParentsController extends Controller
 {
@@ -28,14 +29,14 @@ class ParentsController extends Controller
     public function paginate()
     {
         $data['classes'] = Classes::select('id', 'name')->where('school_id',auth()->user()->school_id)->get();
-        $data['students'] = User::select('id','image', 'first_name','middle_name','last_name','login','gender','class_id','parent_id','status','address')->where('usertype','std')->where('school_id',auth()->user()->school_id)->where('status',1)->with(['class','parent'])->orderBy('gender', 'desc')->orderBy('first_name')->paginate(15);
+        $data['parents'] = User::select('id','image', 'first_name','middle_name','last_name','login','gender','class_id','parent_id','status','address')->where('usertype','std')->where('school_id',auth()->user()->school_id)->where('status',1)->with(['class','parent'])->orderBy('gender', 'desc')->orderBy('first_name')->paginate(15);
         $data['school'] = School::select('username')->where('id',auth()->user()->school_id)->first();
-        return view('users.students.table',$data)->render();
+        return view('users.parents.table',$data)->render();
     }
 
     public function create()
     {
-        $data['students'] = User::select('id', 'first_name','middle_name','last_name','class_id')->where('usertype','std')->where('school_id',auth()->user()->school_id)->where('status',1)->with(['class'])->orderBy('first_name')->orderBy('last_name')->get();
+        $data['parents'] = User::select('id', 'first_name','middle_name','last_name','class_id')->where('usertype','std')->where('school_id',auth()->user()->school_id)->where('status',1)->with(['class'])->orderBy('first_name')->orderBy('last_name')->get();
         return view('users.parents.create', $data);
     }
 
@@ -82,7 +83,7 @@ class ParentsController extends Controller
     {
         $data['school'] = School::select('username')->where('id',auth()->user()->school_id)->first();
 
-        if($request->sort_staffs == 'all')
+        if($request->sort_parents == 'all')
         {
             $data['parents'] = User::select('id', 'image','first_name','phone','last_name','login','usertype','status')
                             ->where('usertype','parent')
@@ -94,7 +95,7 @@ class ParentsController extends Controller
             $data['parents'] = User::select('id', 'image','first_name','phone','last_name','login','usertype','status')
                             ->where('usertype','parent')
                             ->where('school_id',auth()->user()->school_id)
-                            ->where('status', $request->sort_staffs)
+                            ->where('status', $request->sort_parents)
                             ->orderBy('first_name')
                             ->paginate(50000);
         }
@@ -141,15 +142,15 @@ class ParentsController extends Controller
     public function details(Request $request)
     {
 
-        $student = User::with(['class','parent'])->where('id', $request->student_id)->where('school_id',auth()->user()->school_id)->first();
-        $registered = $student->created_at->diffForHumans();
+        $parent = User::where('id', $request->parent_id)->where('school_id',auth()->user()->school_id)->first();
+        $registered = $parent->created_at->diffForHumans();
         $school_name = School::select('username')->where('id',auth()->user()->school_id)->first();
        
-        if($student)
+        if($parent)
         {
             return response()->json([
                 'status'=>200,
-                'student'=>$student,
+                'parent'=>$parent,
                 'registered'=>$registered,
                 'school_name'=>$school_name,
             ]);
@@ -165,27 +166,27 @@ class ParentsController extends Controller
 
  
 
-    public function getStudentDetails(Request $request)
+    public function getParentDetails(Request $request)
     {
 
-        $student = User::find($request->student_id);
+        $parent = User::find($request->parent_id);
         $school_username = School::select('username')->where('id',auth()->user()->school_id)->first();
 
-        if($student){
+        if($parent){
             return response()->json([
-                'student' => $student,
+                'parent' => $parent,
                 'school_username' => $school_username,
                 'status' => 200,
             ]);  
         }
 
         return response()->json([
-            'subjects' => 'Student Not Found',
+            'subjects' => 'parent Not Found',
             'status' => 404,
         ]);
     }
 
-    public function editStudent(Request $request)
+    public function editParent(Request $request)
     {
         // return $request->all();
         $validator = Validator::make($request->all(), [
@@ -208,31 +209,28 @@ class ParentsController extends Controller
         }
         $school = School::select('username')->where('id',auth()->user()->school_id)->first();
        
-        $student = User::find($request->edit_student_id);
-        $student->first_name = $request->first_name;
-        $student->middle_name = $request->middle_name;
-        $student->last_name = $request->last_name;
-        $student->login = $request->roll_number;
-        $student->parent_id = $request->parent_id;
-        $student->gender = $request->gender;
-        $student->dob = $request->dob;
+        $parent = User::find($request->edit_parent_id);
+        $parent->first_name = $request->first_name;
+        $parent->last_name = $request->last_name;
+        $parent->login = $request->roll_number;
+       
       
 
         if ($request->file('image') != null) {
-            $destination = 'uploads/' . $school->username . '/' . $student->image;
+            $destination = 'uploads/' . $school->username . '/' . $parent->image;
             File::delete($destination);
             $file = $request->file('image');
             $extension = $file->getClientOriginalExtension();
             $filename = time() . '.' . $extension;
             $file->move('uploads/' . $school->username, $filename);
-            $student->image = $filename;
+            $parent->image = $filename;
         }
 
-        $student->update();
+        $parent->update();
 
         return response()->json([
             'status'=>200,
-            'message'=>'Student Profile Updated Successfully',
+            'message'=>'Parent Profile Updated Successfully',
         ]);
     }
 }

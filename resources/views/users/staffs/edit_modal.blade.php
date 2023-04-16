@@ -3,18 +3,18 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="edit_student_modal_title">Loading . . .</h5>
+                <h5 class="modal-title" id="edit_staff_modal_title">Loading . . .</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal">
                 </button>
             </div>
-            <form id="edit_student_form" enctype="multipart/form-data">
+            <form id="edit_staff_form" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="" id="edit_loading_div">
                         <div class="col-12 d-flex align-items-center justify-content-center">
                         <div class="spinner-border" style="height: 40px; width: 40px; margin: 0 auto;" role="status"></div>
                         </div>
                     </div>
-                    <input type="hidden" id="edit_student_id" name="edit_student_id" />
+                    <input type="hidden" id="edit_staff_id" name="edit_staff_id" />
                 
                     <div class="profile-personal-info d-none" id="edit_content_div">
         
@@ -22,7 +22,7 @@
                         <div class="mb-3 row">
                             <div class="col-md-12">
                                 <div class="profile-img-edit">
-                                    <img class="profile-pic" id="edit_student_picture" width="150" height="150" src="/uploads/default.png" alt="student picture">
+                                    <img class="profile-pic" id="edit_staff_picture" width="150" height="150" src="/uploads/default.png" alt="staff picture">
                                     <div class="p-image">
                                     <i class="fa fa-pencil  upload-button"></i>
                                     <input class="file-upload" type="file" accept="image/*" name="image" />
@@ -88,7 +88,7 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Dismiss</button>
-                    <button type="submit" id="edit_student_btn" class="btn btn-primary">Save Changes</button>
+                    <button type="submit" id="edit_staff_btn" class="btn btn-primary">Save Changes</button>
                 </div>
             </form>
         </div>

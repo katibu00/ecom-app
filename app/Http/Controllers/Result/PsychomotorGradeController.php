@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Result;
 
 use App\Http\Controllers\Controller;
+use App\Models\AffectiveCrud;
 use App\Models\Classes;
 use App\Models\ProcessedMark;
 use App\Models\PsychomotorCrud;
 use App\Models\PsychomotorGrade;
 use App\Models\PsychomotorSubmit;
 use App\Models\School;
+use App\Models\User;
+use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,9 +29,25 @@ class PsychomotorGradeController extends Controller
     {
         $school = School::select('id','session_id','term',)->where('id', Auth::user()->school_id)->first();
         $students = ProcessedMark::with(['student'])->select('student_id','total')->where('class_id',$request->class_id)->where('term', $school->term)->where('session_id',$school->session_id)->where('school_id', $school->id)->groupBy('student_id','total')->orderBy('total','desc')->get();
-        $grades = PsychomotorCrud::select('id','name')->where('school_id',Auth::user()->school_id)->get();
+        if($request->type == 1)
+        {
+            $grades = PsychomotorCrud::select('id','name')->where('school_id',Auth::user()->school_id)->get();
+        }
+        if($request->type == 2)
+        {
+            $grades = AffectiveCrud::select('id','name')->where('school_id',Auth::user()->school_id)->get();
+        }
+
+        if($students->count() < 1)
+        {
+            return response()->json([
+                'status'=>404,
+                'message'=>'No Marks Found for the Selected Class. Give marks and Try Again.',
+            ]); 
+        }
       
         return response()->json([
+            'status'=>200,
             'students'=>$students,
             'grades'=>$grades,
         ]);
@@ -43,7 +62,7 @@ class PsychomotorGradeController extends Controller
         if($exist){
             return response()->json([
                 'status'=>404,
-                'message'=>'Psychomotor Grades Already addes for the selected class',
+                'message'=>'Psychomotor Grades Already Submitted for the Selected Class',
             ]);
         }
 
@@ -56,6 +75,7 @@ class PsychomotorGradeController extends Controller
                 $data->term = $school->term;
                 $data->class_id = $request->class_id;
                 $data->student_id = $request->student_id[$i];
+                $data->type = $request->type;
                 $data->grade_id = $request->grade_id[$i];
                 $data->score = $request->score[$i];
                 $data->save();
@@ -75,5 +95,37 @@ class PsychomotorGradeController extends Controller
             'status'=>200,
             'message'=>'Psychomotor Grades Added Successfully',
         ]);
+    }
+
+    public function viewRecords($class_id, $type)
+    {
+
+        $school = School::select('id','session_id','term',)->where('id', Auth::user()->school_id)->first();
+        $class = Classes::select('school_id','name')->where('id',$class_id)->first();
+        if(!$class || @$class->school_id != Auth::user()->school_id)
+        {
+            Toastr::error('You do have Permission to Manage this Class');
+            return redirect()->route('psychomotor.index');
+        }
+        $gradesList = [];
+        if($type == 1)
+        {
+            $gradesList = PsychomotorCrud::select('id','name')
+            ->where('school_id', $school->id)
+            ->get();
+        }
+        if($type == 2)
+        {
+            $gradesList = AffectiveCrud::select('id','name')
+            ->where('school_id', $school->id)
+            ->get();
+        }
+
+       
+        $students = User::select('id','first_name','middle_name','last_name')->where('class_id',$class_id)->get();
+        return view('psychomotor.viewPage',['students' => $students,'gradesLists' => $gradesList,'class_id'=>$class_id,'school'=>$school,'class'=>$class,'type'=>$type]);
+        
+
+
     }
 }

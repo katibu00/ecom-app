@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-dialog-centered modal-fullscreen" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Psychomotor/Affective Entry</h4>
+                <h4 class="modal-title">Socio-emotional Skills Marks Entry</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal">
                 </button>
             </div>
@@ -15,7 +15,7 @@
 
                                 <div class="mb-2 row">
                                     <div class="col-lg-3">
-                                        <select class="default-select form-control wide mb-3" id="class_id">
+                                        <select class="form-select mb-3" id="class_id" name="class_id">
                                             <option value="">--Select Class--</option>
                                             @foreach ($classes as $class)
                                                 <option value="{{ $class->id }}">{{ $class->name }}</option>
@@ -23,10 +23,10 @@
                                         </select>
                                     </div>
                                     <div class="col-lg-3">
-                                        <select class="default-select form-control wide mb-3" id="type">
+                                        <select class="form-select mb-3" id="type" name="type">
                                             <option value="">--Select Type--</option>
-                                            <option value="psychomotor">Psychomotor Areas</option>
-                                            <option value="affective">Affective Trait</option>
+                                            <option value="1">Psychomotor Skills</option>
+                                            <option value="2">Affective Traits</option>
                                         </select>
                                     </div>
                                     <div class="col-lg-4">
@@ -38,7 +38,7 @@
                         </div>
                     </form>
 
-                    <form id="data_form">
+                    <form id="add_new_form">
                     <div class="row d-none" id="marks-generate">
                         <div class="table-responsive">
                             <input type="hidden" id="send_class_id" name="class_id" />

@@ -31,62 +31,54 @@ class AdminResultController extends Controller
             'class_id' => 'required',
             'term' => 'required',
         ]);
-     
+    
         $user = Auth::user();
         $school = School::select('id','name','username','email','phone_first','phone_second','address','heading','logo')->where('id', $user->school_id)->first();
-      
-      
-
-        // if(Auth::user()->usertype == 'teacher' || Auth::user()->usertype == 'Accountant'){
-        //     $check = AssignMaster::where('user_id',$user_id)->where('class_id',$request->class_id)->where('class_section_id',$request->class_section_id)->first();
-
-        //     if(!$check){
-        //         Toastr::error('You do not have persmission to manage this class. Please check your input and try again.', 'Warning');
-        //         return redirect()->back();
-        //     }
-        // }
+    
         $studentsCheck = Mark::select('student_id')->where('class_id', $request->class_id)->where('term', $request->term)->where('school_id', $school->id)->where('session_id', $request->session_id)->groupBy('student_id')->get();
-
+    
         if ($studentsCheck->count() == 0) {
             Toastr::error('No Marks Found', 'Warning');
             return redirect()->back();
         }
-
-        ProcessedMark::where('class_id', $request->class_id)->where('term', $request->term)->where('school_id', $school->id)->where('session_id', $request->session_id)->delete();
+    
+        $processedMarks = ProcessedMark::where('class_id', $request->class_id)->where('term', $request->term)->where('school_id', $school->id)->where('session_id', $request->session_id)->get();
+    
         foreach ($studentsCheck as $student) {
-
             $ca = Mark::where('student_id', $student->student_id)->where('class_id', $request->class_id)->where('term', $request->term)->where('session_id', $request->session_id)->where('school_id', $school->id)->where('type', '!=', 'exam')->sum('marks');
             $exam = Mark::where('student_id', $student->student_id)->where('class_id', $request->class_id)->where('term', $request->term)->where('school_id', $school->id)->where('session_id', $request->session_id)->where('type', 'exam')->sum('marks');
-
-            $data = new ProcessedMark();
-
-            $data->student_id = $student->student_id;
-            $data->school_id = $school->id;
-            $data->session_id = $request->session_id;
-            $data->class_id = $request->class_id;
-            $data->term = $request->term;
+    
+            $data = $processedMarks->where('student_id', $student->student_id)->first();
+    
+            if (!$data) {
+                $data = new ProcessedMark();
+                $data->student_id = $student->student_id;
+                $data->school_id = $school->id;
+                $data->session_id = $request->session_id;
+                $data->class_id = $request->class_id;
+                $data->term = $request->term;
+            }
+    
             $data->ca = $ca;
             $data->exam = $exam;
-            $data->total = $ca+$exam;
+            $data->total = $ca + $exam;
             $data->save();
         }
-
-      
+    
         $students = ProcessedMark::select('student_id','total')->where('class_id',$request->class_id)->where('term',$request->term)->where('school_id',$school->id)->where('session_id',$request->session_id)->groupBy('student_id','total')->orderBy('total','desc')->get();
-       
+    
         $session_id = $request->session_id;
         $class_id = $request->class_id;
         $term = $request->term;
-        
+    
         $comments = @$request->comments;
         $psychomotor = @$request->psychomotor;
         $next_term = @$request->next_term;
         $date = @$request->date;
-
+    
         return view('pdfs.admin.results.termly', compact('school', 'students', 'class_id', 'term', 'session_id','comments','next_term','date','psychomotor'));
-
-
     }
+    
 
     public function settingsIndex()
     {
@@ -104,20 +96,48 @@ class AdminResultController extends Controller
     {
      
         $data = ResultSettings::where('school_id', auth()->user()->school_id)->first();
-        $data->show_position = $request->show_position;
-        $data->show_attendance = $request->show_attendance;
-        $data->show_passport = $request->show_passport;
-        $data->withhold = $request->withhold;
-        $data->minimun_amount = $request->minimun_amount;
-        $data->grading_style = $request->grading_style;
-
-        if($data->update())
+        if($data)
         {
+            $data->show_position = $request->show_position;
+            $data->show_attendance = $request->show_attendance;
+            $data->show_passport = $request->show_passport;
+            $data->show_scores = $request->show_scores;
+            $data->break_ca = $request->break_ca;
+            $data->withhold = $request->withhold;
+            $data->minimun_amount = $request->minimun_amount;
+            $data->grading_style = $request->grading_style;
+            if($data->update())
+            {
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Result Settings Updated Successfully'
+                ]);
+            }
+        }else
+        {
+            $data = new ResultSettings();
+            $data->school_id = auth()->user()->school_id;
+            $data->show_position = $request->show_position;
+            $data->show_attendance = $request->show_attendance;
+            $data->show_passport = $request->show_passport;
+            $data->show_scores = $request->show_scores;
+            $data->break_ca = $request->break_ca;
+            $data->withhold = $request->withhold;
+            $data->minimun_amount = $request->minimun_amount;
+            $data->grading_style = $request->grading_style;
+
             return response()->json([
                 'status' => 200,
-                'message' => 'Result Settings Updated Successfully'
+                'message' => 'Result Settings Saved Successfully'
             ]);
         }
+        
+        return response()->json([
+            'status' => 404,
+            'message' => 'Error Occurred'
+        ]);
+
+       
        
     }
 

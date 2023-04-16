@@ -3,8 +3,7 @@
     <thead>
         <tr>
             <th class="text-center">S/N</th>
-            <th>Fee Category</th>
-            <th>Priority</th>
+            <th>Fee Category Name</th>
             <th class="text-center">Status</th>
             <th class="text-center">Action</th>
         </tr>
@@ -14,7 +13,6 @@
         <tr>
             <td class="text-center">{{ $key + 1 }}</td>
             <td>{{ @$value->name }}</td>
-            <td>@if(@$value->priority == 'o') Optional @elseif(@$value->priority == 'r') Recommended @elseif(@$value->priority == 'm') Mandatory @endif</td>
             <td class="text-center">
                 {!! $value->status == 1 ? '  <span class="badge bg-label-primary me-1">Active</span>': '  <span class="badge bg-label-danger me-1">Not Active</span>' !!}
             </td>

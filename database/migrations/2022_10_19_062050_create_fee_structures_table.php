@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('fee_category_id');
             $table->string('student_type');
             $table->double('amount');
+            $table->string('priority');
             $table->timestamps();
         });
     }

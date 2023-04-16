@@ -31,6 +31,7 @@ use App\Http\Controllers\Settings\SubjectsController;
 use App\Http\Controllers\Users\ParentsController;
 use App\Http\Controllers\Users\StudentsController;
 use App\Http\Controllers\Users\StaffsController;
+use App\Http\Controllers\Users\SubjectOfferingController;
 use App\Mail\ResetSchoolAdminPassword;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
@@ -182,36 +183,36 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
         Route::get('/students/create', [StudentsController::class, 'create'])->name('users.students.create');
         Route::post('/students/edit', [StudentsController::class, 'editStudent'])->name('users.students.edit');
         Route::post('/students/store', [StudentsController::class, 'store'])->name('users.students.store');
-
         Route::get('/students/sort', [StudentsController::class, 'sort'])->name('users.students.sort');
-
         Route::post('/students/search', [StudentsController::class, 'search'])->name('users.students.search');
-
         Route::post('/students/details', [StudentsController::class, 'details'])->name('users.students.details');
-        // Route::get('/students/bulk_update/index', [StudentsController::class, 'bulk_update'])->name('users.students.bulk_update.index');
-        // Route::post('/students/bulk_update/index', [StudentsController::class, 'bulk_update']);
-        // Route::post('/students/bulk_update/store', [StudentsController::class, 'bulk_store'])->name('users.students.bulk_update.store');
-
-        // Route::post('/get-subjects_not_offering', [StudentsController::class, 'get_subjects_offering'])->name('get-subjects_not_offering');
         Route::post('/get-student_details', [StudentsController::class, 'getStudentDetails'])->name('get-student_details');
-        // Route::post('/save-subjects_not_offering', [StudentsController::class, 'save_subjects_offering'])->name('save-subjects_not_offering');
 
 
         Route::get('/staffs/index', [StaffsController::class, 'index'])->name('users.staffs.index');
         Route::get('/staffs/create', [StaffsController::class, 'create'])->name('users.staffs.create');
-        Route::post('/staffs/edit', [StaffsController::class, 'editStudent'])->name('users.staffs.edit');
+        Route::post('/staffs/edit', [StaffsController::class, 'editStaff'])->name('users.staffs.edit');
         Route::post('/staffs/store', [StaffsController::class, 'store'])->name('users.staffs.store');
         Route::get('/staffs/sort', [StaffsController::class, 'sort'])->name('users.staffs.sort');
         Route::post('/staffs/search', [StaffsController::class, 'search'])->name('users.staffs.search');
-        Route::post('/staffs/details', [StaffsController::class, 'details'])->name('users.staffs.details');
+        Route::post('/staffs/details', [StaffsController::class, 'details'])->name('users.staff.details');
+        Route::post('/get-staff_details', [StaffsController::class, 'getStaffDetails'])->name('get-staff_details');
+
 
         Route::get('/parents/index', [ParentsController::class, 'index'])->name('users.parents.index');
         Route::get('/parents/create', [ParentsController::class, 'create'])->name('users.parents.create');
-        Route::post('/parents/edit', [ParentsController::class, 'editStudent'])->name('users.parents.edit');
+        Route::post('/parents/edit', [ParentsController::class, 'editParent'])->name('users.parents.edit');
         Route::post('/parents/store', [ParentsController::class, 'store'])->name('users.parents.store');
         Route::get('/parents/sort', [ParentsController::class, 'sort'])->name('users.parents.sort');
         Route::post('/parents/search', [ParentsController::class, 'search'])->name('users.parents.search');
         Route::post('/parents/details', [ParentsController::class, 'details'])->name('users.parents.details');
+        Route::post('/get-parent_details', [ParentsController::class, 'getParentDetails'])->name('get-parent_details');
+
+        Route::get('/subjects_offering/index', [SubjectOfferingController::class, 'index'])->name('subjects_offering.index');
+        Route::post('/get-subjects_offering', [SubjectOfferingController::class, 'getSubjects'])->name('get-subjects_offering');
+        Route::post('/save-subjects_offering', [SubjectOfferingController::class, 'saveSubjectsOffering'])->name('save-subjects_offering');
+
+
     });
 
 
@@ -220,7 +221,7 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
 
     Route::group(['prefix' => 'marks', 'middleware' => ['auth', 'admin']], function(){
         Route::get('/create', [MarksController::class, 'create'])->name('marks.create');
-        Route::post('/create',  [MarksController::class, 'getMarks']);
+        Route::post('/create/fetch_students',  [MarksController::class, 'getMarks'])->name('marks.create.fetch');
         Route::post('/initialize-marks-entry',  [MarksController::class, 'initializeMarks'])->name('initialize-marks-entry');
         Route::post('/save-marks-entry',  [MarksController::class, 'saveMarks'])->name('save-marks-entry');
         Route::post('/submit-marks-entry',  [MarksController::class, 'submitMarks'])->name('submit-marks-entry');
@@ -230,6 +231,12 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
         Route::post('/submissions/search', [MarksController::class, 'submissionSearch'])->name('marks.submissions.search');
         Route::get('/grade_book/index', [MarksController::class, 'gradeBookIndex'])->name('marks.grade_book.index');
         Route::post('/grade_book/search', [MarksController::class, 'gradeGookSearch'])->name('marks.grade_book.search');
+
+        Route::get('/socio-emotional/index', [PsychomotorGradeController::class, 'index'])->name('psychomotor.index');
+        Route::post('/get-psychomotor', [PsychomotorGradeController::class, 'getRecords'])->name('psychomotor.get');
+        Route::post('/store-psychomotor', [PsychomotorGradeController::class, 'storePsychomotor'])->name('psychomotor.store');
+        Route::get('/view-psychomotor/{class_id}/{type}', [PsychomotorGradeController::class, 'viewRecords'])->name('psychomotor.view');
+
     });
     //termly result generation
     Route::group(['prefix' => 'result', 'middleware' => ['auth', 'admin']], function(){
@@ -245,11 +252,6 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
         Route::post('/store-comments', [CommentsController::class, 'storeComments'])->name('comments.store');
         Route::post('/view-comments', [CommentsController::class, 'viewComments'])->name('comments.view');
 
-        Route::get('/index', [PsychomotorGradeController::class, 'index'])->name('psychomotor.index');
-        Route::post('/get-psychomotor', [PsychomotorGradeController::class, 'getRecords'])->name('psychomotor.get');
-        Route::post('/store-psychomotor', [PsychomotorGradeController::class, 'storePsychomotor'])->name('psychomotor.store');
-        Route::post('/view-psychomotor', [PsychomotorGradeController::class, 'viewComments'])->name('psychomotor.view'); 
-
     });
 
     //fees and billing
@@ -262,7 +264,6 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
         Route::get('/invoices/print/index', [InvoicesController::class, 'PrintIndex'])->name('invoices.print.index');
         Route::post('/invoices/print/generate', [InvoicesController::class, 'print'])->name('invoices.print.generate');
         Route::post('/invoices/bulk_action', [InvoicesController::class, 'bulk_action'])->name('invoices.bulk_action');
-
 
         Route::get('/fee_collection/index', [FeeCollectionController::class, 'index'])->name('fee_collection.index');
         Route::post('/get-invoices', [FeeCollectionController::class, 'getInvoices'])->name('get-invoices');
@@ -281,9 +282,6 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
         Route::post('/report/generate', [ReportsController::class, 'generate'])->name('billing.report.generate');
 
         Route::get('/payments/index', [PaymentsController::class, 'index'])->name('payments.index');
-
-
-      
     });
 
 

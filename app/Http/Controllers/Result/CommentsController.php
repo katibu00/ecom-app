@@ -31,7 +31,7 @@ class CommentsController extends Controller
     public function storeComments(Request $request)
     {
         $school = School::select('id','session_id','term',)->where('id', Auth::user()->school_id)->first();
-        $exist = CommentSubmit::where('school_id',$school->id)->where('term',$school->term)->where('class_id',$request->class_id)->where('officer',$request->officer)->first();
+        $exist = Comment::where('school_id',$school->id)->where('term',$school->term)->where('class_id',$request->class_id)->where('officer',$request->officer)->first();
         if($exist){
             return response()->json([
                 'status'=>404,
@@ -54,16 +54,6 @@ class CommentsController extends Controller
                 $data->save();
             }
         };
-
-        $submit = new CommentSubmit();
-        $submit->school_id = auth()->user()->school_id;
-        $submit->session_id = $school->session_id;
-        $submit->term = $school->term;
-        $submit->class_id = $request->class_id;
-        $submit->officer = $request->officer;
-        $submit->teacher_id = auth()->user()->id;
-        $submit->save();
-
         return response()->json([
             'status'=>200,
             'message'=>'Comments Added Successfully',
