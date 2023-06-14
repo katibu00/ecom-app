@@ -219,6 +219,12 @@
                             if (response.user == 'intellisas') {
                                 window.location.replace('{{ route('intellisas.home') }}');
                             }
+                            if (response.user == 'parent') {
+                                window.location.replace('{{ route('parent.home') }}');
+                            }
+                            if (response.user == 'teacher') {
+                                window.location.replace('{{ route('teacher.home') }}');
+                            }
                            
 
                         }

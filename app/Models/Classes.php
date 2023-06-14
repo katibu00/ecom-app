@@ -12,4 +12,7 @@ class Classes extends Model
     public function section(){
         return $this->belongsTo(Section::class, 'section_id','id');
     }
+    public function form_master(){
+        return $this->belongsTo(User::class, 'form_master_id','id');
+    }
 }

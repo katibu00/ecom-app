@@ -15,9 +15,10 @@ class AssignSubjectsController extends Controller
 {
     public function index()
     {
-        $data['classes'] = Classes::select('id','name')->where('school_id',auth()->user()->school_id)->where('status',1)->get();
-        $data['subjects'] = Subject::select('id','name')->where('school_id',auth()->user()->school_id)->get();
-        $data['staffs'] = User::select('id','first_name','last_name')->where('usertype','!=','student')->where('usertype','!=','parent')->get();
+        $school_id = auth()->user()->school_id;
+        $data['classes'] = Classes::select('id','name')->where('school_id',$school_id)->where('status',1)->get();
+        $data['subjects'] = Subject::select('id','name')->where('school_id',$school_id)->get();
+        $data['staffs'] = User::select('id','first_name','last_name')->where('usertype','!=','student')->where('usertype','!=','parent')->where('school_id',$school_id)->get();
         return view('settings.assign_subjects.index',$data);
     }
 

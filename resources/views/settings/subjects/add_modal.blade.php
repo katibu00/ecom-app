@@ -4,7 +4,7 @@
             <div class="modal-body">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 <div class="text-center mb-3">
-                    <h3 class="mb-2">Add New Classes</h3>
+                    <h3 class="mb-2">Add New Subject(s)</h3>
                 </div>
 
                 <form id="addNewForm" class="row g-3">
@@ -13,7 +13,7 @@
                         <div class="row  mb-2">
                             
                             <div class="col-md-9">
-                                <input type="text" name="name[]" class="form-control" placeholder="Enter Class Name" required/>
+                                <input type="text" name="name[]" class="form-control" placeholder="Enter Subject Name" required/>
                             </div>
                             <div class="col-md-2 d-flex mt-1">
                                 <span class="btn btn-success  addeventmore"><i class="ti ti-plus me-1"></i></span>
@@ -40,7 +40,7 @@
 
             <div class="row mb-2">
                 <div class="col-md-9">
-                    <input type="text" name="name[]" class="form-control" placeholder="Enter Class Name" required/>
+                    <input type="text" name="name[]" class="form-control" placeholder="Enter Subject Name" required/>
                 </div>
                 <div class="col-md-3 mt-1">
                     <div class="d-flex">

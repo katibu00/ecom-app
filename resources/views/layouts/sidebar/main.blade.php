@@ -1,6 +1,7 @@
 @php
 $prefix = Request::route()->getPrefix();
 $route = Route::current()->getName();
+$userType = auth()->user()->usertype;
 @endphp
 
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
@@ -22,11 +23,17 @@ $route = Route::current()->getName();
 
     <ul class="menu-inner py-1">
       
-      @if(auth()->user()->usertype == 'admin')
+      @if($userType == 'admin')
        @include('layouts.sidebar.admin')
       @endif
-      @if(auth()->user()->usertype == 'intellisas')
+      @if($userType == 'intellisas')
        @include('layouts.sidebar.intellisas')
+      @endif
+      @if($userType == 'parent')
+       @include('layouts.sidebar.parent')
+      @endif
+      @if($userType == 'teacher')
+       @include('layouts.sidebar.teacher')
       @endif
      
   

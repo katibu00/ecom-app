@@ -22,7 +22,7 @@
                                             <input type="text" class="form-control mb-2" name="description[]" placeholder="Description" >                                    
                                         </div>
                                         <div class="col-lg-2">
-                                            <select class="default-select form-control wide mb-2" name="fee_category_id[]" required>
+                                            <select class="form-select mb-2" name="expense_category_id[]" required>
                                                 <option value="">--Category--</option>
                                                 @foreach ($expense_cats as $category)
                                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -30,7 +30,7 @@
                                             </select>                                      
                                         </div>
                                         <div class="col-lg-2">
-                                            <select class="default-select form-control wide mb-2" name="payee_id[]" required>
+                                            <select class="form-select mb-2" name="payee_id[]" required>
                                                 <option value="">-- Recipient --</option>
                                                 @foreach ($staffs as $staff)
                                                     <option value="{{ $staff->id }}">{{ @$staff->title }} {{ $staff->first_name }} {{ $staff->last_name }}</option>

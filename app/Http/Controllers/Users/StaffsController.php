@@ -17,14 +17,13 @@ class StaffsController extends Controller
     public function index()
     {
         $school_id = auth()->user()->school_id;
-        $data['staffs'] = User::select('id', 'image','first_name','phone','last_name','login','usertype','status')
-                                ->where('usertype','!=','std')
-                                ->where('usertype','!=','parent')
-                                ->where('usertype','!=','intellisas')
-                                ->where('school_id',$school_id)
-                                ->where('status',1)
-                                ->orderBy('first_name')
-                                ->paginate(15);
+        $data['staffs'] = User::select('id', 'image', 'first_name', 'phone', 'last_name', 'login', 'usertype', 'status')
+                                    ->where('school_id', $school_id)
+                                    ->where('status', 1)
+                                    ->whereNotIn('usertype', ['std', 'parent', 'intellisas'])
+                                    ->orderBy('first_name')
+                                    ->paginate(15);
+    
         $data['school'] = School::select('username')->where('id',$school_id)->first();
         return view('users.staffs.index',$data);
     }
@@ -171,6 +170,10 @@ class StaffsController extends Controller
     }
 
  
+    public function privilegeIndex()
+    {
+        return view('users.privileges.index');
+    }
 
  
 

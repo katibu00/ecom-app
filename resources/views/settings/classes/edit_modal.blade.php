@@ -15,10 +15,18 @@
                     <input type="hidden" id="update_id">
 
                     <div class="add_item">
-                        <div class="form-group  mb-2">
-                            <div class="col-md-12">
-                                <input type="text" id="edit_name" class="form-control" placeholder="Enter LG Name" />
+                        <div class="form-group  mb-3">
+                            <div class="col-md-12 mb-3">
+                                <input type="text" id="edit_name" class="form-control" placeholder="Edit Class Name" />
                             </div>
+                            <div class="col-md-12 mb-3">
+                                <select class="form-select mb-3" id="edit_form_master_id" name="edit_form_master_id" required>
+                                    <option value="">-- Select Form Master --</option>
+                                    @foreach ($staffs as $staff)
+                                        <option value="{{ $staff->id }}">{{ $staff->first_name.' '.$staff->last_name }}</option>
+                                    @endforeach
+                                </select>                           
+                             </div>
                         </div>
                         <div class="form-group">
                             <div class="form-check">

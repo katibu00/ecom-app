@@ -11,9 +11,11 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\IntelliSAS\SchoolController;
 use App\Http\Controllers\MarksController;
+use App\Http\Controllers\ParentController;
 use App\Http\Controllers\Result\AdminResultController;
 use App\Http\Controllers\Result\CommentsController;
 use App\Http\Controllers\Result\PsychomotorGradeController;
+use App\Http\Controllers\Result\PublishResultController;
 use App\Http\Controllers\Settings\AffectiveCrudController;
 use App\Http\Controllers\Settings\AssignSubjectsController;
 use App\Http\Controllers\Settings\BankAccountsController;
@@ -61,6 +63,9 @@ Route::get('/home', function () {
         if(auth()->user()->usertype == 'intellisas'){
             return redirect()->route('intellisas.home');
         }
+        if(auth()->user()->usertype == 'parent'){
+            return redirect()->route('parent.home');
+        }
 
 })->middleware('auth');
 
@@ -90,6 +95,13 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
     Route::group(['middleware' => ['auth', 'admin']], function () {
         Route::get('/admin/home', [HomeController::class, 'admin'])->name('admin.home');
     });
+    Route::group(['middleware' => ['auth', 'parent']], function () {
+        Route::get('/parent/home', [HomeController::class, 'parent'])->name('parent.home');
+    });
+
+    Route::group(['middleware' => ['auth', 'teachers']], function () {
+        Route::get('/teacher/home', [HomeController::class, 'teacher'])->name('teacher.home');
+    });
 
     Route::group(['prefix' => 'schools', 'middleware' => ['auth', 'intellisas']], function () {
         Route::get('/index', [SchoolController::class, 'index'])->name('schools.index');
@@ -104,9 +116,12 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
         Route::post('/get-school-details', [SchoolController::class, 'getScholDetails'])->name('get-school-details');
     });
 
-    Route::group(['prefix' => 'settings', 'middleware' => ['auth', 'admin']], function () {
+    Route::group(['prefix' => 'settings', 'middleware' => ['auth', 'managers']], function () {
         Route::get('/basic/index', [BasicSettingsController::class, 'index'])->name('settings.basic.index');
         Route::post('/basic/index', [BasicSettingsController::class, 'updateBasic']);
+
+        Route::get('/basic/monnify/index', [BasicSettingsController::class, 'monnifyIndex'])->name('settings.monnify.index');
+        Route::post('/basic/monnify/index', [BasicSettingsController::class, 'monnifyStore']);
 
         Route::get('/sessions/index', [SessionsController::class, 'index'])->name('settings.sessions.index');
         Route::post('/sessions/index', [SessionsController::class, 'store']);
@@ -117,11 +132,6 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
         Route::post('/classes/index', [ClassesController::class, 'store']);
         Route::post('/classes/update', [ClassesController::class, 'update'])->name('settings.class.update');
         Route::post('/classes/delete', [ClassesController::class, 'delete'])->name('settings.class.delete');
-
-        Route::get('/class_section/index', [ClassSectionController::class, 'index'])->name('settings.class_section.index');
-        Route::post('/class_section/index', [ClassSectionController::class, 'store']);
-        Route::post('/class_section/update', [ClassSectionController::class, 'update'])->name('settings.class_section.update');
-        Route::post('/class_section/delete', [ClassSectionController::class, 'delete'])->name('settings.class_section.delete');
 
         Route::get('/sections/index', [SectionsController::class, 'index'])->name('settings.sections.index');
         Route::post('/sections/index', [SectionsController::class, 'store']);
@@ -178,7 +188,7 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
 
     });
 
-    Route::group(['prefix' => 'users', 'middleware' => ['auth','admin']], function(){
+    Route::group(['prefix' => 'users', 'middleware' => ['auth','teachers']], function(){
         Route::get('/students/index', [StudentsController::class, 'index'])->name('users.students.index');
         Route::get('/students/create', [StudentsController::class, 'create'])->name('users.students.create');
         Route::post('/students/edit', [StudentsController::class, 'editStudent'])->name('users.students.edit');
@@ -219,7 +229,7 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
     // Route::get('/paginate-students', [StudentsController::class, 'paginate']);
     // Route::get('/users/students/sort', [StudentsController::class, 'sort']);
 
-    Route::group(['prefix' => 'marks', 'middleware' => ['auth', 'admin']], function(){
+    Route::group(['prefix' => 'marks', 'middleware' => ['auth', 'teachers']], function(){
         Route::get('/create', [MarksController::class, 'create'])->name('marks.create');
         Route::post('/create/fetch_students',  [MarksController::class, 'getMarks'])->name('marks.create.fetch');
         Route::post('/initialize-marks-entry',  [MarksController::class, 'initializeMarks'])->name('initialize-marks-entry');
@@ -236,26 +246,28 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
         Route::post('/get-psychomotor', [PsychomotorGradeController::class, 'getRecords'])->name('psychomotor.get');
         Route::post('/store-psychomotor', [PsychomotorGradeController::class, 'storePsychomotor'])->name('psychomotor.store');
         Route::get('/view-psychomotor/{class_id}/{type}', [PsychomotorGradeController::class, 'viewRecords'])->name('psychomotor.view');
-
     });
+
     //termly result generation
-    Route::group(['prefix' => 'result', 'middleware' => ['auth', 'admin']], function(){
+    Route::group(['prefix' => 'result', 'middleware' => ['auth', 'teachers']], function(){
         Route::get('/termly/index', [AdminResultController::class, 'termIndex'])->name('result.termly.index');
         Route::post('/termly/index', [AdminResultController::class, 'termGenerate']);
 
         Route::get('/settings/index', [AdminResultController::class, 'settingsIndex'])->name('result.settings');
         Route::post('/settings/index', [AdminResultController::class, 'settingsStore']);
-      
 
         Route::get('/comments/index', [CommentsController::class, 'index'])->name('comments.index');
         Route::post('/get-comments', [CommentsController::class, 'getComments'])->name('comments.get');
         Route::post('/store-comments', [CommentsController::class, 'storeComments'])->name('comments.store');
         Route::post('/view-comments', [CommentsController::class, 'viewComments'])->name('comments.view');
+        Route::post('/edit-comments', [CommentsController::class, 'editComments'])->name('comments.edit');
+
+        Route::get('/publish/index', [PublishResultController::class, 'index'])->name('result.publish');
 
     });
 
     //fees and billing
-    Route::group(['prefix' => 'billing', 'middleware' => ['auth', 'admin']], function(){
+    Route::group(['prefix' => 'billing', 'middleware' => ['auth', 'managers']], function(){
         Route::get('/invoices/generate/index', [InvoicesController::class, 'index'])->name('invoices.index');
         Route::post('/get-students-invoices', [InvoicesController::class, 'getRecords'])->name('invoices.get.students');
         Route::post('/store-invoices', [InvoicesController::class, 'storeInvoices'])->name('invoices.store');
@@ -285,7 +297,7 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
     });
 
 
-    Route::group(['prefix' => 'attendance', 'middleware' => ['auth']], function () {
+    Route::group(['prefix' => 'attendance', 'middleware' => ['auth','teachers']], function () {
     
         Route::get('/take/index', [AttendanceController::class, 'create'])->name('attendance.take.index');
         Route::post('/take/search', [AttendanceController::class, 'create'])->name('attendance.take.search');
@@ -300,6 +312,15 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
 
         Route::get('/offline/sheet/index', [AttendanceController::class, 'offline_index'])->name('attendance.offline.index');
         Route::post('/offline/sheet/generate', [AttendanceController::class, 'offline_generate'])->name('attendance.offline.generate');
+
+    });
+
+    Route::group(['prefix' => 'fees_billing', 'middleware' => ['auth','parent']], function () {
+    
+        Route::get('/index', [ParentController::class, 'feesIndex'])->name('fees_billing.index');
+        Route::post('/mark_optional', [ParentController::class, 'markOptional'])->name('mark_optional');
+        Route::post('/proceed_payment', [ParentController::class, 'proccedPayment'])->name('proceed_payment');
+       
 
     });
 

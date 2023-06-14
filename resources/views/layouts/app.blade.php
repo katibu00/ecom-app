@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 @php
-$school = App\Models\School::select('username','name','logo')->where('id',auth()->user()->school_id)->first();
+  $school = App\Models\School::select('username','name','logo')->where('id',auth()->user()->school_id)->first();
+  $user = auth()->user();
 @endphp
 <html
   lang="en"
@@ -39,7 +40,7 @@ $school = App\Models\School::select('username','name','logo')->where('id',auth()
 
     <!-- Core CSS -->
     <link rel="stylesheet" href="/assets/vendor/css/rtl/core.css" class="template-customizer-core-css" />
-    <link rel="stylesheet" href="/assets/vendor/css/rtl/theme-default.css" class="template-customizer-theme-css" />
+    {{-- <link rel="stylesheet" href="/assets/vendor/css/rtl/theme-default.css" class="template-customizer-theme-css" /> --}}
     <link rel="stylesheet" href="/assets/css/demo.css" />
 
     <!-- Vendors CSS -->
@@ -52,7 +53,7 @@ $school = App\Models\School::select('username','name','logo')->where('id',auth()
     {{-- <link rel="stylesheet" href="/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css" /> --}}
     {{-- <link rel="stylesheet" href="/assets/vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css" /> --}}
 
-    <link rel="stylesheet" href="/toastr/toastr.min.css">
+   
 
     <!-- Page CSS -->
     {{-- <link rel="stylesheet" href="/assets/vendor/css/pages/cards-advance.css" /> --}}
@@ -62,9 +63,10 @@ $school = App\Models\School::select('username','name','logo')->where('id',auth()
 
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Template customizer: To hide customizer set displayCustomizer value false in config.js.  -->
-    {{-- <script src="/assets/vendor/js/template-customizer.js"></script> --}}
+    <script src="/assets/vendor/js/template-customizer.js"></script>
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="/assets/js/config.js"></script>
+    <link rel="stylesheet" href="/toastr/toastr.min.css">
   </head>
 
   <body>
@@ -78,7 +80,6 @@ $school = App\Models\School::select('username','name','logo')->where('id',auth()
         <!-- Layout container -->
         <div class="layout-page">
           <!-- Navbar -->
-
           <nav
             class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
             id="layout-navbar"
@@ -102,7 +103,6 @@ $school = App\Models\School::select('username','name','logo')->where('id',auth()
               <!-- /Search -->
 
               <ul class="navbar-nav flex-row align-items-center ms-auto">
-               
 
                 <!-- Style Switcher -->
                 <li class="nav-item me-2 me-xl-0">
@@ -113,7 +113,7 @@ $school = App\Models\School::select('username','name','logo')->where('id',auth()
                 <!--/ Style Switcher -->
 
                 <!-- Quick links  -->
-                <li class="nav-item dropdown-shortcuts navbar-dropdown dropdown me-2 me-xl-0">
+                {{-- <li class="nav-item dropdown-shortcuts navbar-dropdown dropdown me-2 me-xl-0">
                   <a
                     class="nav-link dropdown-toggle hide-arrow"
                     href="javascript:void(0);"
@@ -156,7 +156,7 @@ $school = App\Models\School::select('username','name','logo')->where('id',auth()
                       </div>
                     </div>
                   </div>
-                </li>
+                </li> --}}
                 <!-- Quick links -->
 
                 <!-- Notification -->
@@ -242,8 +242,8 @@ $school = App\Models\School::select('username','name','logo')->where('id',auth()
                             </div>
                           </div>
                           <div class="flex-grow-1">
-                            <span class="fw-semibold d-block">{{ auth()->user()->name }}</span>
-                            <small class="text-muted">{{ ucfirst(auth()->user()->usertype) }}</small>
+                            <span class="fw-semibold d-block">{{ $user->first_name.' '.$user->last_name }}</span>
+                            <small class="text-muted">{{ ucfirst($user->usertype) }}</small>
                           </div>
                         </div>
                       </a>
@@ -353,11 +353,7 @@ $school = App\Models\School::select('username','name','logo')->where('id',auth()
     <!-- Main JS -->
     <script src="/assets/js/main.js"></script>
     <script src="/sweetalert.min.js"></script>
-
     <!-- Page JS -->
     @yield('js')
-
-
-  
   </body>
 </html>

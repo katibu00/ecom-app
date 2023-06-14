@@ -5,7 +5,7 @@
             <div class="modal-body">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 <div class="text-center mb-3">
-                    <h3 class="mb-2">Edit Class</h3>
+                    <h3 class="mb-2">Edit Session</h3>
                 </div>
 
                 <form id="addNewForm" class="row g-3">
@@ -17,15 +17,7 @@
                     <div class="add_item">
                         <div class="form-group  mb-2">
                             <div class="col-md-12">
-                                <input type="text" id="edit_name" class="form-control" placeholder="Enter LG Name" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="status">
-                                <label class="form-check-label">
-                                    Active
-                                </label>
+                                <input type="text" id="edit_name" class="form-control" placeholder="Enter Session Name" />
                             </div>
                         </div>
                     </div>
@@ -33,10 +25,10 @@
 
 
                     <div class="col-12 text-center">
-                        <button type="submit" class="btn btn-primary me-sm-3 me-1" id="update_btn">Update</button>
+                        <button type="submit" class="btn btn-primary me-sm-3 mb-1 me-1" id="update_btn">Update</button>
                         <button type="reset" class="btn btn-label-secondary btn-reset" data-bs-dismiss="modal"
                             aria-label="Close">
-                            Cancel
+                            Dismiss
                         </button>
                     </div>
                 </form>

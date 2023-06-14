@@ -367,10 +367,10 @@
                    
                 @endphp
                 <div style="width: 100%; overflow: hidden; clear:both; margin-top: 0px;">
-                    <p style="margin: 0 0px; font-size: {{ $principal_length > 100 ? 12 : 15 }}px; line-height: 1.8em;">Form Master's Comment: <span
+                    <p style="margin: 0 0px; font-size: {{ @$principal_length > 100 ? 12 : 15 }}px; line-height: 1.8em;">Form Master's Comment: <span
                             style="border-bottom: 1px solid black;  padding: 5px 10px;">
                             @if($withhold == 0) {{ @$master_comment }} @else Withheld @endif</span></p>
-                    <p style="margin: 10px 0px; font-size: {{ $principal_length > 100 ? 12 : 15 }}px; line-height: 1.8em;">Principal's Comment: <span
+                    <p style="margin: 10px 0px; font-size: {{ @$principal_length > 100 ? 12 : 15 }}px; line-height: 1.8em;">Principal's Comment: <span
                             style="border-bottom: 1px solid black;  padding: 2px 10px;">
                             @if($withhold == 0) {{ @$principal_comment }} @else Withheld @endif</span></p>
                 </div>

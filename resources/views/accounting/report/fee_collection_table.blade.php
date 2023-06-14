@@ -29,17 +29,22 @@
         @foreach ($students as $key => $student )
        
         @php
-            @$invoice = App\Models\Invoice::select('id','amount','pre_balance','discount')->where('student_id',$student->id)->where('session_id',$school->session_id)->where('term',$school->term)->first();
+            $invoice = App\Models\Invoice::select('id','amount','pre_balance','discount','student_type')->where('student_id',$student->id)->where('session_id',$school->session_id)->where('term',$school->term)->first();
             $slip = App\Models\PaymentSlip::select('payable','paid','additional')->where('invoice_id',@$invoice->id)->first();
             $additionals = 0;
             if($slip)
             {
               $rows = explode(',', $slip->additional); 
               foreach ($rows as $row) {
-                $fee_amount = App\Models\FeeStructure::where('id',$row)->first()->amount;
-                $additionals+=$fee_amount;
+                $fee_amount = App\Models\FeeStructure::where('id',$row)->first();
+                $additionals+= @$fee_amount->amount;
               }
             }
+
+            $mandatory_sum = App\Models\FeeStructure::where('priority', 'm')
+                                        ->where('school_id', $school->id)
+                                        ->where('class_id', @$student->class_id)
+                                        ->where('student_type', @$invoice->student_type)->sum('amount'); 
           
             $paid = App\Models\PaymentRecord::select('paid_amount')->where('student_id',$student->id)->where('invoice_id',@$invoice->id)->sum('paid_amount');
             $payable = @$slip->payable-@$invoice->discount+@$invoice->pre_balance;
@@ -71,13 +76,7 @@
           <th scope="row">{{ $key+1 }}</th>
           <td>{{ $student->first_name.' '.$student->middle_name.' '.$student->last_name}}</td>
           <td>{{ number_format(@$mandatory_sum,0) }}</td>
-          {{-- <td colspan="6">Payment Not Initiated</td> --}}
-          <td></td>
-          <td></td>
-          <td></td>
-          <td class="table-secondary"></td>
-          <td></td>
-          <td class="table-primary"></td>
+          <td colspan="6" class="text-center">Payment Slip Not Generated</td>
         </tr>
         @endif
         @endforeach

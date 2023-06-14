@@ -14,18 +14,35 @@ class SubjectOfferingController extends Controller
 {
     public function index()
     {
-        $data['classes'] = Classes::select('id', 'name')->where('school_id', auth()->user()->school_id)->get();
+        $user = auth()->user();
+
+        if($user->usertype == 'teacher' || $user->usertype == 'accountant')
+        {
+            $data['classes'] = Classes::select('id','name')->where('school_id',$user->school_id)->where('form_master_id',$user->id)->where('status',1)->get();
+        }else
+        {
+            $data['classes'] = Classes::select('id','name')->where('school_id',$user->school_id)->where('status',1)->get();
+        }  
         return view('users.subjects_offering.index', $data);
     }
 
     public function getSubjects(Request $request)
     {
+        $user = auth()->user();
+
+        if($user->usertype == 'teacher' || $user->usertype == 'accountant')
+        {
+            $data['classes'] = Classes::select('id','name')->where('school_id',$user->school_id)->where('form_master_id',$user->id)->where('status',1)->get();
+        }else
+        {
+            $data['classes'] = Classes::select('id','name')->where('school_id',$user->school_id)->where('status',1)->get();
+        }  
         $data['subjects'] = AssignSubject::with('subject')->select('subject_id')
-            ->where('school_id', auth()->user()->school_id)
+            ->where('school_id', $user->school_id)
             ->where('class_id', $request->class_id)
             ->where('designation', 0)
             ->get();
-        $data['classes'] = Classes::select('id', 'name')->where('school_id', auth()->user()->school_id)->get();
+
         $data['students'] = User::select('id', 'first_name', 'middle_name', 'last_name')
             ->where('class_id', $request->class_id)
             ->where('school_id', auth()->user()->school_id)

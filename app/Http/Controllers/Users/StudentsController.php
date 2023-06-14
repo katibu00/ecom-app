@@ -16,24 +16,63 @@ class StudentsController extends Controller
 {
     public function index()
     {
-        $school_id = auth()->user()->school_id;
-        $data['classes'] = Classes::select('id', 'name')->where('school_id', $school_id)->get();
-        $data['students'] = User::select('id', 'image','first_name','middle_name','last_name','login','gender','class_id','parent_id','status','address')->where('usertype','std')->where('school_id',$school_id)->where('status',1)->with(['class','parent'])->orderBy('gender', 'desc')->orderBy('first_name')->paginate(15);
-        $data['parents'] = User::select('id','first_name','last_name','login','status')->where('usertype','parent')->where('school_id',$school_id)->where('status',1)->get();
-        $data['school'] = School::select('username')->where('id',$school_id)->first();
+        $user = auth()->user();
+
+        if($user->usertype == 'teacher' || $user->usertype == 'accountant')
+        {
+            $data['classes'] = Classes::select('id','name')->where('school_id',$user->school_id)->where('form_master_id',$user->id)->where('status',1)->get();
+        }else
+        {
+            $data['classes'] = Classes::select('id','name')->where('school_id',$user->school_id)->where('status',1)->get();
+        }  
+        $data['students'] = User::select('id', 'image','first_name','middle_name','last_name','login','gender','class_id','parent_id','status')
+                                ->where('usertype','std')
+                                ->where('school_id',$user->school_id)
+                                ->where('status',1)
+                                ->with(['class','parent'])
+                                ->orderBy('gender', 'desc')
+                                ->orderBy('first_name')
+                                ->paginate(15);
+        $data['parents'] = User::select('id','first_name','last_name','login','status')
+                                ->where('usertype','parent')
+                                ->where('school_id',$user->school_id)
+                                ->where('status',1)
+                                ->get();
+        $data['school'] = School::select('username')->where('id',$user->school_id)->first();
         return view('users.students.index',$data);
     }
     public function paginate()
     {
-        $data['classes'] = Classes::select('id', 'name')->where('school_id',auth()->user()->school_id)->get();
-        $data['students'] = User::select('id','image', 'first_name','middle_name','last_name','login','gender','class_id','parent_id','status','address')->where('usertype','std')->where('school_id',auth()->user()->school_id)->where('status',1)->with(['class','parent'])->orderBy('gender', 'desc')->orderBy('first_name')->paginate(15);
-        $data['school'] = School::select('username')->where('id',auth()->user()->school_id)->first();
+        $user = auth()->user();
+        if($user->usertype == 'teacher' || $user->usertype == 'accountant')
+        {
+            $data['classes'] = Classes::select('id','name')->where('school_id',$user->school_id)->where('form_master_id',$user->id)->where('status',1)->get();
+        }else
+        {
+            $data['classes'] = Classes::select('id','name')->where('school_id',$user->school_id)->where('status',1)->get();
+        } 
+        $data['students'] = User::select('id','image', 'first_name','middle_name','last_name','login','gender','class_id','parent_id','status')
+                                    ->where('usertype','std')
+                                    ->where('school_id',$user->school_id)
+                                    ->where('status',1)
+                                    ->with(['class','parent'])
+                                    ->orderBy('gender', 'desc')
+                                    ->orderBy('first_name')
+                                    ->paginate(15);
+        $data['school'] = School::select('username')->where('id', $user->school_id)->first();
         return view('users.students.table',$data)->render();
     }
 
     public function create()
     {
-        $data['classes'] = Classes::select('id', 'name')->where('school_id',auth()->user()->school_id)->where('status',1)->get();
+        $user = auth()->user();
+        if($user->usertype == 'teacher' || $user->usertype == 'accountant')
+        {
+            $data['classes'] = Classes::select('id','name')->where('school_id',$user->school_id)->where('form_master_id',$user->id)->where('status',1)->get();
+        }else
+        {
+            $data['classes'] = Classes::select('id','name')->where('school_id',$user->school_id)->where('status',1)->get();
+        } 
         return view('users.students.create', $data);
     }
 
@@ -50,7 +89,6 @@ class StudentsController extends Controller
                 $data->login = $request->roll_number[$i];
                 $data->usertype = 'std';
                 $data->class_id = $request->class_id;
-                $data->class_section_id = $request->class_section_id;
                 $data->school_id = auth()->user()->school_id;
                 $data->password = Hash::make('123');
                 $data->save();
@@ -65,16 +103,23 @@ class StudentsController extends Controller
 
     public function sort(Request $request)
     {
-        // dd($request->all());
-        $data['classes'] = Classes::select('id', 'name')->where('school_id',auth()->user()->school_id)->get();
+        $user = auth()->user();
+        if($user->usertype == 'teacher' || $user->usertype == 'accountant')
+        {
+            $data['classes'] = Classes::select('id','name')->where('school_id',$user->school_id)->where('form_master_id',$user->id)->where('status',1)->get();
+        }else
+        {
+            $data['classes'] = Classes::select('id','name')->where('school_id',$user->school_id)->where('status',1)->get();
+        }        
+        
         $data['school'] = School::select('username')->where('id',auth()->user()->school_id)->first();
 
         if($request->class_id == 'all')
         {
-            $data['students'] = User::select('id','image','first_name','middle_name','last_name','login','gender','class_id','parent_id','status','address')->where('usertype','std')->where('school_id',auth()->user()->school_id)->where('status',1)->with(['class','parent'])->orderBy('gender', 'desc')->orderBy('first_name')->paginate(10000);
+            $data['students'] = User::select('id','image','first_name','middle_name','last_name','login','gender','class_id','parent_id','status')->where('usertype','std')->where('school_id',auth()->user()->school_id)->where('status',1)->with(['class','parent'])->orderBy('gender', 'desc')->orderBy('first_name')->paginate(10000);
         }else{
 
-            $data['students'] = User::select('id','image','first_name','middle_name','last_name','login','gender','class_id','parent_id','status','address')->where('class_id',$request->class_id)->where('usertype','std')->where('school_id',auth()->user()->school_id)->where('status',1)->with(['class','parent'])->orderBy('gender', 'desc')->orderBy('first_name')->paginate(10000);
+            $data['students'] = User::select('id','image','first_name','middle_name','last_name','login','gender','class_id','parent_id','status')->where('class_id',$request->class_id)->where('usertype','std')->where('school_id',auth()->user()->school_id)->where('status',1)->with(['class','parent'])->orderBy('gender', 'desc')->orderBy('first_name')->paginate(10000);
         }
       
         if( $data['students']->count() > 0)
@@ -91,13 +136,20 @@ class StudentsController extends Controller
     public function search(Request $request)
     {
     
-        $school_id = auth()->user()->school_id;
-        $data['classes'] = Classes::select('id', 'name')->where('school_id',$school_id)->get();
-        $data['school'] = School::select('username')->where('id',$school_id)->first();
+        $user = auth()->user();
+        if($user->usertype == 'teacher' || $user->usertype == 'accountant')
+        {
+            $data['classes'] = Classes::select('id','name')->where('school_id',$user->school_id)->where('form_master_id',$user->id)->where('status',1)->get();
+        }else
+        {
+            $data['classes'] = Classes::select('id','name')->where('school_id',$user->school_id)->where('status',1)->get();
+        }    
 
-        $data['students'] = User::select('id','image', 'first_name','middle_name','last_name','login','gender','class_id','parent_id','status','address')
+        $data['school'] = School::select('username')->where('id',$user->school_id)->first();
+
+        $data['students'] = User::select('id','image', 'first_name','middle_name','last_name','login','gender','class_id','parent_id','status')
                                 ->where('usertype','std')
-                                ->where('school_id',$school_id)
+                                ->where('school_id',$user->school_id)
                                 ->where(function($query) use ($request){
                                     $query ->where('login','like','%'.$request['query'].'%')->orWhere('first_name','like','%'.$request['query'].'%')->orWhere('last_name','like','%'.$request['query'].'%');
                                 })

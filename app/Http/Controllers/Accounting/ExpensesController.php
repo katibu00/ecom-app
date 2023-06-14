@@ -14,7 +14,14 @@ class ExpensesController extends Controller
     public function index()
     {
         $data['expense_cats'] = ExpenseCategory::all();
-        $data['staffs'] = User::all();
+        $data['staffs'] = User::select('id','first_name','last_name')
+                        ->where('usertype','!=','std')
+                        ->where('usertype','!=','parent')
+                        ->where('usertype','!=','intellisas')
+                        ->where('school_id',auth()->user()->school_id)
+                        ->where('status',1)
+                        ->orderBy('first_name')
+                        ->get();      
         $data['expenses'] = Expense::where('school_id', auth()->user()->school_id)->orderBy('date','desc')->get();
         return view('accounting.expenses.index',$data);
     }
@@ -39,7 +46,7 @@ class ExpensesController extends Controller
                 }
                 $data->number = $number + 1;
                 $data->description = $request->description[$i];
-                $data->fee_category_id = $request->fee_category_id[$i];
+                $data->expense_category_id = $request->expense_category_id[$i];
                 $data->payer_id = auth()->user()->id;
                 $data->payee_id = $request->payee_id[$i];
                 $data->amount = $request->amount[$i];

@@ -32,6 +32,11 @@
               $additionals+=$fee_amount;
             }
           }
+
+          $mandatory_sum = App\Models\FeeStructure::where('priority', 'm')
+                            ->where('school_id', $school->id)
+                            ->where('class_id', $student->class_id)
+                            ->where('student_type', @$invoice->student_type)->sum('amount'); 
         
           $paid = App\Models\PaymentRecord::select('paid_amount')->where('student_id',$student->id)->where('invoice_id',@$invoice->id)->sum('paid_amount');
           $payable = @$slip->payable-@$invoice->discount+@$invoice->pre_balance;
@@ -54,9 +59,9 @@
       <tr class="table-danger">
         <th scope="row">{{ $key+1 }}</th>
         <td>{{ $student->first_name.' '.$student->middle_name.' '.$student->last_name}}</td>
-        <td class="table-secondary"></td>
-        <td></td>
-        <td class="table-primary"></td>
+        <td class="table-danger text-center" colspan="3">Payment Slip Not Generated</td>
+        {{-- <td></td>
+        <td class="table-primary"></td> --}}
       </tr>
       @endif
       @endforeach

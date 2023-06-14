@@ -1,59 +1,123 @@
 <script>
     $(document).ready(function() {
        
-        //create
-        $(document).on('submit', '#addNewForm', function(e){
+        //create data
+        $(document).on('click', '#submit_btn', function(e) {
             e.preventDefault();
-            
-            let formData = new FormData($('#addNewForm')[0]);
-    
-            spinner = '<div class="spinner-border" style="height: 15px; width: 15px;" role="status"></div> &nbsp; Submitting . . .'
-                     $('#submit_btn').html(spinner);
-                     $('#submit_btn').attr("disabled", true);
-    
+            name = $('#name').val()
+
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-    
+
+            spinner = '<div class="spinner-border" style="height: 20px; width: 20px;" role="status"><span class="sr-only"></span></div> &nbsp; Submitting...';          
+            $("#submit_btn").html(spinner);
+            $("#submit_btn").attr("disabled", true);
+
             $.ajax({
                 type: "POST",
-                url: "{{ route('settings.class_section.index') }}",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response){
-    
-                        if(response.status == 200){
-                            $('.table').load(location.href+' .table');
-                            $('#addNewModal').modal('hide');
-                            $('#addNewForm')[0].reset();
-                            Command: toastr["success"](response.message)
-                            toastr.options = {
-                            "closeButton": false,
-                            "debug": false,
-                            "newestOnTop": false,
-                            "progressBar": false,
-                            "positionClass": "toast-top-right",
-                            "preventDuplicates": false,
-                            "onclick": null,
-                            "showDuration": "300",
-                            "hideDuration": "1000",
-                            "timeOut": "5000",
-                            "extendedTimeOut": "1000",
-                            "showEasing": "swing",
-                            "hideEasing": "linear",
-                            "showMethod": "fadeIn",
-                            "hideMethod": "fadeOut"
-                            }
+                url: "{{ route('settings.sessions.index') }}",
+                data: {
+                    'name': name
+                },
+                dataType: "json",
+                success: function(res) {
 
-                            $('#submit_btn').text("Submit");
-                            $('#submit_btn').attr("disabled", false);
-                        }
-                }
+                    if (res.status == 400) {
+                        $("#error_list").html("");
+                        $("#error_list").addClass("alert alert-danger");
+                        $.each(res.errors, function (key, err) {
+                            $("#error_list").append("<li>" + err + "</li>");
+                        });
+                        Command: toastr["error"](
+                            "Check your input and try again."
+                        );
+                        toastr.options = {
+                            closeButton: false,
+                            debug: false,
+                            newestOnTop: false,
+                            progressBar: false,
+                            positionClass: "toast-top-right",
+                            preventDuplicates: false,
+                            onclick: null,
+                            showDuration: "300",
+                            hideDuration: "1000",
+                            timeOut: "5000",
+                            extendedTimeOut: "1000",
+                            showEasing: "swing",
+                            hideEasing: "linear",
+                            showMethod: "fadeIn",
+                            hideMethod: "fadeOut",
+                        };
+                        $("#submit_btn").text("Submit");
+                        $("#submit_btn").attr("disabled", false);
+                    }
+
+                    if (res.status == 201) {
+
+                        $('#error_list').html("");
+                        $('#error_list').removeClass('alert alert-danger');
+                        $('#addNewModal').modal('hide');
+                        $('#submit_btn').text("Submit");
+                        $('#submit_btn').attr("disabled", false);
+                        $('#name').val("");
+                        $('.table').load(location.href+' .table');
+                        
+                        Command: toastr["success"](res.message);
+                        toastr.options = {
+                            closeButton: false,
+                            debug: false,
+                            newestOnTop: false,
+                            progressBar: false,
+                            positionClass: "toast-top-right",
+                            preventDuplicates: false,
+                            onclick: null,
+                            showDuration: "300",
+                            hideDuration: "1000",
+                            timeOut: "5000",
+                            extendedTimeOut: "1000",
+                            showEasing: "swing",
+                            hideEasing: "linear",
+                            showMethod: "fadeIn",
+                            hideMethod: "fadeOut",
+                        };
+                        $("#submit_btn").text("Submit");
+                        $("#submit_btn").attr("disabled", false);
+
+
+                    }
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    if (xhr.status === 419) {
+                        Command: toastr["error"](
+                            "Session expired. please login again."
+                        );
+                        toastr.options = {
+                            closeButton: false,
+                            debug: false,
+                            newestOnTop: false,
+                            progressBar: false,
+                            positionClass: "toast-top-right",
+                            preventDuplicates: false,
+                            onclick: null,
+                            showDuration: "300",
+                            hideDuration: "1000",
+                            timeOut: "5000",
+                            extendedTimeOut: "1000",
+                            showEasing: "swing",
+                            hideEasing: "linear",
+                            showMethod: "fadeIn",
+                            hideMethod: "fadeOut",
+                        };
+
+                        setTimeout(() => {
+                               window.location.replace('{{ route('login') }}');
+                        }, 2000);
+                    }
+                },
             });
-    
         });
 
          //delete item
@@ -81,7 +145,7 @@
 
 
                         $.ajax({
-                            url: "{{ route('settings.class_section.delete') }}",
+                            url: "{{ route('settings.session.delete') }}",
                             method: 'POST',
                             data: {
                                 id: id,
@@ -110,11 +174,6 @@
            
             let name = $(this).data('name');
             let id = $(this).data('id');
-            let status = $(this).data('status');
-            if(status == 1)
-            {
-                $("#status").prop("checked", true)
-            }
          
             $('.modal-title').html('Update '+name);
             $('#edit_name').val(name);
@@ -134,15 +193,15 @@
                 }
             });
 
-            spinner = '<div class="spinner-border" style="height: 15px; width: 15px;" role="status"></div> &nbsp; Updating. . .';
-            $("#update_btn").html(spinner);
+            spinner = '<div class="spinner-border" style="height: 20px; width: 20px;" role="status"><span class="sr-only"></span></div> &nbsp; Updating...';
+                        $("#update_btn").html(spinner);
             $("#update_btn").attr("disabled", true);
 
             $.ajax({
                 type: "POST",
-                url: "{{ route('settings.class_section.update') }}",
+                url: "{{ route('settings.session.update') }}",
                 data: {
-                    'name': name, 'id':id,  status: $("#status").prop("checked") == true ? 1 : 0,
+                    'name': name, 'id':id
                 },
                 dataType: "json",
                 success: function(res) {
@@ -240,24 +299,6 @@
                 },
             });
         });
-
-
         
     });
-</script>
-
-<script type="text/javascript">
-    $(document).ready(function() {
-        var counter = 0;
-        $(document).on("click", ".addeventmore", function() {
-            var whole_extra_item_add = $("#whole_extra_item_add").html();
-            $(this).closest(".add_item").append(whole_extra_item_add);
-            counter++
-        });
-        $(document).on("click", ".removeeventmore", function(event) {
-            $(this).closest(".delete_whole_extra_item_add").remove();
-            counter -= 1;
-        });
-    });
-
 </script>

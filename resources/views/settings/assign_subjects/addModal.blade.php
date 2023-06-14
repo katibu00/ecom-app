@@ -16,7 +16,7 @@
 
                                     <div class="mb-2 row">
                                         <div class="col-lg-4">
-                                            <select class="default-select form-control wide mb-3" name="class_id" required>
+                                            <select class="form-select form-select-sm mb-3" name="class_id" required>
                                                 <option value="">--Select Class--</option>
                                                 @foreach ($classes as $class)
                                                     <option value="{{ $class->id }}">{{ $class->name }}</option>
@@ -27,7 +27,7 @@
 
                                     <div class="mb-2 row">
                                         <div class="col-lg-3">
-                                            <select class="form-select form-control wide mb-3" name="subject_id[]" required>
+                                            <select class="form-select form-select-sm mb-3" name="subject_id[]" required>
                                                 <option value="">--Select Subject--</option>
                                                 @foreach ($subjects as $subject)
                                                     <option value="{{ $subject->id }}">{{ $subject->name }}</option>
@@ -35,7 +35,7 @@
                                             </select>                                      
                                           </div>
                                         <div class="col-lg-3">
-                                            <select class="form-select form-control wide mb-3" name="teacher_id[]" required>
+                                            <select class="form-select form-select-sm mb-3" name="teacher_id[]" required>
                                                 <option value="">--Select Teacher--</option>
                                                 @foreach ($staffs as $staff)
                                                     <option value="{{ $staff->id }}">{{ $staff->title }} {{ $staff->first_name }} {{ $staff->last_name }}</option>
@@ -43,7 +43,7 @@
                                             </select>                                      
                                           </div>
                                         <div class="col-lg-3">
-                                            <select class="form-select form-control wide mb-3" name="designation[]" required>
+                                            <select class="form-select form-select-sm  mb-3" name="designation[]" required>
                                                 <option value="">--Designation--</option>
                                                 <option value="1">Compulsory</option>
                                                 <option value="0">Optional</option>
@@ -76,7 +76,7 @@
                 <div class="col-xl-12">
                     <div class="mb-2 row">
                         <div class="col-lg-3">
-                            <select class="form-select form-control wide mb-3" name="subject_id[]" required>
+                            <select class="form-select form-select-sm mb-3" name="subject_id[]" required>
                                 <option value="">--Select Subject--</option>
                                 @foreach ($subjects as $subject)
                                     <option value="{{ $subject->id }}">{{ $subject->name }}</option>
@@ -84,7 +84,7 @@
                             </select>                                      
                           </div>
                         <div class="col-lg-3">
-                            <select class="form-select form-control wide mb-3" name="teacher_id[]" required>
+                            <select class="form-select form-select-sm mb-3" name="teacher_id[]" required>
                                 <option value="">--Select Teacher--</option>
                                 @foreach ($staffs as $staff)
                                     <option value="{{ $staff->id }}">{{ $staff->title }} {{ $staff->first_name }} {{ $staff->last_name }}</option>
@@ -92,7 +92,7 @@
                             </select>                                      
                           </div>
                           <div class="col-lg-3">
-                            <select class="form-select form-control wide mb-3" name="designation[]" required>
+                            <select class="form-select form-select-sm mb-3" name="designation[]" required>
                                 <option value="">--Designation--</option>
                                 <option value="1">Compulsory</option>
                                 <option value="0">Optional</option>

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('PageTitle', 'Class Sections')
+@section('PageTitle', 'Publish Result')
 
 
 @section('content')
@@ -8,23 +8,23 @@
         <!-- Basic Bootstrap Table -->
         <div class="card">
             <div class="card-header header-elements">
-                <span class="me-2">Class Sections</span>
+                <span class="me-2">Publish Result</span>
 
                 <div class="card-header-elements ms-auto">
                     <button type="button" data-bs-toggle="modal" data-bs-target="#addNewModal" class="btn btn-sm btn-primary">
-                        <span class="tf-icon ti ti-plus ti-xs me-1"></span>Add Class Section(s)
+                        <span class="tf-icon ti ti-plus ti-xs me-1"></span>Publish New Result
                     </button>
                 </div>
             </div>
-            @include('settings.class_section.table')
+            @include('results.publish.table')
         </div>
         <!--/ Basic Bootstrap Table -->
-        @include('settings.class_section.add_modal')
-        @include('settings.class_section.edit_modal')
+        @include('results.publish.add_modal')
+        @include('results.publish.edit_modal')
     </div>
     <!-- content @e -->
 @endsection
 
 @section('js')
-    @include('settings.class_section.script')
+    @include('results.publish.script')
 @endsection

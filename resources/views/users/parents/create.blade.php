@@ -24,6 +24,7 @@
                                     <div class="col-xl-12">
                                         <div class="mb-2 row">
                                             <div class="col-lg-2 mb-2">
+                                                <label for="title">Title <span class="text-danger">*</span></label>
                                                 <select class="form-select form-select-sm" name="title" required>
                                                     <option value="Mr.">Mr.</option>
                                                     <option value="Mrs.">Mrs.</option>
@@ -36,15 +37,22 @@
                                                 </select>                                        
                                             </div>
                                             <div class="col-lg-2 mb-2">
+                                                <label for="">First Name <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control form-control-sm" name="first_name" placeholder="First Name">     
                                             </div>                                 
                                             <div class="col-lg-2 mb-2">
+                                                <label for="">Last Name<span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control form-control-sm" name="last_name" placeholder="Last Name" required>     
                                             </div>                                 
                                             <div class="col-lg-2 mb-2">
-                                                <input type="text" class="form-control form-control-sm" name="login" placeholder="Email/Phone Number" required>     
+                                                <label for="">Email/Phone Number <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control form-control-sm" name="login" placeholder="Email/Phone Number" required>  
+                                                @error('login')
+                                                <span class="text-danger">{{ $message }}</span>  
+                                                @enderror 
                                             </div>                                 
                                             <div class="col-lg-4 mb-2">
+                                                <label for="">Child(s) <span class="text-danger">*</span></label>
                                                 <select class="form-select select2 form-select-sm" multiple name="children[]" required>
                                                     <option value=""></option>
                                                    @foreach ($students as $student)

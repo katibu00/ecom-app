@@ -51,10 +51,10 @@ class LoginController extends Controller
                     'status'=>200,
                     'user'=>'student',
                 ]);
-            }else if (Auth::user()->usertype == 'lecturer'){
+            }else if (Auth::user()->usertype == 'parent'){
                 return response()->json([
                     'status'=>200,
-                    'user'=>'lecturer',
+                    'user'=>'parent',
                 ]);
             }else if (Auth::user()->usertype == 'intellisas'){
                 return response()->json([
@@ -65,6 +65,11 @@ class LoginController extends Controller
                 return response()->json([
                     'status'=>200,
                     'user'=>'applicant',
+                ]);
+            }else if (Auth::user()->usertype == 'teacher'){
+                return response()->json([
+                    'status'=>200,
+                    'user'=>'teacher',
                 ]);
             }else{
                 return back()->with('status','You are not authorized to access this content');

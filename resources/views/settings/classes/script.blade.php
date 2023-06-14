@@ -109,13 +109,15 @@
          $(document).on('click', '.editItem', function() {
            
             let name = $(this).data('name');
+            let form_master_id = $(this).data('form_master_id');
             let id = $(this).data('id');
             let status = $(this).data('status');
             if(status == 1)
             {
                 $("#status").prop("checked", true)
             }
-         
+            $('#edit_form_master_id').val(form_master_id).prop('selected', true);
+
             $('.modal-title').html('Update '+name);
             $('#edit_name').val(name);
             $('#update_id').val(id);
@@ -127,6 +129,7 @@
 
             name = $('#edit_name').val()
             id = $('#update_id').val()
+            form_master_id = $('#edit_form_master_id').val()
 
             $.ajaxSetup({
                 headers: {
@@ -142,7 +145,7 @@
                 type: "POST",
                 url: "{{ route('settings.class.update') }}",
                 data: {
-                    'name': name, 'id':id,  status: $("#status").prop("checked") == true ? 1 : 0,
+                    'name': name, 'id':id, 'form_master_id':form_master_id, status: $("#status").prop("checked") == true ? 1 : 0,
                 },
                 dataType: "json",
                 success: function(res) {

@@ -45,11 +45,12 @@
                                             <div class="col-lg-2 mb-2">
                                                 <select class="form-select form-select-sm" name="usertype[]" required>
                                                     <option value=""></option>
-                                                    <option value="admin">Admin</option>
-                                                    <option value="accountant">Accountant</option>
                                                     <option value="teacher">Teacher</option>
+                                                    <option value="admin">Administrator</option>
+                                                    <option value="accountant">Accountant</option>
                                                     <option value="proprietor">Proprietor</option>
                                                     <option value="director">Director</option>
+                                                    <option value="staff">Non-teaching Staff</option>
                                                 </select>     
                                             </div>                                 
                                             <div class="col-lg-2">

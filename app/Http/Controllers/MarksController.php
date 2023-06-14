@@ -20,7 +20,14 @@ class MarksController extends Controller
 
         $user = Auth::user();
         $data['school'] = School::where('id', $user->school_id)->first();
-        $data['subjects'] = AssignSubject::select('id', 'subject_id', 'class_id', 'designation')->where('teacher_id', $user->id)->get();
+
+        if($user->usertype == 'teacher' || $user->usertype == 'accountant')
+        {
+            $data['subjects'] = AssignSubject::select('id', 'subject_id', 'class_id', 'designation')->where('teacher_id', $user->id)->get();
+        }else
+        {
+            $data['subjects'] = AssignSubject::select('id', 'subject_id', 'class_id', 'designation')->get();
+        }
         $data['cas'] = CAScheme::where('school_id', $user->school_id)->get();
         return view('marks.create', $data);
     }
@@ -294,7 +301,14 @@ class MarksController extends Controller
     public function gradeBookIndex()
     {
         $user = Auth::user();
-        $data['classes'] = Classes::select('id', 'name')->where('school_id', $user->school_id)->get();
+
+        if($user->usertype == 'teacher' || $user->usertype == 'accountant')
+        {
+            $data['classes'] = Classes::select('id','name')->where('school_id',$user->school_id)->where('form_master_id',$user->id)->where('status',1)->get();
+        }else
+        {
+            $data['classes'] = Classes::select('id','name')->where('school_id',$user->school_id)->where('status',1)->get();
+        }     
         return view('marks.grade_book', $data);
 
     }
@@ -332,8 +346,14 @@ class MarksController extends Controller
     public function submissionIndex()
     {
         $user = Auth::user();
-        $data['classes'] = Classes::select('id', 'name')->where('school_id', $user->school_id)->get();
 
+        if($user->usertype == 'teacher' || $user->usertype == 'accountant')
+        {
+            $data['classes'] = Classes::select('id','name')->where('school_id',$user->school_id)->where('form_master_id',$user->id)->where('status',1)->get();
+        }else
+        {
+            $data['classes'] = Classes::select('id','name')->where('school_id',$user->school_id)->where('status',1)->get();
+        }     
         return view('marks.submissions.index', $data);
     }
     public function submissionSearch(Request $request)

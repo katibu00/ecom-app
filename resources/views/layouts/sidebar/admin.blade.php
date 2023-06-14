@@ -124,6 +124,11 @@
                 <div data-i18n="Comments">Comments</div>
             </a>
         </li>
+        <li class="menu-item {{ $route == 'result.publish' ? 'active' : '' }}">
+            <a href="{{ route('result.publish') }}" class="menu-link">
+                <div data-i18n="Publish Result">Publish Result</div>
+            </a>
+        </li>
        
         <li class="menu-item {{ $route == 'result.settings' ? 'active' : '' }}">
             <a href="{{ route('result.settings') }}" class="menu-link">
@@ -186,11 +191,6 @@
         <li class="menu-item {{ $route == 'settings.classes.index' ? 'active' : '' }}">
             <a href="{{ route('settings.classes.index') }}" class="menu-link">
                 <div data-i18n="Classes">Classes</div>
-            </a>
-        </li>
-        <li class="menu-item {{ $route == 'settings.class_section.index' ? 'active' : '' }}">
-            <a href="{{ route('settings.class_section.index') }}" class="menu-link">
-                <div data-i18n="Class Section">Class Section</div>
             </a>
         </li>
         <li class="menu-item {{ $route == 'settings.subjects.index' ? 'active' : '' }}">

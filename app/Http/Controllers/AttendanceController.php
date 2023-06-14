@@ -17,9 +17,15 @@ class AttendanceController extends Controller
 
     public function overview()
     {
-        $school_id = Auth::user()->school_id;
-        $data['classes'] = Classes::select('id','name')->where('school_id',$school_id)->where('status',1)->get();
-        $data['school'] = School::select('session_id','term')->where('id',$school_id)->first();
+        $user = Auth::user();
+        if($user->usertype == 'teacher' || $user->usertype == 'accountant')
+        {
+            $data['classes'] = Classes::select('id','name')->where('school_id',$user->school_id)->where('form_master_id',$user->id)->where('status',1)->get();
+        }else
+        {
+            $data['classes'] = Classes::select('id','name')->where('school_id',$user->school_id)->where('status',1)->get();
+        }
+        $data['school'] = School::select('session_id','term')->where('id',$user->school_id)->first();
         return view('attendance.overview',$data);
     }
 
@@ -37,11 +43,18 @@ class AttendanceController extends Controller
 
     public function create(Request $request)
     {
-        $school_id = Auth::user()->school_id;
-        $data['classes'] = Classes::select('id','name')->where('school_id',$school_id)->where('status',1)->get();
+        $user = Auth::user();
+        if($user->usertype == 'teacher' || $user->usertype == 'accountant')
+        {
+            $data['classes'] = Classes::select('id','name')->where('school_id',$user->school_id)->where('form_master_id',$user->id)->where('status',1)->get();
+        }else
+        {
+            $data['classes'] = Classes::select('id','name')->where('school_id',$user->school_id)->where('status',1)->get();
+        }        
+        
         if($request->class_id)
         {
-            $data['students'] = User::select('id','first_name','middle_name','last_name')->where('class_id',$request->class_id)->where('school_id',$school_id)->where('status',1)->get();
+            $data['students'] = User::select('id','first_name','middle_name','last_name')->where('class_id',$request->class_id)->where('school_id',$user->school_id)->where('status',1)->get();
             if ( $data['students']->count() < 1) {
                 Toastr::error('No student has been found in the selected class');
                 return redirect()->route('attendance.take.index');
@@ -82,23 +95,31 @@ class AttendanceController extends Controller
                 $data->save();
             }
             Toastr::success('Attendance has been Recorded sucessfully');
-            return redirect()->route('attendance.index');
+            return redirect()->route('attendance.take.index');
         }
     }
 
     public function report(Request $request){
 
-        $school_id = Auth::user()->school_id;
-        $data['classes'] = Classes::select('id','name')->where('school_id',$school_id)->where('status',1)->get();
+        $user = Auth::user();
+
+        if($user->usertype == 'teacher' || $user->usertype == 'accountant')
+        {
+            $data['classes'] = Classes::select('id','name')->where('school_id',$user->school_id)->where('form_master_id',$user->id)->where('status',1)->get();
+        }else
+        {
+            $data['classes'] = Classes::select('id','name')->where('school_id',$user->school_id)->where('status',1)->get();
+        }     
+
         if($request->class_id)
         {
-            $data['dates'] = Attendance::select('date')->where('school_id',$school_id)->where('class_id',$request->class_id)->groupBy('date')->orderBy('date','desc')->get();
+            $data['dates'] = Attendance::select('date')->where('school_id',$user->school_id)->where('class_id',$request->class_id)->groupBy('date')->orderBy('date','desc')->get();
             if ($data['dates']->count() < 1) {
                 Toastr::error('Attendance not Recorded for the selected class');
                 return redirect()->route('attendance.report.index');
             }
             $data['class_id'] = $request->class_id;
-            $data['students'] = User::select('id','gender','first_name','middle_name','last_name')->where('class_id',$request->class_id)->where('school_id',$school_id)->where('status',1)->orderBy('gender', 'desc')->orderBy('first_name')->get();
+            $data['students'] = User::select('id','gender','first_name','middle_name','last_name')->where('class_id',$request->class_id)->where('school_id',$user->school_id)->where('status',1)->orderBy('gender', 'desc')->orderBy('first_name')->get();
         }
         return view('attendance.report', $data);
         

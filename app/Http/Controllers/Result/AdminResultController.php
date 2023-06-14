@@ -18,7 +18,15 @@ class AdminResultController extends Controller
     public function termIndex()
     {
         $data['sessions'] = Session::select('id','name')->where('school_id',auth()->user()->school_id)->get(); 
-        $data['classes'] = Classes::select('id','name')->where('school_id',auth()->user()->school_id)->get(); 
+        $user = auth()->user();
+
+        if($user->usertype == 'teacher' || $user->usertype == 'accountant')
+        {
+            $data['classes'] = Classes::select('id','name')->where('school_id',$user->school_id)->where('form_master_id',$user->id)->where('status',1)->get();
+        }else
+        {
+            $data['classes'] = Classes::select('id','name')->where('school_id',$user->school_id)->where('status',1)->get();
+        }  
         $data['school'] = School::select('session_id','term')->where('id',auth()->user()->school_id)->first();
         return view('results.termly',$data);
     }

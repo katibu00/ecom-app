@@ -21,7 +21,15 @@ class PsychomotorGradeController extends Controller
     {
        
         $data['school'] = School::select('id','term','session_id')->where('id', auth()->user()->school_id)->first();
-        $data['classes'] = Classes::select('id','name')->where('school_id',auth()->user()->school_id)->get(); 
+        $user = auth()->user();
+
+        if($user->usertype == 'teacher' || $user->usertype == 'accountant')
+        {
+            $data['classes'] = Classes::select('id','name')->where('school_id',$user->school_id)->where('form_master_id',$user->id)->where('status',1)->get();
+        }else
+        {
+            $data['classes'] = Classes::select('id','name')->where('school_id',$user->school_id)->where('status',1)->get();
+        }  
         return view('psychomotor.index',$data);
     }
 
