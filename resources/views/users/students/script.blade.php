@@ -108,9 +108,12 @@
 
                     if (res.status == 200) {
 
-                        if (res.student.image != 'default.png') {
-                            $("#picture").attr("src", "/uploads/" + res.school_name + '/' +
-                                res.student.image);
+                        if (res.student.image === null) {
+                            $("#student_image").attr("src", "/uploads/default.png");
+
+                        }else
+                        {
+                            $("#student_image").attr("src", "/uploads/" + res.school_name.username + '/' + res.student.image);
                         }
 
                         $('#first_name').html(res.student.first_name);
@@ -120,12 +123,28 @@
                         $('#class').html(res.student.class.name);
 
                         $('#registered').html(res.registered);
+                        if(res.student.profile)
+                        {
+                            $('#dob').html(res.student.profile.dob);
+                            $('#physical_fitness').html(res.student.profile.physical_fitness);
+                        }else
+                        {
+                            $('#dob').html('');
+                            $('#physical_fitness').html('');
+                        }
+                   
                         if(res.student.parent)
                         {
                             $('#parent_name').html(res.student.parent.first_name + ' ' + res.student.parent.last_name);
                             $('#parent_email').html(res.student.parent.email);
                             $('#parent_phone').html(res.student.parent.phone);
                             $('#parent_address').html(res.student.parent.name);
+                        }else
+                        {
+                            $('#parent_name').html('');
+                            $('#parent_email').html('');
+                            $('#parent_phone').html('');
+                            $('#parent_address').html(''); 
                         }
 
                         $('.modal-title').html('Details for ' + student_name);
@@ -322,7 +341,7 @@
                 },
                 success: function(res) {
 
-                    if (res.student.image != 'default.png') {
+                    if (res.student.image !== null) {
                         $("#edit_student_picture").attr("src", "/uploads/" + res
                             .school_username.username + '/' + res.student.image);
                     }
@@ -338,6 +357,15 @@
                         "selected", "selected");
                     $(`#edit_gender option[value="${res.student.gender}"]`).attr("selected",
                         "selected");
+                        if(res.student.profile)
+                        {
+                            $('#edit_dob').val(res.student.profile.dob);
+                            $('#edit_fitness').val(res.student.profile.physical_fitness);
+                        }else
+                        {
+                            $('#edit_dob').val('');
+                            $('#edit_fitness').val('');
+                        }
 
 
 

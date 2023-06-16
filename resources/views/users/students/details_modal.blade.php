@@ -15,10 +15,10 @@
                 </div>
                 <div class="profile-personal-info d-none" id="details_content_div">
                     <div class="mb-2">
-                        <img alt="student picture" id="logo" class="rounded mr-sm-4 mr-0" width="130" src="/uploads/default.png">
+                        <img alt="student picture" id="student_image" class="rounded mr-sm-4 mr-0" width="130" src="">
                     </div>
                     <h4 class="text-primary mb-2">Student Information</h4>
-                    <div class="row mb-2">
+                    <div class="row mb-1">
                         <div class="col-4">
                             <h5 class="f-w-500">First Name <span class="pull-right">:</span>
                             </h5>
@@ -26,7 +26,7 @@
                         <div class="col-8"><span id="first_name"></span>
                         </div>
                     </div>
-                    <div class="row mb-2">
+                    <div class="row mb-1">
                         <div class="col-4">
                             <h5 class="f-w-500">Middle Name <span class="pull-right">:</span>
                             </h5>
@@ -34,7 +34,7 @@
                         <div class="col-8"><span id="middle_name"></span>
                         </div>
                     </div>
-                    <div class="row mb-2">
+                    <div class="row mb-1">
                         <div class="col-4">
                             <h5 class="f-w-500">Last Name <span class="pull-right">:</span>
                             </h5>
@@ -42,7 +42,7 @@
                         <div class="col-8"><span id="last_name"></span>
                         </div>
                     </div>
-                    <div class="row mb-2">
+                    <div class="row mb-1">
                         <div class="col-4">
                             <h5 class="f-w-500">Class <span class="pull-right">:</span>
                             </h5>
@@ -50,7 +50,7 @@
                         <div class="col-8"><span id="class"></span>
                         </div>
                     </div>
-                    <div class="row mb-2">
+                    <div class="row mb-1">
                         <div class="col-4">
                             <h5 class="f-w-500">Roll Number <span class="pull-right">:</span>
                             </h5>
@@ -58,7 +58,23 @@
                         <div class="col-8"><span id="roll_number"></span>
                         </div>
                     </div>
-                    <div class="row mb-2">
+                    <div class="row mb-1">
+                        <div class="col-4">
+                            <h5 class="f-w-500">Date of Borth<span class="pull-right">:</span>
+                            </h5>
+                        </div>
+                        <div class="col-8"><span id="dob"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col-4">
+                            <h5 class="f-w-500">Physical Fitness <span class="pull-right">:</span>
+                            </h5>
+                        </div>
+                        <div class="col-8"><span id="physical_fitness"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-1">
                         <div class="col-4">
                             <h5 class="f-w-500">Registered <span class="pull-right">:</span>
                             </h5>
@@ -68,7 +84,7 @@
                     </div>
              
                     <h5 class="text-primary">Parent's Information</h5>
-                    <div class="row mb-2">
+                    <div class="row mb-1">
                         <div class="col-4">
                             <h5 class="f-w-500">Name <span class="pull-right">:</span>
                             </h5>
@@ -76,7 +92,7 @@
                         <div class="col-8"><span id="parent_name"></span>
                         </div>
                     </div>
-                    <div class="row mb-2">
+                    <div class="row mb-1">
                         <div class="col-4">
                             <h5 class="f-w-500">Email <span class="pull-right">:</span>
                             </h5>
@@ -84,7 +100,7 @@
                         <div class="col-8"><span id="parent_email"></span>
                         </div>
                     </div>
-                    <div class="row mb-2">
+                    <div class="row mb-1">
                         <div class="col-4">
                             <h5 class="f-w-500">Phone <span class="pull-right">:</span>
                             </h5>
@@ -92,7 +108,7 @@
                         <div class="col-8"><span id="parent_phone"></span>
                         </div>
                     </div>
-                    <div class="row mb-2">
+                    <div class="row mb-1">
                         <div class="col-4">
                             <h5 class="f-w-500">Address <span class="pull-right">:</span>
                             </h5>

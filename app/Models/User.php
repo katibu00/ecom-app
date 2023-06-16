@@ -42,12 +42,14 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function class(){
-        return $this->hasOne('App\Models\Classes','id','class_id');
+    function class ()
+    {
+        return $this->hasOne('App\Models\Classes', 'id', 'class_id');
     }
 
-    public function parent(){
-        return $this->belongsTo(User::class, 'parent_id','id');
+    public function parent()
+    {
+        return $this->belongsTo(User::class, 'parent_id', 'id');
     }
 
     public function subjectOfferings()
@@ -63,5 +65,10 @@ class User extends Authenticatable
     public function wallet()
     {
         return $this->hasOne(Wallet::class);
+    }
+
+    public function profile()
+    {
+        return $this->hasOne(Profile::class);
     }
 }

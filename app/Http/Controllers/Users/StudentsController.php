@@ -4,13 +4,15 @@ namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
 use App\Models\Classes;
-use App\Models\ClassSection;
+use App\Models\Profile;
 use App\Models\School;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File as File;
+use Intervention\Image\Facades\Image;
+
 
 class StudentsController extends Controller
 {
@@ -173,7 +175,7 @@ class StudentsController extends Controller
     public function details(Request $request)
     {
 
-        $student = User::with(['class','parent'])->where('id', $request->student_id)->where('school_id',auth()->user()->school_id)->first();
+        $student = User::with(['class','parent','profile'])->where('id', $request->student_id)->where('school_id',auth()->user()->school_id)->first();
         $registered = $student->created_at->diffForHumans();
         $school_name = School::select('username')->where('id',auth()->user()->school_id)->first();
        
@@ -243,7 +245,7 @@ class StudentsController extends Controller
     public function getStudentDetails(Request $request)
     {
 
-        $student = User::find($request->student_id);
+        $student = User::with('profile')->find($request->student_id);
         $school_username = School::select('username')->where('id',auth()->user()->school_id)->first();
 
         if($student){
@@ -262,27 +264,19 @@ class StudentsController extends Controller
 
     public function editStudent(Request $request)
     {
-        // return $request->all();
         $validator = Validator::make($request->all(), [
-            // 'name'=>'required',
-            // 'school_email' => 'required|email',
-            // 'address'=>'required',
-            // 'school_phone' => 'required',
-            // 'website' => 'required',
-            // 'session_id' => 'required',
-            // 'term' => 'required',
-            // 'motto' => 'required',
-            
+            // Add your validation rules here
         ]);
-       
-        if($validator->fails()){
+        
+        if ($validator->fails()) {
             return response()->json([
-                'status'=>400,
-                'errors'=>$validator->messages(),
+                'status' => 400,
+                'errors' => $validator->messages(),
             ]);
         }
-        $school = School::select('username')->where('id',auth()->user()->school_id)->first();
-       
+        
+        $school = School::select('username')->where('id', auth()->user()->school_id)->first();
+        
         $student = User::find($request->edit_student_id);
         $student->first_name = $request->first_name;
         $student->middle_name = $request->middle_name;
@@ -290,26 +284,45 @@ class StudentsController extends Controller
         $student->login = $request->roll_number;
         $student->parent_id = $request->parent_id;
         $student->gender = $request->gender;
-        $student->dob = $request->dob;
-      
-
+        
         if ($request->file('image') != null) {
             $destination = 'uploads/' . $school->username . '/' . $student->image;
             File::delete($destination);
             $file = $request->file('image');
             $extension = $file->getClientOriginalExtension();
             $filename = time() . '.' . $extension;
-            $file->move('uploads/' . $school->username, $filename);
+        
+            // Use Intervention Image to compress and resize the image
+            $image = Image::make($file)
+                ->resize(800, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                })
+                ->encode('jpg', 80); // Set the desired image format and quality
+        
+            // Save the image to the specified destination
+            $image->save('uploads/' . $school->username . '/' . $filename);
+        
             $student->image = $filename;
         }
-
+        
+        
         $student->update();
-
+        
+        // Create or update the student's profile
+        $profile = $student->profile ?? new Profile();
+        $profile->dob = $request->dob;
+        $profile->physical_fitness = $request->physical_fitness;
+        
+        $student->profile()->save($profile);
+        
         return response()->json([
-            'status'=>200,
-            'message'=>'Student Profile Updated Successfully',
+            'status' => 200,
+            'message' => 'Student Profile Updated Successfully',
         ]);
+        
     }
+
 
 
 }

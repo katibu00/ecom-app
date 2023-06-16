@@ -78,7 +78,7 @@
                         <div class="row mb-3">
                             <div class="col-md-12">
                                 <label for="edit_fitness">Physical Fitness</label>
-                                <textarea class="form-control" id="edit_fitness" name="fitness" placeholder="Physical Fitness"></textarea>
+                                <textarea class="form-control" id="edit_fitness" name="physical_fitness" placeholder="Physical Fitness"></textarea>
                             </div>
                         </div>
                     

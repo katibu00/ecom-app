@@ -16,7 +16,7 @@
                             </div>
                             <div class="card-title-elements ms-auto">
                                 <select class="form-select form-select-sm w-auto" id="select_class">
-                                    <option value="all">All Active</option>
+                                    <option value="all">All Current Students</option>
                                     @foreach ($classes as $class)
                                         <option value="{{ $class->id }}">{{ $class->name }}</option>
                                     @endforeach

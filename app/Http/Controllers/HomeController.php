@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AssignSubject;
 use App\Models\Attendance;
+use App\Models\Classes;
 use App\Models\Expense;
 use App\Models\Invoice;
 use App\Models\PaymentRecord;
@@ -10,6 +12,7 @@ use App\Models\PaymentSlip;
 use App\Models\ReservedAccount;
 use App\Models\School;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -151,8 +154,24 @@ class HomeController extends Controller
     }
     public function teacher()
     {
-        $school_id = auth()->user()->school_id;
-        $data['school'] = School::select('id','term','session_id','username')->where('id',$school_id)->first();
+        $user = auth()->user();
+        $data['school'] = School::select('id','term','session_id','username')->where('id',$user->school_id)->first();
+
+        $data['classes'] = Classes::select('name','id')->where('form_master_id',$user->id)->get();
+
+        $data['subjects'] = AssignSubject::select('subject_id','id','designation','class_id')->where('teacher_id',$user->id)->with('subject','class')->get();
+
+        $data['students'] = 0;
+        $data['attendance'] = 'no';
+        foreach($data['classes'] as $class)
+        {
+            $data['students'] += User::select('id')->where('class_id', $class->id)->count();
+            $attendance = Attendance::select('id')->where('class_id',$class->id)->whereDate('created_at', Carbon::today())->first();
+            if($attendance)
+            {
+                $data['attendance'] = 'yes';
+            }
+        }
 
        
 

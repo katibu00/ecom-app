@@ -30,7 +30,7 @@
                     </td>
                     <td>
                         <div class="avatar avatar-sm me-2">
-                            <img @if ($student->image == 'default.png') src="/uploads/default.png" @else src="/uploads/{{ $school->username }}/{{ $student->image }}" @endif
+                            <img @if ($student->image == '') src="/uploads/default.png" @else src="/uploads/{{ $school->username }}/{{ $student->image }}" @endif
                                 alt="Avatar" class="rounded-circle" />
                         </div>
                     </td>
@@ -44,7 +44,7 @@
                         {{ @$student->class->name }}
                     </td>
                     <td>
-                        {{ @$student->parent->title . ' ' . @$student->parent->first_name . ' ' . @$student->parent->last_name }}
+                        {!! @$student->parent->first_name ? @$student->parent->first_name . ' ' . @$student->parent->last_name : '  <span class="badge bg-label-danger me-1">Not Linked</span>' !!}
                     </td>
                     <td>
                         @if (@$student->status == 1)
