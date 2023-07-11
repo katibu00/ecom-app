@@ -16,12 +16,15 @@ return new class extends Migration
         Schema::create('classes', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('form_master_id');
-            $table->integer('school_id');
-            $table->integer('section_id');
-            $table->integer('status')->default('1');
-            $table->timestamps();
+            $table->unsignedBigInteger('form_master_id');
+            $table->unsignedBigInteger('school_id');
+            $table->unsignedBigInteger('section_id');
+            $table->tinyInteger('status')->default(1);
+        
+            $table->foreign('form_master_id')->references('id')->on('users');
+            $table->foreign('school_id')->references('id')->on('schools');
         });
+        
     }
 
     /**

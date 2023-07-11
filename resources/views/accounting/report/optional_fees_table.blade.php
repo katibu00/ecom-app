@@ -19,6 +19,7 @@
                     $query->where('priority','!=', 'm');
                 })
                 ->where('school_id', auth()->user()->school_id)
+                ->where('term', $school->term)
                 ->where('class_id', $class->id)
                 ->where('student_type', 'r')->get();
               

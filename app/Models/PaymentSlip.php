@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class PaymentSlip extends Model
 {
     use HasFactory;
+    public $timestamps = false;
+
 
    
 }

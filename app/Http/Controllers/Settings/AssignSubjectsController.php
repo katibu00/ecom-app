@@ -24,6 +24,8 @@ class AssignSubjectsController extends Controller
 
     public function store(Request $request)
     {
+        $count = AssignSubject::where('school_id', auth()->user()->school_id)->count();
+
 
         $rowCount = count($request->subject_id);
         if($rowCount != NULL){
@@ -40,6 +42,7 @@ class AssignSubjectsController extends Controller
 
         return response()->json([
             'status'=>200,
+            'count'=>$count,
             'message'=>'Subject(s) Assigned Successfully',
         ]);
     }

@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class AffectiveCrud extends Model
 {
     use HasFactory;
+
+    public $timestamps = false;
+
 }

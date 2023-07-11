@@ -18,9 +18,10 @@ return new class extends Migration
             $table->string('bank');
             $table->string('name');
             $table->string('number');
-            $table->integer('school_id');
+            $table->unsignedBigInteger('school_id');
             $table->integer('status')->default('1');
-            $table->timestamps();
+
+            $table->foreign('school_id')->references('id')->on('schools');
         });
     }
 

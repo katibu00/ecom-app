@@ -1,3 +1,4 @@
+@if (count($subjects) > 0)
 <div class="table-responsive text-nowrap">
     <table class="table table-hover">
         <thead>
@@ -31,3 +32,15 @@
         </tbody>
     </table>
 </div>
+@else
+<div class="container">
+    <div class="alert alert-primary text-center">
+        <h5 class="mb-4 text-danger">No Subjects Created!</h5>
+        <p class="mb-4">Input all the distinct subjects taught across different classes in your school.</p>
+        <button type="button" data-bs-toggle="modal" data-bs-target="#addNewModal" class="btn btn-sm btn-primary">
+            Create New Subject
+        </button>
+    </div>
+</div>
+
+@endif

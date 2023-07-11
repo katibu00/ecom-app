@@ -32,7 +32,7 @@ $route = Route::current()->getName();
                         <div class="card-body">
                             <div class="d-flex align-items-start align-items-sm-center gap-4">
                                 <img @if ($school->logo == 'default.jpg') src="/uploads/no-image.jpg" @else src="/uploads/{{ $school->username }}/{{ $school->logo }}" @endif
-                                    alt="user-avatar" class="d-block w-px-100 h-px-100 rounded" id="uploadedAvatar" />
+                                    alt="school logo" class="d-block w-px-100 h-px-100 rounded" id="uploadedAvatar" />
                                 <div class="button-wrapper">
                                     <label for="upload" class="btn btn-primary me-2 mb-3" tabindex="0">
                                         <span class="d-none d-sm-block">Upload new logo</span>
@@ -151,7 +151,6 @@ $route = Route::current()->getName();
                             </div>
                             <div class="mt-2">
                                 <button type="submit" id="submit_btn" class="btn btn-primary me-2">Save changes</button>
-                                <button type="reset" class="btn btn-label-secondary">Reset</button>
                             </div>
                         </div>
                     </form>

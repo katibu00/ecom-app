@@ -16,4 +16,16 @@ class Invoice extends Model
         return $this->belongsTo(Classes::class, 'class_id','id');
     }
 
+    public function paymentSlip()
+    {
+        return $this->hasOne(PaymentSlip::class, 'invoice_id');
+    }
+
+
+    public function feeCategories()
+    {
+        return $this->belongsToMany(FeeCategory::class, 'invoice_fee', 'invoice_id', 'fee_category_id');
+    }
+
+
 }

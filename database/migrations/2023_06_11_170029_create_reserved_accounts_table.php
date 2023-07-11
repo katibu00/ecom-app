@@ -22,7 +22,6 @@ return new class extends Migration
             $table->string('customer_email');
             $table->string('customer_name');
             $table->json('accounts');
-            $table->timestamps();
         });
     }
 

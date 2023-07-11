@@ -31,9 +31,36 @@
                         </button>
                     </div>
                 </td>
-             
             </tr>
             @endforeach
+
+            <tr class="table-totals">
+                <td></td>
+                <td class="text-end"><strong>Total Mandatory:</strong></td>
+                <td><strong>&#8358;{{ number_format($totals['mandatory'], 0) }}</strong></td>
+                <td colspan="3"></td>
+            </tr>
+
+            <tr class="table-totals">
+                <td></td>
+                <td class="text-end"><strong>Total Optional:</strong></td>
+                <td><strong>&#8358;{{ number_format($totals['optional'], 0) }}</strong></td>
+                <td colspan="3"></td>
+            </tr>
+
+            <tr class="table-totals">
+                <td></td>
+                <td class="text-end"><strong>Total Recommended:</strong></td>
+                <td><strong>&#8358;{{ number_format($totals['recommended'], 0) }}</strong></td>
+                <td colspan="3"></td>
+            </tr>
+
+            <tr class="table-totals">
+                <td></td>
+                <td class="text-end"><strong>Total:</strong></td>
+                <td><strong>&#8358;{{ number_format($totals['total'], 0) }}</strong></td>
+                <td colspan="3"></td>
+            </tr>
         </tbody>
     </table>
-    </div>
+</div>

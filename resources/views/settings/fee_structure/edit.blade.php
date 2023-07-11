@@ -5,7 +5,7 @@
 
     <div class="card mb-4">
         <div class="card-header header-elements">
-            <span class="me-2">Edit Fee Structure</span>
+            <h5 class="card-title">{{ $pageTitle = 'Edit Fee Structure: ' . (@$class->name ?: 'Unknown Class') . ' - ' . $termName . ' Term - ' . (@$studentType ?: 'Unknown Student Type') }}</h5>
             <div class="card-header-elements ms-auto">
                 <a href="{{ route('settings.fee_structure.index') }}" class="btn btn-sm btn-info">
                     <span class="tf-icon ti ti-list ti-xs me-1"></span>Back to List
@@ -13,9 +13,9 @@
             </div>
         </div>
        
-
-        @include('settings.fee_structure.edit_table')
-
+        <div class="card-body">
+            @include('settings.fee_structure.edit_table')
+        </div>
 
     </div>
     @include('settings.fee_structure.editModal')

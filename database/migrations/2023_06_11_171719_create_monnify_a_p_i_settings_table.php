@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('secret_key');
             $table->string('public_key');
             $table->string('contract_code');
-            $table->timestamps();
+            $table->tinyInteger('enable_monnify')->default(0);
         });
     }
 

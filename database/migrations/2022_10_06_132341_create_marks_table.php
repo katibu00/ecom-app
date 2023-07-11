@@ -15,17 +15,24 @@ return new class extends Migration
     {
         Schema::create('marks', function (Blueprint $table) {
             $table->id();
-            $table->integer('school_id');
-            $table->integer('session_id');
-            $table->integer('class_id');
+            $table->unsignedBigInteger('school_id');
+            $table->unsignedBigInteger('session_id');
+            $table->unsignedBigInteger('class_id');
             $table->string('term');
-            $table->integer('subject_id');
-            $table->integer('student_id');
+            $table->unsignedBigInteger('subject_id');
+            $table->unsignedBigInteger('student_id');
             $table->string('type')->nullable();
             $table->string('absent')->nullable();
             $table->double('marks')->nullable();
             $table->timestamps();
+        
+            $table->foreign('school_id')->references('id')->on('schools');
+            $table->foreign('session_id')->references('id')->on('sessions');
+            $table->foreign('class_id')->references('id')->on('classes');
+            $table->foreign('subject_id')->references('id')->on('subjects');
+            $table->foreign('student_id')->references('id')->on('users');
         });
+        
     }
 
     /**

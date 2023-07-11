@@ -16,9 +16,10 @@ return new class extends Migration
         Schema::create('student_types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('school_id');
+            $table->unsignedBigInteger('school_id');
             $table->integer('status')->default('1');
-            $table->timestamps();
+
+            $table->foreign('school_id')->references('id')->on('schools');
         });
     }
 

@@ -18,11 +18,13 @@ return new class extends Migration
             $table->string('code');
             $table->string('desc');
             $table->integer('marks');
-            $table->integer('status')->default('1');
-            $table->integer('school_id');
+            $table->integer('status')->default(1);
+            $table->unsignedBigInteger('school_id');
             $table->string('class_id');
-            $table->timestamps();
+        
+            $table->foreign('school_id')->references('id')->on('schools');
         });
+        
     }
 
     /**

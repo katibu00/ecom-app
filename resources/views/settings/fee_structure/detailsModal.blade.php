@@ -3,30 +3,26 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Loading . . .</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal">
-                </button>
+                <h5 class="modal-title" id="modalTitle">Loading...</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <div class="" id="loading_div">
-                    <div class="col-12 d-flex align-items-center justify-content-center">
-                    <div class="spinner-border" style="height: 40px; width: 40px; margin: 0 auto; color: #5bcfc5;" role="status"></div>
-                    </div>
+                <div class="d-flex align-items-center justify-content-center" id="loadingDiv">
+                    <div class="spinner-border" style="height: 40px; width: 40px; color: #5bcfc5;" role="status"></div>
                 </div>
-    
-                <div id="content_div" class="table-responsive d-none">
+                <div class="table-responsive d-none" id="contentDiv">
                     <table class="table table-bordered table-sm" style="width: 100%">
                         <thead>
-                            <th>Fee Category</th>
-                            <th>Amount (&#8358;)</th>
-                            <th>Priority</th>
+                            <tr>
+                                <th>Fee Category</th>
+                                <th>Amount (&#8358;)</th>
+                                <th>Priority</th>
+                            </tr>
                         </thead>
-                        <tbody id="fee_list"></tbody>
+                        <tbody id="feeList"></tbody>
                     </table>
                 </div>
-                   
             </div>
-
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Dismiss</button>
             </div>

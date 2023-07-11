@@ -21,6 +21,9 @@
                                         <option value=""></option>
                                         <option value="r">Regular</option>
                                         <option value="t">Transfer</option>
+                                        @foreach ($studentTypes as $type)
+                                        <option value="{{ $type->id }}">{{ $type->name }}</option> 
+                                        @endforeach
                                     </select>
                                     <input type="hidden" id="update_id">
                                 </div>

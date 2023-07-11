@@ -1,63 +1,50 @@
 <script>
     $(document).ready(function() {
-       
+
         //create
-        $(document).on('submit', '#create_data_form', function(e){
+        $(document).on('submit', '#create_data_form', function(e) {
             e.preventDefault();
-            
+
             let formData = new FormData($('#create_data_form')[0]);
-    
-            spinner = '<div class="spinner-border" style="height: 15px; width: 15px;" role="status"></div> &nbsp; Submitting . . .'
-                     $('#submit_btn').html(spinner);
-                     $('#submit_btn').attr("disabled", true);
-    
+
+            spinner =
+                '<div class="spinner-border" style="height: 15px; width: 15px;" role="status"></div> &nbsp; Submitting . . .'
+            $('#submit_btn').html(spinner);
+            $('#submit_btn').attr("disabled", true);
+
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-    
+
             $.ajax({
                 type: "POST",
                 url: "{{ route('settings.assign_subjects.index') }}",
                 data: formData,
                 contentType: false,
                 processData: false,
-                success: function(response){
-    
-                        if(response.status == 200){
-                            $('.table').load(location.href+' .table');
-                            $('#addModal').modal('hide');
-                            $('#create_data_form')[0].reset();
-                            Command: toastr["success"](response.message)
-                            toastr.options = {
-                            "closeButton": false,
-                            "debug": false,
-                            "newestOnTop": false,
-                            "progressBar": false,
-                            "positionClass": "toast-top-right",
-                            "preventDuplicates": false,
-                            "onclick": null,
-                            "showDuration": "300",
-                            "hideDuration": "1000",
-                            "timeOut": "5000",
-                            "extendedTimeOut": "1000",
-                            "showEasing": "swing",
-                            "hideEasing": "linear",
-                            "showMethod": "fadeIn",
-                            "hideMethod": "fadeOut"
-                            }
+                success: function(response) {
 
-                            $('#submit_btn').text("Submit");
-                            $('#submit_btn').attr("disabled", false);
+                    if (response.status == 200) {
+                        $('.table').load(location.href + ' .table');
+                        $('#addModal').modal('hide');
+                        $('#create_data_form')[0].reset();
+                        Command: toastr["success"](response.message)
+                        if (response.count == 0) {
+                            location.reload();
                         }
+
+                        $('#submit_btn').text("Submit");
+                        $('#submit_btn').attr("disabled", false);
+                    }
                 },
             });
-    
+
         });
 
-         //delete item
-         $(document).on('click', '.deleteItem', function(e) {
+        //delete item
+        $(document).on('click', '.deleteItem', function(e) {
             e.preventDefault();
 
             let id = $(this).data('id');
@@ -105,21 +92,21 @@
 
         });
 
-         //edit item
-         $(document).on('click', '.editItem', function() {
-           
+        //edit item
+        $(document).on('click', '.editItem', function() {
             let class_name = $(this).data('class_name');
             let subject_name = $(this).data('subject_name');
-            let id = $(this).data('id');
+            let row_id = $(this).data('row_id');
             let teacher_id = $(this).data('teacher_id');
-            // if(status == 1)
-            // {
-            //     $("#status").prop("checked", true)
-            // }
-         
-            $('.modal-title').html('Update '+subject_name +' teacher for '+ class_name+'?');
-            $('#edit_name').val(name);
-            $('#update_id').val(id);
+            let designation = $(this).data('designation');
+
+            $('.modal-title').html('Update ' + subject_name + ' teacher for ' + class_name + '?');
+            $('#update_id').val(row_id);
+            $('#update_teacher_id').val(teacher_id);
+
+            $('#update_designation').val(designation ? 1 : 0);
+            $('#update_teacher_id').trigger('change');
+            $('#update_designation').trigger('change');
         });
 
         //update data
@@ -136,7 +123,8 @@
                 }
             });
 
-            spinner = '<div class="spinner-border" style="height: 15px; width: 15px;" role="status"></div> &nbsp; Updating. . .';
+            spinner =
+                '<div class="spinner-border" style="height: 15px; width: 15px;" role="status"></div> &nbsp; Updating. . .';
             $("#update_btn").html(spinner);
             $("#update_btn").attr("disabled", true);
 
@@ -144,7 +132,9 @@
                 type: "POST",
                 url: "{{ route('settings.assign_subjects.update') }}",
                 data: {
-                    'teacher_id': teacher_id, 'id':id,'designation':designation,
+                    'teacher_id': teacher_id,
+                    'id': id,
+                    'designation': designation,
                 },
                 dataType: "json",
                 success: function(res) {
@@ -152,32 +142,16 @@
                     if (res.status == 400) {
                         $("#update_error_list").html("");
                         $("#update_error_list").addClass("alert alert-danger");
-                        $.each(res.errors, function (key, err) {
+                        $.each(res.errors, function(key, err) {
                             $("#update_error_list").append("<li>" + err + "</li>");
                         });
                         Command: toastr["error"](
                             "Check your input and try again."
                         );
-                        toastr.options = {
-                            closeButton: false,
-                            debug: false,
-                            newestOnTop: false,
-                            progressBar: false,
-                            positionClass: "toast-top-right",
-                            preventDuplicates: false,
-                            onclick: null,
-                            showDuration: "300",
-                            hideDuration: "1000",
-                            timeOut: "5000",
-                            extendedTimeOut: "1000",
-                            showEasing: "swing",
-                            hideEasing: "linear",
-                            showMethod: "fadeIn",
-                            hideMethod: "fadeOut",
-                        };
+
                         $("#update_btn").text("Update");
                         $("#update_btn").attr("disabled", false);
-                        
+
                     }
 
                     if (res.status == 200) {
@@ -187,26 +161,10 @@
                         $('#editModal').modal('hide');
                         $('#update_btn').text("Update");
                         $('#update_btn').attr("disabled", false);
-                        $('.table').load(location.href+' .table');
-                        
+                        $('.table').load(location.href + ' .table');
+
                         Command: toastr["success"](res.message);
-                        toastr.options = {
-                            closeButton: false,
-                            debug: false,
-                            newestOnTop: false,
-                            progressBar: false,
-                            positionClass: "toast-top-right",
-                            preventDuplicates: false,
-                            onclick: null,
-                            showDuration: "300",
-                            hideDuration: "1000",
-                            timeOut: "5000",
-                            extendedTimeOut: "1000",
-                            showEasing: "swing",
-                            hideEasing: "linear",
-                            showMethod: "fadeIn",
-                            hideMethod: "fadeOut",
-                        };
+
                         $("#update_btn").text("Update");
                         $("#update_btn").attr("disabled", false);
                         $("#update_form")[0].reset();
@@ -220,26 +178,9 @@
                         Command: toastr["error"](
                             "Session expired. please login again."
                         );
-                        toastr.options = {
-                            closeButton: false,
-                            debug: false,
-                            newestOnTop: false,
-                            progressBar: false,
-                            positionClass: "toast-top-right",
-                            preventDuplicates: false,
-                            onclick: null,
-                            showDuration: "300",
-                            hideDuration: "1000",
-                            timeOut: "5000",
-                            extendedTimeOut: "1000",
-                            showEasing: "swing",
-                            hideEasing: "linear",
-                            showMethod: "fadeIn",
-                            hideMethod: "fadeOut",
-                        };
 
                         setTimeout(() => {
-                               window.location.replace('{{ route('login') }}');
+                            window.location.replace('{{ route('login') }}');
                         }, 2000);
                     }
                 },
@@ -247,7 +188,7 @@
         });
 
 
-        
+
     });
 </script>
 
@@ -264,5 +205,4 @@
             counter -= 1;
         });
     });
-
 </script>

@@ -15,18 +15,24 @@ return new class extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
-            $table->integer('school_id');
-            $table->integer('session_id');
-            $table->integer('class_id');
+            $table->unsignedBigInteger('school_id');
+            $table->unsignedBigInteger('session_id');
+            $table->unsignedBigInteger('class_id');
             $table->string('term');
             $table->string('number');
-            $table->string('student_id');
+            $table->unsignedBigInteger('student_id');
             $table->string('student_type');
             $table->double('amount');
             $table->double('pre_balance')->nullable();
             $table->double('discount')->nullable();
             $table->timestamps();
+        
+            $table->foreign('school_id')->references('id')->on('schools');
+            $table->foreign('session_id')->references('id')->on('sessions');
+            $table->foreign('class_id')->references('id')->on('classes');
+            $table->foreign('student_id')->references('id')->on('users');
         });
+        
     }
 
     /**

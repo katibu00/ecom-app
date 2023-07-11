@@ -5,6 +5,7 @@ use App\Http\Controllers\Accounting\FeeCollectionController;
 use App\Http\Controllers\Accounting\InvoicesController;
 use App\Http\Controllers\Accounting\PaymentsController;
 use App\Http\Controllers\Accounting\ReportsController;
+use App\Http\Controllers\Accounting\TrackPaymentsController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
@@ -22,7 +23,6 @@ use App\Http\Controllers\Settings\BankAccountsController;
 use App\Http\Controllers\Settings\BasicSettingsController;
 use App\Http\Controllers\Settings\CASchemeController;
 use App\Http\Controllers\Settings\ClassesController;
-use App\Http\Controllers\Settings\ClassSectionController;
 use App\Http\Controllers\Settings\FeeCategoriesController;
 use App\Http\Controllers\Settings\FeeStructuresController;
 use App\Http\Controllers\Settings\PsychomotorCrudController;
@@ -77,9 +77,9 @@ Route::get('/sendmail', function () {
     return 'sendd successfully';
 });
 
-Route::middleware('tenant')->group(function() {
-    // routes
-});
+// Route::middleware('tenant')->group(function() {
+//     // routes
+// });
 
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
 Route::post('/login', [LoginController::class, 'login']);
@@ -185,6 +185,9 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
         Route::post('/fee_structure/delete', [FeeStructuresController::class, 'delete'])->name('settings.fee_structure.delete');
         
         Route::get('/fee_structure/edit', [FeeStructuresController::class, 'edit'])->name('settings.fee_structure.edit');
+        Route::post('/fee_structure/copy', [FeeStructuresController::class, 'copyFeeStructure'])->name('settings.fee_structure.copy');
+        Route::post('fee_structure/change_term', [FeeStructuresController::class, 'changeTerm'])->name('settings.fee_structure.change_term');
+
 
     });
 
@@ -197,6 +200,8 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
         Route::post('/students/search', [StudentsController::class, 'search'])->name('users.students.search');
         Route::post('/students/details', [StudentsController::class, 'details'])->name('users.students.details');
         Route::post('/get-student_details', [StudentsController::class, 'getStudentDetails'])->name('get-student_details');
+        Route::post('/students/delete', [StudentsController::class, 'delete'])->name('students.delete');
+
 
 
         Route::get('/staffs/index', [StaffsController::class, 'index'])->name('users.staffs.index');
@@ -277,6 +282,8 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
         Route::post('/invoices/print/generate', [InvoicesController::class, 'print'])->name('invoices.print.generate');
         Route::post('/invoices/bulk_action', [InvoicesController::class, 'bulk_action'])->name('invoices.bulk_action');
 
+        Route::post('/invoices/sort', [InvoicesController::class, 'fetchData'])->name('invoices.sort');
+
         Route::get('/fee_collection/index', [FeeCollectionController::class, 'index'])->name('fee_collection.index');
         Route::post('/get-invoices', [FeeCollectionController::class, 'getInvoices'])->name('get-invoices');
         Route::post('/get-fees', [FeeCollectionController::class, 'getFees'])->name('get-fees');
@@ -294,6 +301,11 @@ Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
         Route::post('/report/generate', [ReportsController::class, 'generate'])->name('billing.report.generate');
 
         Route::get('/payments/index', [PaymentsController::class, 'index'])->name('payments.index');
+
+        Route::get('/track_payments', [TrackPaymentsController::class, 'index'])->name('track_payments');
+        Route::post('/track_payments/sort', [TrackPaymentsController::class, 'sort'])->name('track_payments.sort');
+        Route::post('/track_payments/invoice_details', [TrackPaymentsController::class, 'fetchInvoiceDetails'])->name('track_payments.invoice_details');
+        Route::post('/track_payments/payment_history', [TrackPaymentsController::class, 'getPaymentHistory'])->name('track_payments.payment_history');
     });
 
 

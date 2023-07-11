@@ -20,6 +20,7 @@ class AssignSubject extends Model
     public function class(){
         return $this->belongsTo(Classes::class, 'class_id','id');
     }
+    public $timestamps = false;
 
   
 }

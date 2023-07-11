@@ -11,9 +11,11 @@
                 <span class="me-2">Classes</span>
 
                 <div class="card-header-elements ms-auto">
+                    @if (count($classes) > 0)
                     <button type="button" data-bs-toggle="modal" data-bs-target="#addModal" class="btn btn-sm btn-primary">
                         <span class="tf-icon ti ti-plus ti-xs me-1"></span>Assign Subjects
                     </button>
+                    @endif
                 </div>
             </div>
             @include('settings.assign_subjects.table')

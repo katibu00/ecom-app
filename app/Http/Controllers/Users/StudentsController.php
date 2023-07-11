@@ -3,9 +3,16 @@
 namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
+use App\Models\Attendance;
 use App\Models\Classes;
+use App\Models\Invoice;
+use App\Models\Mark;
+use App\Models\PaymentRecord;
+use App\Models\PaymentSlip;
+use App\Models\ProcessedMark;
 use App\Models\Profile;
 use App\Models\School;
+use App\Models\SubjectOffering;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -323,6 +330,25 @@ class StudentsController extends Controller
         
     }
 
+    public function delete(Request $request){
+        $student_id = $request->id;
+        User::find($request->id)->delete();
+        Invoice::where('student_id', $student_id)->delete();
+        Mark::where('student_id', $student_id)->delete();
+        Attendance::where('student_id', $student_id)->delete();
+        PaymentSlip::where('student_id', $student_id)->delete();
+        PaymentRecord::where('student_id', $student_id)->delete();
+        ProcessedMark::where('student_id', $student_id)->delete();
+        Profile::where('user_id', $student_id)->delete();
+        SubjectOffering::where('student_id', $student_id)->delete();
+        
+       
+        return response()->json([
+            'status' => 200,
+            'message' => 'Student Deleted Successfully'
+        ]);
+        
+    }
 
 
 }

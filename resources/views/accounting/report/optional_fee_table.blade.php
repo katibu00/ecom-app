@@ -18,6 +18,7 @@
             $students = App\Models\User::where('class_id',$class->id)->where('status',1)->count();
             $optional = App\Models\FeeStructure::where('school_id', auth()->user()->school_id)
                 ->where('class_id', $class->id)
+                ->where('term', $school->term)
                 ->where('fee_category_id', @$report)->first();
             $paying = App\Models\PaymentSlip::where('class_id',$class->id)->where('additional','like','%'.@$optional->id.'%')->count();
             $total = @$optional->amount*$paying;

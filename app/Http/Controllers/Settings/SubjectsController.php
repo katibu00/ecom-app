@@ -20,6 +20,8 @@ class SubjectsController extends Controller
     public function store(Request $request)
     {
 
+        $count = Subject::where('school_id', auth()->user()->school_id)->count();
+
         $classCount = count($request->name);
         if($classCount != NULL){
             for ($i=0; $i < $classCount; $i++){
@@ -32,6 +34,7 @@ class SubjectsController extends Controller
 
         return response()->json([
             'status'=>200,
+            'count'=>$count,
             'message'=>'Subject(s) Created Successfully',
         ]);
     }

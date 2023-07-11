@@ -65,6 +65,8 @@
                                 <a class="dropdown-item edit_student" href="javascript:void(0);"
                                     data-student_id="{{ $student->id }}" data-student_name="{{ @$student->first_name . ' ' . @$student->middle_name . ' ' . @$student->last_name }}" data-bs-toggle="modal"
                                     data-bs-target="#editModal"><i class="ti ti-pencil me-1"></i> Edit</a>
+                                <a class="dropdown-item deleteItem" href="javascript:void(0);"
+                                    data-student_id="{{ $student->id }}" data-student_name="{{ @$student->first_name . ' ' . @$student->middle_name . ' ' . @$student->last_name }}"><i class="ti ti-trash me-1"></i> Delete</a>
                                
                             </div>
                         </div>

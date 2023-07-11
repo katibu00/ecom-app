@@ -31,6 +31,8 @@ class ClassesController extends Controller
     {
         $school_id =  auth()->user()->school_id;
 
+        $count = Classes::where('school_id', $school_id)->count();
+
         $classCount = count($request->name);
         if($classCount != NULL){
             for ($i=0; $i < $classCount; $i++){
@@ -45,6 +47,7 @@ class ClassesController extends Controller
 
         return response()->json([
             'status'=>200,
+            'count'=>$count,
             'message'=>'class(s) Created Successfully',
         ]);
     }

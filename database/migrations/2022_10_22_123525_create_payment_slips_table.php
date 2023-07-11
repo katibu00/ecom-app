@@ -15,19 +15,25 @@ return new class extends Migration
     {
         Schema::create('payment_slips', function (Blueprint $table) {
             $table->id();
-            $table->integer('school_id');
-            $table->integer('session_id');
+            $table->unsignedBigInteger('school_id');
+            $table->unsignedBigInteger('session_id');
             $table->string('term');
-            $table->integer('student_id');
-            $table->integer('class_id');
-            $table->integer('invoice_id');
+            $table->unsignedBigInteger('student_id');
+            $table->unsignedBigInteger('class_id');
+            $table->unsignedBigInteger('invoice_id');
             $table->string('number');
             $table->string('additional');
             $table->double('payable');
             $table->double('discount')->nullable();
             $table->double('paid')->nullable();
-            $table->timestamps();
+        
+            $table->foreign('school_id')->references('id')->on('schools');
+            $table->foreign('session_id')->references('id')->on('sessions');
+            $table->foreign('student_id')->references('id')->on('users');
+            $table->foreign('class_id')->references('id')->on('classes');
+            $table->foreign('invoice_id')->references('id')->on('invoices');
         });
+        
     }
 
     /**

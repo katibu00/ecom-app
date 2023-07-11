@@ -1,3 +1,5 @@
+@if (count($sections) > 0)
+
 <div class="table-responsive text-nowrap">
     <table class="table table-hover">
         <thead>
@@ -31,3 +33,14 @@
         </tbody>
     </table>
 </div>
+@else
+<div class="container">
+    <div class="alert alert-primary text-center">
+        <h5 class="mb-4 text-danger">No School Sections Created!</h5>
+        <p class="mb-4">A school section represents a specific division within your school, such as Primary, Secondary, or College.</p>
+        <button type="button" data-bs-toggle="modal" data-bs-target="#addNewModal" class="btn btn-sm btn-primary">
+            Create New School Section
+        </button>
+    </div>
+</div>
+@endif

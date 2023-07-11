@@ -16,6 +16,11 @@
                 <div data-i18n="Collect Fee">Collect Fee</div>
             </a>
         </li>
+        <li class="menu-item {{ $route == 'track_payments' ? 'active' : '' }} ">
+            <a href="{{ route('track_payments') }}" class="menu-link">
+                <div data-i18n="Track Payments">Track Payments</div>
+            </a>
+        </li>
         <li class="menu-item {{ $route == 'payments.index' ? 'active' : '' }} ">
             <a href="{{ route('payments.index') }}" class="menu-link">
                 <div data-i18n="Payment Records">Payments Records</div>
@@ -31,12 +36,12 @@
             <ul class="menu-sub">
                  <li class="menu-item {{ $route == 'invoices.index' ? 'active' : '' }} ">
                     <a href="{{ route('invoices.index') }}" class="menu-link">
-                        <div data-i18n="Generate">Generate</div>
+                        <div data-i18n="All Invoices">All Invoices</div>
                     </a>
                 </li>
                 <li class="menu-item {{ $route == 'invoices.print.index' ? 'active' : '' }} ">
                     <a href="{{ route('invoices.print.index') }}" class="menu-link">
-                        <div data-i18n="Print">Print</div>
+                        <div data-i18n="Print Invoices">Print</div>
                     </a>
                 </li>
             </ul>
@@ -173,7 +178,7 @@
         <div data-i18n="Settings">Settings</div>
     </a>
     <ul class="menu-sub">
-        <li class="menu-item {{ $route == 'settings.basic.index' ? 'active' : '' }}">
+        <li class="menu-item {{ $route == 'settings.basic.index' ? 'active' : '' }}  {{ $route == 'settings.monnify.index' ? 'active' : '' }}">
             <a href="{{ route('settings.basic.index') }}" class="menu-link">
                 <div data-i18n="School Settings">School Settings</div>
             </a>

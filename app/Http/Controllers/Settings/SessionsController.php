@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Models\Mark;
+use App\Models\School;
 use App\Models\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+
 
 class SessionsController extends Controller
 {
@@ -20,7 +23,12 @@ class SessionsController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'name'=>'required',
+            'name' => [
+                'required',
+                Rule::unique('sessions')->where(function ($query) {
+                    return $query->where('school_id', auth()->user()->school_id);
+                })
+            ],
         ]);
        
         if($validator->fails()){
@@ -35,10 +43,21 @@ class SessionsController extends Controller
         $session->school_id = auth()->user()->school_id;
         $session->save();
 
+        $count = Session::where('school_id', auth()->user()->school_id)->count();
+        $school = School::where('id', auth()->user()->school_id)->first();
+        
+        if (!$school->session_id) {
+            $school->session_id = $session->id;
+            $school->save();
+        }
+
+
         return response()->json([
-            'status'=>201,
-            'message'=>'Session Created Successfully',
+            'status' => 201,
+            'message' => 'Session Created Successfully',
+            'count' => $count,
         ]);
+    
     }
     
     public function update(Request $request)

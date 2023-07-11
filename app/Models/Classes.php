@@ -9,6 +9,8 @@ class Classes extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     public function section(){
         return $this->belongsTo(Section::class, 'section_id','id');
     }

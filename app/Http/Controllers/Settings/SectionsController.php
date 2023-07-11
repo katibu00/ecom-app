@@ -18,6 +18,7 @@ class SectionsController extends Controller
 
     public function store(Request $request)
     {
+        $count = Section::where('school_id', auth()->user()->school_id)->count();
 
         $dataCount = count($request->name);
         if($dataCount != NULL){
@@ -32,6 +33,7 @@ class SectionsController extends Controller
         return response()->json([
             'status'=>200,
             'message'=>'class(s) Created Successfully',
+            'count' => $count,
         ]);
     }
 
@@ -61,14 +63,7 @@ class SectionsController extends Controller
 
     public function delete(Request $request){
 
-        $check = Classes::where('section_id', $request->id)->first();
-        if($check)
-        {
-            return response()->json([
-                'status' => 400,
-                'message' => 'School Section has Assigned Class and hence cannot be deleted'
-            ]);
-        }
+       
         $data = Section::find($request->id);
 
         if($data->delete()){

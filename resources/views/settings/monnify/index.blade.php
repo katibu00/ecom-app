@@ -27,32 +27,41 @@ $route = Route::current()->getName();
                     <form id="monnify_form" method="POST">
                
                         <div class="card-body">
-                            <div class="row">
+                            <div class="row mb-3">
+                                <label class="col-sm-3">Enable Monnify Payment Collection</label>
+                                <div class="col-sm-9">
+                                    <div class="form-check form-switch ">
+                                        <input class="form-check-input" type="checkbox" id="enableMonnifySwitch" name="enable_monnify" value="1" {{ @$monnify->enable_monnify ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="enableMonnifySwitch"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div id="monnifyFields" style="{{ @$monnify->enable_monnify ? 'display: block;' : 'display: none;' }}">
                                 <div class="row mb-3">
-                                    <label class="col-sm-2 col-form-label">Secret Key</label>
-                                    <div class="col-sm-10">
+                                    <label class="col-sm-3 col-form-label">Secret Key</label>
+                                    <div class="col-sm-9">
                                         <input type="text" class="form-control" name="secret_key"
-                                            value="{{ $monnify->secret_key }}" placeholder="Monnify Secret Key" />
+                                            value="{{ @$monnify->secret_key }}" placeholder="Monnify Secret Key" />
                                     </div>
                                 </div>
                                 
                                 <div class="row mb-3">
-                                    <label class="col-sm-2 col-form-label">Public Key</label>
-                                    <div class="col-sm-10">
+                                    <label class="col-sm-3 col-form-label">Public Key</label>
+                                    <div class="col-sm-9">
                                         <input type="text" class="form-control" name="public_key"
-                                            value="{{ $monnify->public_key }}" placeholder="Monnify Public Key">
+                                            value="{{ @$monnify->public_key }}" placeholder="Monnify Public Key">
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <label class="col-sm-2 col-form-label">Contract Code</label>
-                                    <div class="col-sm-10">
+                                    <label class="col-sm-3 col-form-label">Contract Code</label>
+                                    <div class="col-sm-9">
                                         <input type="text" class="form-control" name="contract_code"
-                                            value="{{ $monnify->contract_code }}" placeholder="Monnify Contact Code">
+                                            value="{{ @$monnify->contract_code }}" placeholder="Monnify Contact Code">
                                     </div>
                                 </div>
-        
-
                             </div>
+        
                             <div class="mt-2">
                                 <button type="submit" id="submit_btn" class="btn btn-primary me-2">Save changes</button>
                             </div>

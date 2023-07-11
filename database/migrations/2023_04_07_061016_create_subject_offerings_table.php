@@ -15,12 +15,16 @@ return new class extends Migration
     {
         Schema::create('subject_offerings', function (Blueprint $table) {
             $table->id();
-            $table->integer('school_id');
-            $table->integer('student_id');
-            $table->integer('subject_id');
+            $table->unsignedBigInteger('school_id');
+            $table->unsignedBigInteger('student_id');
+            $table->unsignedBigInteger('subject_id');
             $table->integer('offering');
-            $table->timestamps();
+        
+            $table->foreign('school_id')->references('id')->on('schools');
+            $table->foreign('student_id')->references('id')->on('users');
+            $table->foreign('subject_id')->references('id')->on('subjects');
         });
+        
     }
 
     /**

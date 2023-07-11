@@ -14,23 +14,7 @@
           
             if (class_id == '' || class_section_id == '') {
                 Command: toastr["error"]("All fields are required")
-                toastr.options = {
-                    "closeButton": false,
-                    "debug": false,
-                    "newestOnTop": false,
-                    "progressBar": false,
-                    "positionClass": "toast-top-right",
-                    "preventDuplicates": false,
-                    "onclick": null,
-                    "showDuration": "300",
-                    "hideDuration": "1000",
-                    "timeOut": "5000",
-                    "extendedTimeOut": "1000",
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut"
-                }
+               
                 return;
             }
 
@@ -56,23 +40,7 @@
                     if (res.students.length == 0) {
                         Command: toastr["error"](
                             "No Students Found the Selected Class")
-                        toastr.options = {
-                            "closeButton": false,
-                            "debug": false,
-                            "newestOnTop": false,
-                            "progressBar": false,
-                            "positionClass": "toast-top-right",
-                            "preventDuplicates": false,
-                            "onclick": null,
-                            "showDuration": "300",
-                            "hideDuration": "1000",
-                            "timeOut": "5000",
-                            "extendedTimeOut": "1000",
-                            "showEasing": "swing",
-                            "hideEasing": "linear",
-                            "showMethod": "fadeIn",
-                            "hideMethod": "fadeOut"
-                        }
+                       
                         $('#marks-generate').addClass('d-none');
                         $('#marks-generate-tr').html('');
                         $('#search_btn').html("Search Records");
@@ -117,24 +85,7 @@
                         Command: toastr["error"](
                             "Session expired. please login again."
                         );
-                        toastr.options = {
-                            closeButton: false,
-                            debug: false,
-                            newestOnTop: false,
-                            progressBar: false,
-                            positionClass: "toast-top-right",
-                            preventDuplicates: false,
-                            onclick: null,
-                            showDuration: "300",
-                            hideDuration: "1000",
-                            timeOut: "5000",
-                            extendedTimeOut: "1000",
-                            showEasing: "swing",
-                            hideEasing: "linear",
-                            showMethod: "fadeIn",
-                            hideMethod: "fadeOut",
-                        };
-
+                       
                         setTimeout(() => {
                             window.location.replace('{{ route('login') }}');
                         }, 2000);
@@ -171,51 +122,17 @@
                 success: function(response) {
 
                     if (response.status == 200) {
-                        // $('.table').load(location.href + ' .table');
                         $('#addModal').modal('hide');
                         $('#invoices_form')[0].reset();
                         Command: toastr["success"](response.message)
-                        toastr.options = {
-                            "closeButton": false,
-                            "debug": false,
-                            "newestOnTop": false,
-                            "progressBar": false,
-                            "positionClass": "toast-top-right",
-                            "preventDuplicates": false,
-                            "onclick": null,
-                            "showDuration": "300",
-                            "hideDuration": "1000",
-                            "timeOut": "5000",
-                            "extendedTimeOut": "1000",
-                            "showEasing": "swing",
-                            "hideEasing": "linear",
-                            "showMethod": "fadeIn",
-                            "hideMethod": "fadeOut"
-                        }
-
+                        $('.invoices_table').load(location.href+' .invoices_table');
                         $('#submit_btn').text("Submit");
                         $('#submit_btn').attr("disabled", false);
                     }
                     if (response.status == 404) {
                         $('#invoices_form')[0].reset();
                         Command: toastr["error"](response.message)
-                        toastr.options = {
-                            "closeButton": false,
-                            "debug": false,
-                            "newestOnTop": false,
-                            "progressBar": false,
-                            "positionClass": "toast-top-right",
-                            "preventDuplicates": false,
-                            "onclick": null,
-                            "showDuration": "300",
-                            "hideDuration": "1000",
-                            "timeOut": "5000",
-                            "extendedTimeOut": "1000",
-                            "showEasing": "swing",
-                            "hideEasing": "linear",
-                            "showMethod": "fadeIn",
-                            "hideMethod": "fadeOut"
-                        }
+                        
                         $('#submit_btn').text("Submit");
                         $('#submit_btn').attr("disabled", false);
                     }
@@ -226,23 +143,7 @@
                         Command: toastr["error"](
                             "Session expired. please login again."
                         );
-                        toastr.options = {
-                            closeButton: false,
-                            debug: false,
-                            newestOnTop: false,
-                            progressBar: false,
-                            positionClass: "toast-top-right",
-                            preventDuplicates: false,
-                            onclick: null,
-                            showDuration: "300",
-                            hideDuration: "1000",
-                            timeOut: "5000",
-                            extendedTimeOut: "1000",
-                            showEasing: "swing",
-                            hideEasing: "linear",
-                            showMethod: "fadeIn",
-                            hideMethod: "fadeOut",
-                        };
+                        
 
                         setTimeout(() => {
                             window.location.replace('{{ route('login') }}');
@@ -309,23 +210,7 @@
                         Command: toastr["error"](
                             "Check your input and try again."
                         );
-                        toastr.options = {
-                            closeButton: false,
-                            debug: false,
-                            newestOnTop: false,
-                            progressBar: false,
-                            positionClass: "toast-top-right",
-                            preventDuplicates: false,
-                            onclick: null,
-                            showDuration: "300",
-                            hideDuration: "1000",
-                            timeOut: "5000",
-                            extendedTimeOut: "1000",
-                            showEasing: "swing",
-                            hideEasing: "linear",
-                            showMethod: "fadeIn",
-                            hideMethod: "fadeOut",
-                        };
+
                         $("#update_btn").text("Update");
                         $("#update_btn").attr("disabled", false);
                     }
@@ -337,26 +222,10 @@
                         $('#editModal').modal('hide');
                         $('#update_btn').text("Update");
                         $('#update_btn').attr("disabled", false);
-                        $('.table').load(location.href+' .table');
+                        $('.invoices_table').load(location.href+' .invoices_table');
                         
                         Command: toastr["success"](res.message);
-                        toastr.options = {
-                            closeButton: false,
-                            debug: false,
-                            newestOnTop: false,
-                            progressBar: false,
-                            positionClass: "toast-top-right",
-                            preventDuplicates: false,
-                            onclick: null,
-                            showDuration: "300",
-                            hideDuration: "1000",
-                            timeOut: "5000",
-                            extendedTimeOut: "1000",
-                            showEasing: "swing",
-                            hideEasing: "linear",
-                            showMethod: "fadeIn",
-                            hideMethod: "fadeOut",
-                        };
+                       
                         $("#update_btn").text("Update");
                         $("#update_btn").attr("disabled", false);
 
@@ -368,24 +237,7 @@
                         Command: toastr["error"](
                             "Session expired. please login again."
                         );
-                        toastr.options = {
-                            closeButton: false,
-                            debug: false,
-                            newestOnTop: false,
-                            progressBar: false,
-                            positionClass: "toast-top-right",
-                            preventDuplicates: false,
-                            onclick: null,
-                            showDuration: "300",
-                            hideDuration: "1000",
-                            timeOut: "5000",
-                            extendedTimeOut: "1000",
-                            showEasing: "swing",
-                            hideEasing: "linear",
-                            showMethod: "fadeIn",
-                            hideMethod: "fadeOut",
-                        };
-
+                        
                         setTimeout(() => {
                                window.location.replace('{{ route('login') }}');
                         }, 2000);
@@ -397,3 +249,55 @@
 
     });
 </script>
+
+<script>
+
+$(document).ready(function() {
+    $('#sortStudentType').change(function() {
+        var selectedValue = $(this).val();
+        $.LoadingOverlay("show")
+
+        if (selectedValue === 'regular') {
+            fetchData(selectedValue);
+        } else if (selectedValue === 'transfer') {
+            fetchData(selectedValue);
+        } else if (selectedValue.startsWith('type_')) {
+            var studentTypeId = selectedValue.substr(5);
+            fetchData('type_' + studentTypeId);
+        } else if (selectedValue.startsWith('class_')) {
+            var classId = selectedValue.substr(6);
+            fetchData('class_' + classId);
+        }
+    });
+    
+    function fetchData(value) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            type: 'POST',
+            url: '{{ route('invoices.sort') }}',
+            data: {
+                value: value
+            },
+            success: function(response) {
+               $('.invoices_table').html(response.data);
+               $('.pagination').html(response.pagination);
+               $.LoadingOverlay("hide")
+
+            },
+            error: function(xhr, status, error) {
+                // Handle the error if any
+                console.error(error);
+            }
+        });
+    }
+});
+
+
+
+</script>
+
+

@@ -12,7 +12,7 @@ class StudentTypeController extends Controller
 {
     public function index()
     {
-        $data['student_types'] = StudentType::select('id', 'name','status')->where('school_id',auth()->user()->school_id)->latest()->get();
+        $data['student_types'] = StudentType::select('id', 'name','status')->where('school_id',auth()->user()->school_id)->get();
         return view('settings.student_type.index', $data);
     }
 

@@ -21,19 +21,23 @@ return new class extends Migration
             $table->string('state');
             $table->string('lga');
             $table->string('address');
-            $table->integer('service_fee'); 
+            $table->unsignedInteger('service_fee');
             $table->string('phone_first');
             $table->string('phone_second')->nullable();
             $table->string('email')->nullable();
             $table->string('website');
-            $table->string('logo')->default('default.png');
-            $table->integer('session_id')->nullable();
+            $table->string('logo')->nullable();
+            $table->unsignedBigInteger('session_id')->nullable();
             $table->string('term')->nullable();
             $table->string('heading')->default('h2');
-            $table->integer('registrar_id');
-            $table->integer('admin_id')->nullable();
+            $table->unsignedBigInteger('registrar_id')->nullable();
+            $table->unsignedBigInteger('admin_id');
+
+            $table->foreign('admin_id')->references('id')->on('users')->onDelete('cascade');
+
             $table->timestamps();
         });
+        
     }
 
     /**

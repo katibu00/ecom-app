@@ -20,28 +20,10 @@
                     'class_id': class_id,
                 },
                 success: function(res) {
-
                     if (res.invoices.length == 0) {
                         Command: toastr["error"](
                             "No Invoices Generated for the selected Class."
                         );
-                        toastr.options = {
-                            closeButton: false,
-                            debug: false,
-                            newestOnTop: false,
-                            progressBar: false,
-                            positionClass: "toast-top-right",
-                            preventDuplicates: false,
-                            onclick: null,
-                            showDuration: "300",
-                            hideDuration: "1000",
-                            timeOut: "5000",
-                            extendedTimeOut: "1000",
-                            showEasing: "swing",
-                            hideEasing: "linear",
-                            showMethod: "fadeIn",
-                            hideMethod: "fadeOut",
-                        };
                         $('#invoice_id').html('<option value=""></option>');
                         return
                     }
@@ -63,23 +45,7 @@
                         Command: toastr["error"](
                             "Session expired. please login again."
                         );
-                        toastr.options = {
-                            closeButton: false,
-                            debug: false,
-                            newestOnTop: false,
-                            progressBar: false,
-                            positionClass: "toast-top-right",
-                            preventDuplicates: false,
-                            onclick: null,
-                            showDuration: "300",
-                            hideDuration: "1000",
-                            timeOut: "5000",
-                            extendedTimeOut: "1000",
-                            showEasing: "swing",
-                            hideEasing: "linear",
-                            showMethod: "fadeIn",
-                            hideMethod: "fadeOut",
-                        };
+                       
                         setTimeout(() => {
                             window.location.replace('{{ route('login') }}');
                         }, 2000);
@@ -95,7 +61,6 @@
             $(".card").LoadingOverlay("show")
             var class_id = $('#class_id').val();
             var invoice_id = $('#invoice_id').val();
-
             $('#sidebar').removeClass('d-none');
             $('#bottom_bar').removeClass('d-none');
             $('#total_paid_li').addClass('d-none');
@@ -106,13 +71,11 @@
             $('#add_payment_amount').val('');
             $('#bbf').html('');
             $('#hidden_discount').val(0);
-
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-
             $.ajax({
                 type: 'POST',
                 url: '{{ route('get-fees') }}',
@@ -130,7 +93,6 @@
                             mandatory.fee_category.name + ' - Mandatory - ' +
                             mandatory.amount.toLocaleString() + '</label>' +
                             '</div>';
-
                     });
                     $.each(res.recommededs, function(key, recommeded) {
                         html += '<div class="form-check custom-checkbox mb-0">' +
@@ -141,7 +103,6 @@
                             recommeded.fee_category.name + ' - Recommeded - ' +
                             recommeded.amount.toLocaleString() + '</label>' +
                             '</div>';
-
                     });
                     $.each(res.optionals, function(key, optional) {
                         html += '<div class="form-check custom-checkbox mb-0">' +
@@ -153,7 +114,6 @@
                             .amount.toLocaleString() + '</label>' +
                             '</div>';
                     });
-
                     if (res.additionals[0] != null) {
                         if (res.additionals.length >= 1) {
                             $.each(res.additionals, function(key, additional) {
@@ -167,10 +127,8 @@
                                     ' - Optional - ' + additional.amount
                                     .toLocaleString() + '</label>' +
                                     '</div>';
-
                             });
                         }
-
                     }
                     html = $('#mandatory_fees').html(html);
                     $('.payable').html('&#8358;' + res.mandatory_sum.toLocaleString());
@@ -189,7 +147,6 @@
                     } else {
                         $('.discount').html('')
                     }
-
                     if (res.balance > 0) {
                         $('.balance').html('&#8358;' + res.balance.toLocaleString());
                         $('.modal_balance').html('&#8358;' + res.balance.toLocaleString());
@@ -197,7 +154,6 @@
                         $('.balance').html('');
                         $('.modal_balance').html('');
                     }
-
                     $('#hidden_discount').val(res.invoice_discount);
                     $('.modal-title').html('New Record For ' + res.student.first_name +
                         ' ' + res.student.middle_name + ' ' + res.student.last_name);
@@ -246,7 +202,6 @@
                             $('#recent_payments_tbl').html("No Records");
                             $('#table_div').removeClass('d-none');
                         }
-
                     }
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
@@ -254,23 +209,7 @@
                         Command: toastr["error"](
                             "Session expired. please login again."
                         );
-                        toastr.options = {
-                            closeButton: false,
-                            debug: false,
-                            newestOnTop: false,
-                            progressBar: false,
-                            positionClass: "toast-top-right",
-                            preventDuplicates: false,
-                            onclick: null,
-                            showDuration: "300",
-                            hideDuration: "1000",
-                            timeOut: "5000",
-                            extendedTimeOut: "1000",
-                            showEasing: "swing",
-                            hideEasing: "linear",
-                            showMethod: "fadeIn",
-                            hideMethod: "fadeOut",
-                        };
+                        
                         setTimeout(() => {
                             window.location.replace('{{ route('login') }}');
                         }, 2000);
@@ -278,7 +217,6 @@
                     }
                 }
             });
-
         });
 
         //on click optional fees
@@ -291,10 +229,7 @@
             if (discount === '') {
                 discount = 0;
             }
-
             if ($(this).is(':checked')) {
-
-
                 $('.payable').html('&#8358;' + (parseInt(amount) + parseInt(total_amount))
                     .toLocaleString());
                 $('#hidden_payable').val(parseInt(amount) + parseInt(total_amount));
@@ -303,10 +238,7 @@
                 $('.balance').html('&#8358;' + (parseInt(amount) + parseInt(total_amount) -
                     parseInt(
                         discount)).toLocaleString());
-
-
             } else {
-
                 $('.payable').html('&#8358;' + (parseInt(total_amount) - parseInt(amount))
                     .toLocaleString());
                 $('#hidden_payable').val(parseInt(total_amount) - parseInt(amount));
@@ -314,7 +246,6 @@
                 $('.balance').html('&#8358;' + ((parseInt(total_amount) - parseInt(amount)) -
                     parseInt(
                         discount)).toLocaleString())
-
             }
 
         });
@@ -370,23 +301,6 @@
                                 if (res.status === 200) {
 
                                     Command: toastr["success"](res.message);
-                                    toastr.options = {
-                                        closeButton: false,
-                                        debug: false,
-                                        newestOnTop: false,
-                                        progressBar: false,
-                                        positionClass: "toast-top-right",
-                                        preventDuplicates: false,
-                                        onclick: null,
-                                        showDuration: "300",
-                                        hideDuration: "1000",
-                                        timeOut: "5000",
-                                        extendedTimeOut: "1000",
-                                        showEasing: "swing",
-                                        hideEasing: "linear",
-                                        showMethod: "fadeIn",
-                                        hideMethod: "fadeOut",
-                                    };
 
                                     $('#btn_div').addClass('d-none');
                                     $('#add_record_div').removeClass('d-none');
@@ -399,24 +313,7 @@
                                     Command: toastr["error"](
                                         "Session expired. please login again."
                                     );
-                                    toastr.options = {
-                                        closeButton: false,
-                                        debug: false,
-                                        newestOnTop: false,
-                                        progressBar: false,
-                                        positionClass: "toast-top-right",
-                                        preventDuplicates: false,
-                                        onclick: null,
-                                        showDuration: "300",
-                                        hideDuration: "1000",
-                                        timeOut: "5000",
-                                        extendedTimeOut: "1000",
-                                        showEasing: "swing",
-                                        hideEasing: "linear",
-                                        showMethod: "fadeIn",
-                                        hideMethod: "fadeOut",
-                                    };
-
+                                   
                                     setTimeout(() => {
                                         window.location.replace(
                                             '{{ route('login') }}');
@@ -440,23 +337,7 @@
 
             if (paid_amount == '') {
                 Command: toastr["error"]('Payment Amount fields is required');
-                toastr.options = {
-                    closeButton: false,
-                    debug: false,
-                    newestOnTop: false,
-                    progressBar: false,
-                    positionClass: "toast-top-right",
-                    preventDuplicates: false,
-                    onclick: null,
-                    showDuration: "300",
-                    hideDuration: "1000",
-                    timeOut: "5000",
-                    extendedTimeOut: "1000",
-                    showEasing: "swing",
-                    hideEasing: "linear",
-                    showMethod: "fadeIn",
-                    hideMethod: "fadeOut",
-                };
+
                 $('#add_payment_amount').addClass('is-invalid')
                 return;
             }
@@ -466,23 +347,7 @@
             if ($('.method:checked').length === 0) {
                 $('.method').addClass('is-invalid');
                 Command: toastr["error"]('Payment Method fields is required');
-                toastr.options = {
-                    closeButton: false,
-                    debug: false,
-                    newestOnTop: false,
-                    progressBar: false,
-                    positionClass: "toast-top-right",
-                    preventDuplicates: false,
-                    onclick: null,
-                    showDuration: "300",
-                    hideDuration: "1000",
-                    timeOut: "5000",
-                    extendedTimeOut: "1000",
-                    showEasing: "swing",
-                    hideEasing: "linear",
-                    showMethod: "fadeIn",
-                    hideMethod: "fadeOut",
-                };
+               
                 return;
             } else {
                 $('.method').removeClass('is-invalid');
@@ -513,23 +378,7 @@
                 success: function(res) {
                     if (res.status === 200) {
                         Command: toastr["success"](res.message);
-                        toastr.options = {
-                            closeButton: false,
-                            debug: false,
-                            newestOnTop: false,
-                            progressBar: false,
-                            positionClass: "toast-top-right",
-                            preventDuplicates: false,
-                            onclick: null,
-                            showDuration: "300",
-                            hideDuration: "1000",
-                            timeOut: "5000",
-                            extendedTimeOut: "1000",
-                            showEasing: "swing",
-                            hideEasing: "linear",
-                            showMethod: "fadeIn",
-                            hideMethod: "fadeOut",
-                        };
+                       
                         $('#add_record_btn').html('Add Record');
                         $('#add_record_btn').attr("disabled", false);
                         $('#add_payment_amount').val("");
@@ -544,23 +393,7 @@
                         Command: toastr["error"](
                             "Session expired. please login again."
                         );
-                        toastr.options = {
-                            closeButton: false,
-                            debug: false,
-                            newestOnTop: false,
-                            progressBar: false,
-                            positionClass: "toast-top-right",
-                            preventDuplicates: false,
-                            onclick: null,
-                            showDuration: "300",
-                            hideDuration: "1000",
-                            timeOut: "5000",
-                            extendedTimeOut: "1000",
-                            showEasing: "swing",
-                            hideEasing: "linear",
-                            showMethod: "fadeIn",
-                            hideMethod: "fadeOut",
-                        };
+
                         setTimeout(() => {
                             window.location.replace('{{ route('login') }}');
                         }, 2000);
@@ -632,23 +465,7 @@
                         Command: toastr["error"](
                             "Session expired. please login again."
                         );
-                        toastr.options = {
-                            closeButton: false,
-                            debug: false,
-                            newestOnTop: false,
-                            progressBar: false,
-                            positionClass: "toast-top-right",
-                            preventDuplicates: false,
-                            onclick: null,
-                            showDuration: "300",
-                            hideDuration: "1000",
-                            timeOut: "5000",
-                            extendedTimeOut: "1000",
-                            showEasing: "swing",
-                            hideEasing: "linear",
-                            showMethod: "fadeIn",
-                            hideMethod: "fadeOut",
-                        };
+
                         setTimeout(() => {
                             window.location.replace('{{ route('login') }}');
                         }, 2000);

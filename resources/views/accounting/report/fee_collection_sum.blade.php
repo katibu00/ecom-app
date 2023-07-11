@@ -34,6 +34,7 @@
           }
 
           $mandatory_sum = App\Models\FeeStructure::where('priority', 'm')
+                            ->where('term', $school->term)
                             ->where('school_id', $school->id)
                             ->where('class_id', $student->class_id)
                             ->where('student_type', @$invoice->student_type)->sum('amount'); 
