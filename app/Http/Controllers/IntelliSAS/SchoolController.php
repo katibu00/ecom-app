@@ -6,11 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\School;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File as File;
 use Illuminate\Support\Facades\Hash;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Spatie\Multitenancy\Models\Tenant;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -40,7 +36,7 @@ class SchoolController extends Controller
             'state' => 'required',
             'lga' => 'required',
             'address' => 'required',
-            'school_phone' => 'required',
+            'phone_first' => 'required',
             'website' => 'required',
             'service_fee' => 'required',
             'heading' => 'required',

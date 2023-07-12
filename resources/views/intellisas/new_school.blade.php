@@ -157,7 +157,7 @@
                                 <label class="col-sm-3 col-form-label">Phone Number<span class="text-danger">
                                         *</span></label>
                                 <div class="col-sm-9">
-                                    <input type="tel" class="form-control" name="school_phone"
+                                    <input type="tel" class="form-control" name="phone_first"
                                         placeholder="School Mobile Phone Number">
                                 </div>
                             </div>
@@ -343,44 +343,12 @@
                                 "Some Fields are required. Please check your input and try again."
                                 )
 
-                            toastr.options = {
-                                "closeButton": false,
-                                "debug": false,
-                                "newestOnTop": false,
-                                "progressBar": false,
-                                "positionClass": "toast-top-right",
-                                "preventDuplicates": false,
-                                "onclick": null,
-                                "showDuration": "300",
-                                "hideDuration": "1000",
-                                "timeOut": "5000",
-                                "extendedTimeOut": "1000",
-                                "showEasing": "swing",
-                                "hideEasing": "linear",
-                                "showMethod": "fadeIn",
-                                "hideMethod": "fadeOut"
-                            }
+                           
                         }
 
                         if (response.status == 201) {
                             Command: toastr["success"](response.message)
-                            toastr.options = {
-                                "closeButton": false,
-                                "debug": false,
-                                "newestOnTop": false,
-                                "progressBar": false,
-                                "positionClass": "toast-top-right",
-                                "preventDuplicates": false,
-                                "onclick": null,
-                                "showDuration": "300",
-                                "hideDuration": "1000",
-                                "timeOut": "5000",
-                                "extendedTimeOut": "1000",
-                                "showEasing": "swing",
-                                "hideEasing": "linear",
-                                "showMethod": "fadeIn",
-                                "hideMethod": "fadeOut"
-                            }
+                           
                             window.location.replace('{{ route('schools.index') }}');
                         }
                     }

@@ -20,35 +20,35 @@
                     <h4 class="text-primary mb-2">Staff Information</h4>
                     <div class="row mb-2">
                         <div class="col-4">
-                            <h5 class="f-w-500">First Name <span class="pull-right">:</span>
+                            <h5 class="f-w-500">Full Name <span class="pull-right">:</span>
                             </h5>
                         </div>
-                        <div class="col-8"><span id="first_name"></span>
+                        <div class="col-8"><span id="full_name"></span>
                         </div>
                     </div>
                   
                     <div class="row mb-2">
                         <div class="col-4">
-                            <h5 class="f-w-500">Last Name <span class="pull-right">:</span>
+                            <h5 class="f-w-500">Email <span class="pull-right">:</span>
                             </h5>
                         </div>
-                        <div class="col-8"><span id="last_name"></span>
+                        <div class="col-8"><span id="email"></span>
                         </div>
                     </div>
                     <div class="row mb-2">
                         <div class="col-4">
-                            <h5 class="f-w-500">Class <span class="pull-right">:</span>
+                            <h5 class="f-w-500">Phone <span class="pull-right">:</span>
                             </h5>
                         </div>
-                        <div class="col-8"><span id="class"></span>
+                        <div class="col-8"><span id="phone"></span>
                         </div>
                     </div>
                     <div class="row mb-2">
                         <div class="col-4">
-                            <h5 class="f-w-500">Roll Number <span class="pull-right">:</span>
+                            <h5 class="f-w-500">Password <span class="pull-right">:</span>
                             </h5>
                         </div>
-                        <div class="col-8"><span id="roll_number"></span>
+                        <div class="col-8"><span id="password"></span>
                         </div>
                     </div>
                     <div class="row mb-2">
@@ -59,40 +59,6 @@
                         <div class="col-8"><span id="registered"></span>
                         </div>
                     </div>
-             
-                    {{-- <h5 class="text-primary">Parent's Information</h5>
-                    <div class="row mb-2">
-                        <div class="col-4">
-                            <h5 class="f-w-500">Name <span class="pull-right">:</span>
-                            </h5>
-                        </div>
-                        <div class="col-8"><span id="parent_name"></span>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-4">
-                            <h5 class="f-w-500">Email <span class="pull-right">:</span>
-                            </h5>
-                        </div>
-                        <div class="col-8"><span id="parent_email"></span>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-4">
-                            <h5 class="f-w-500">Phone <span class="pull-right">:</span>
-                            </h5>
-                        </div>
-                        <div class="col-8"><span id="parent_phone"></span>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-4">
-                            <h5 class="f-w-500">Address <span class="pull-right">:</span>
-                            </h5>
-                        </div>
-                        <div class="col-8"><span id="parent_phone"></span>
-                        </div>
-                    </div> --}}
                    
                 </div>
                    

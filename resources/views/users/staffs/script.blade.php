@@ -33,9 +33,10 @@
                                 res.staff.image);
                         }
 
-                        $('#first_name').html(res.staff.first_name);
-                        $('#last_name').html(res.staff.last_name);
-                        $('#roll_number').html(res.staff.login);
+                        $('#full_name').html(res.staff.first_name+' '+res.staff.last_name);
+                        $('#phone').html(res.staff.phone);
+                        $('#email').html(res.staff.email);
+                        $('#password').html(res.staff.middle_name);
 
                         $('#registered').html(res.registered);
                        
@@ -50,24 +51,7 @@
                         Command: toastr["error"](
                             "Session expired. please login again."
                         );
-                        toastr.options = {
-                            closeButton: false,
-                            debug: false,
-                            newestOnTop: false,
-                            progressBar: false,
-                            positionClass: "toast-top-right",
-                            preventDuplicates: false,
-                            onclick: null,
-                            showDuration: "300",
-                            hideDuration: "1000",
-                            timeOut: "5000",
-                            extendedTimeOut: "1000",
-                            showEasing: "swing",
-                            hideEasing: "linear",
-                            showMethod: "fadeIn",
-                            hideMethod: "fadeOut",
-                        };
-
+                       
                         setTimeout(() => {
                             window.location.replace('{{ route('login') }}');
                         }, 2000);
@@ -105,23 +89,7 @@
                         Command: toastr["warning"](
                             "No Staffs Found in the Selected Category."
                         );
-                        toastr.options = {
-                            closeButton: false,
-                            debug: false,
-                            newestOnTop: false,
-                            progressBar: false,
-                            positionClass: "toast-top-right",
-                            preventDuplicates: false,
-                            onclick: null,
-                            showDuration: "300",
-                            hideDuration: "1000",
-                            timeOut: "5000",
-                            extendedTimeOut: "1000",
-                            showEasing: "swing",
-                            hideEasing: "linear",
-                            showMethod: "fadeIn",
-                            hideMethod: "fadeOut",
-                        };
+                        
                         $('.table').html("No Staffs Found in the Selected Category.");
                     }
 
@@ -131,24 +99,7 @@
                         Command: toastr["error"](
                             "Session expired. please login again."
                         );
-                        toastr.options = {
-                            closeButton: false,
-                            debug: false,
-                            newestOnTop: false,
-                            progressBar: false,
-                            positionClass: "toast-top-right",
-                            preventDuplicates: false,
-                            onclick: null,
-                            showDuration: "300",
-                            hideDuration: "1000",
-                            timeOut: "5000",
-                            extendedTimeOut: "1000",
-                            showEasing: "swing",
-                            hideEasing: "linear",
-                            showMethod: "fadeIn",
-                            hideMethod: "fadeOut",
-                        };
-
+                        
                         setTimeout(() => {
                             window.location.replace('{{ route('login') }}');
                         }, 2000);
@@ -295,44 +246,12 @@
                             "Some Fields are required. Please check your input and try again."
                             )
 
-                        toastr.options = {
-                            "closeButton": false,
-                            "debug": false,
-                            "newestOnTop": false,
-                            "progressBar": false,
-                            "positionClass": "toast-top-right",
-                            "preventDuplicates": false,
-                            "onclick": null,
-                            "showDuration": "300",
-                            "hideDuration": "1000",
-                            "timeOut": "5000",
-                            "extendedTimeOut": "1000",
-                            "showEasing": "swing",
-                            "hideEasing": "linear",
-                            "showMethod": "fadeIn",
-                            "hideMethod": "fadeOut"
-                        }
+                       
                     }
 
                     if (response.status == 200) {
                         Command: toastr["success"](response.message)
-                        toastr.options = {
-                            "closeButton": false,
-                            "debug": false,
-                            "newestOnTop": false,
-                            "progressBar": false,
-                            "positionClass": "toast-top-right",
-                            "preventDuplicates": false,
-                            "onclick": null,
-                            "showDuration": "300",
-                            "hideDuration": "1000",
-                            "timeOut": "5000",
-                            "extendedTimeOut": "1000",
-                            "showEasing": "swing",
-                            "hideEasing": "linear",
-                            "showMethod": "fadeIn",
-                            "hideMethod": "fadeOut"
-                        }
+                        
 
                         $('#edit_staff_btn').text("Save Changes");
                         $('#edit_staff_btn').attr("disabled", false);

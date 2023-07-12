@@ -71,6 +71,11 @@
                 <div data-i18n="Enter Marks">Enter Marks</div>
             </a>
         </li>
+        <li class="menu-item {{ $route == 'early-years.marks-entry' ? 'active' : '' }}">
+            <a href="{{ route('early-years.marks-entry') }}" class="menu-link">
+                <div data-i18n="Early Years">Early Years</div>
+            </a>
+        </li>
         <li class="menu-item {{ $route == 'psychomotor.index' ? 'active' : '' }}">
             <a href="{{ route('psychomotor.index') }}" class="menu-link">
                 <div data-i18n="Socio-emotional skills">Socio-emotional skills</div>
@@ -210,11 +215,17 @@
         </li>
 
         <li
-            class="menu-item {{ $route == 'settings.psychomotor_crud.index' ? 'active open' : '' }} {{ $route == 'settings.affective_crud.index' ? 'active open' : '' }} {{ $route == 'settings.ca_scheme.index' ? 'active open' : '' }}">
+            class="menu-item {{ $route == 'settings.psychomotor_crud.index' ? 'active open' : '' }} {{ $route == 'settings.affective_crud.index' ? 'active open' : '' }} {{ $route == 'learning_domains.index' ? 'active open' : '' }} {{ $route == 'settings.ca_scheme.index' ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <div data-i18n="Result Settings">Result Settings</div>
             </a>
             <ul class="menu-sub">
+                <li class="menu-item {{ $route == 'learning_domains.index' ? 'active' : '' }}">
+                    <a href="{{ route('learning_domains.index') }}" class="menu-link">
+                        <div data-i18n="Learning Domains">Learning Domains</div>
+                    </a>
+                </li>
+                
                 <li class="menu-item {{ $route == 'settings.psychomotor_crud.index' ? 'active' : '' }}">
                     <a href="{{ route('settings.psychomotor_crud.index') }}" class="menu-link">
                         <div data-i18n="Psychomotor SKills">Psychomotor SKills</div>

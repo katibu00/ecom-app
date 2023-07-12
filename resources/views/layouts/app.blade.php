@@ -252,18 +252,18 @@
                       <div class="dropdown-divider"></div>
                     </li>
                     <li>
-                      <a class="dropdown-item" href="pages-profile-user.html">
-                        <i class="ti ti-user-check me-2 ti-sm"></i>
-                        <span class="align-middle">My Profile</span>
+                      <a class="dropdown-item" href="{{ route('change.password') }}">
+                        <i class="ti ti-lock me-2 ti-sm"></i>
+                        <span class="align-middle">Change Password</span>
                       </a>
                     </li>
-                    <li>
+                    {{-- <li>
                       <a class="dropdown-item" href="pages-account-settings-account.html">
                         <i class="ti ti-settings me-2 ti-sm"></i>
                         <span class="align-middle">Settings</span>
                       </a>
                     </li>
-                    <li>
+                    <li> --}}
                         <div class="dropdown-divider"></div>
                       </li>
                     <li>
