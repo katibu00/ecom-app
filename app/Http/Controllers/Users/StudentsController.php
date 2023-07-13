@@ -202,53 +202,9 @@ class StudentsController extends Controller
         ]);
     }
 
-    public function bulk_update(Request $request)
-    {
-        $data['classes'] = Classes::select('id', 'name')->where('school_id',auth()->user()->school_id)->get();
+   
 
-        if($request->class_id)
-        {
-            // $data['students'] = User::where('usertype','std')->get();
-            $data['students'] = User::select('id', 'first_name','middle_name','last_name','login','parent_id','image')->where('usertype','std')->where('school_id',auth()->user()->school_id)->where('status',1)->with(['class'])->orderBy('gender', 'desc')->orderBy('first_name')->get();
-            $data['school'] = School::select('username')->where('id',auth()->user()->school_id)->first();
-            $data['parents'] = User::where('usertype','std')->get();
-            $data['class_id'] = $request->class_id;
-        }
-        return view('users.students.bulk_update', $data);
-    }
-
-    public function bulk_store(Request $request)
-    {
-        // return $request->all();
-        $school = School::select('username')->where('id',auth()->user()->school_id)->first();
-
-        $rowCount = count($request->user_id);
-        if($rowCount != NULL){
-            for ($i=0; $i < $rowCount; $i++){
-
-                $user = User::find($request->user_id[$i]);
-                $user->parent_id = $request->parent_id[$i];
-                $user->dob = $request->dob[$i];
-
-                if ($request->file('image'.$i) != null) {
-                    $destination = 'uploads/' . $school->username . '/' . $user->image;
-                    File::delete($destination);
-                    $file = $request->file('image'.$i);
-                    $extension = $file->getClientOriginalExtension();
-                    $filename = time() . '.' . $extension;
-                    $file->move('uploads/' . $school->username, $filename);
-                    $user->image = $filename;
-                }
-                
-                $user->update();
-            }
-        };
-        return response()->json([
-            'status'=>200,
-            'message'=>'Students(s) Updated Successfully',
-        ]);
-    }
-
+  
     public function getStudentDetails(Request $request)
     {
 

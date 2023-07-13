@@ -61,6 +61,11 @@ class LoginController extends Controller
                     'status'=>200,
                     'user'=>'intellisas',
                 ]);
+            }else if (Auth::user()->usertype == 'accountant'){
+                return response()->json([
+                    'status'=>200,
+                    'user'=>'accountant',
+                ]);
             }else if (Auth::user()->usertype == 'applicant'){
                 return response()->json([
                     'status'=>200,

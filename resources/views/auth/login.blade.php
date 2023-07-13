@@ -225,6 +225,9 @@
                             if (response.user == 'teacher') {
                                 window.location.replace('{{ route('teacher.home') }}');
                             }
+                            if (response.user == 'accountant') {
+                                window.location.replace('{{ route('accountant.home') }}');
+                            }
                            
 
                         }

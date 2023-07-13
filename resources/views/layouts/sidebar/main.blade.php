@@ -35,6 +35,9 @@ $userType = auth()->user()->usertype;
       @if($userType == 'teacher')
        @include('layouts.sidebar.teacher')
       @endif
+      @if($userType == 'accountant')
+       @include('layouts.sidebar.accountant')
+      @endif
      
   
     </ul>

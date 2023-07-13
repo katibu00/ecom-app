@@ -165,9 +165,7 @@
             $('#edit_loading_div').removeClass('d-none');
             $('#edit_content_div').addClass('d-none');
             $('#edit_staff_form')[0].reset();
-            $('#edit_parent option:selected').removeAttr('selected');
-            $('#edit_gender option:selected').removeAttr('selected');
-            $("#edit_staff_picture").attr("src", "/uploads/default.png");
+            $('#edit_usertype option:selected').removeAttr('selected');
             $('#edit_staff_modal_title').html('Edit ' + staff_name + 's Profile');
 
             $.ajaxSetup({
@@ -184,7 +182,7 @@
                 },
                 success: function(res) {
 
-                    if (res.staff.image != 'default.png') {
+                    if (res.staff.image != null) {
                         $("#edit_staff_picture").attr("src", "/uploads/" + res
                             .school_username.username + '/' + res.staff.image);
                     }
@@ -192,14 +190,12 @@
                     $('#edit_loading_div').addClass('d-none');
                     $('#edit_content_div').removeClass('d-none');
                     $('#edit_first_name').val(res.staff.first_name);
-                    $('#edit_middle_name').val(res.staff.middle_name);
                     $('#edit_last_name').val(res.staff.last_name);
-                    $('#edit_dob').val(res.staff.dob);
-                    $('#edit_roll_number').val(res.staff.login);
-                    $(`#edit_parent option[value="${res.staff.parent_id}"]`).attr(
+                    $('#edit_email').val(res.staff.email);
+                    $('#edit_phone_number').val(res.staff.phone);
+                    $(`#edit_usertype option[value="${res.staff.usertype}"]`).attr(
                         "selected", "selected");
-                    $(`#edit_gender option[value="${res.staff.gender}"]`).attr("selected",
-                        "selected");
+                   
 
 
 
@@ -242,22 +238,16 @@
                         });
                         $('#edit_staff_btn').text("Save Changes");
                         $('#edit_staff_btn').attr("disabled", false);
-                        Command: toastr["error"](
-                            "Some Fields are required. Please check your input and try again."
-                            )
-
-                       
+                        Command: toastr["error"]("some Required Fields are not Filled")
                     }
 
                     if (response.status == 200) {
                         Command: toastr["success"](response.message)
-                        
 
                         $('#edit_staff_btn').text("Save Changes");
                         $('#edit_staff_btn').attr("disabled", false);
                         $('#editModal').modal('hide');
                         $('.table').load(location.href + ' .table');
-                        // $('.table').html(response);
                     }
                 }
             })

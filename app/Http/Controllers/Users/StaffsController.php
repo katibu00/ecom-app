@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File as File;
+use Intervention\Image\Facades\Image;
 
 class StaffsController extends Controller
 {
@@ -170,12 +171,6 @@ class StaffsController extends Controller
     }
 
  
-    public function privilegeIndex()
-    {
-        return view('users.privileges.index');
-    }
-
- 
 
     public function getStaffDetails(Request $request)
     {
@@ -201,15 +196,9 @@ class StaffsController extends Controller
     {
         // return $request->all();
         $validator = Validator::make($request->all(), [
-            // 'name'=>'required',
-            // 'school_email' => 'required|email',
-            // 'address'=>'required',
-            // 'school_phone' => 'required',
-            // 'website' => 'required',
-            // 'session_id' => 'required',
-            // 'term' => 'required',
-            // 'motto' => 'required',
-            
+            'first_name'=>'required',
+            'last_name'=>'required',
+            'usertype' => 'required',
         ]);
        
         if($validator->fails()){
@@ -223,7 +212,9 @@ class StaffsController extends Controller
         $staff = User::find($request->edit_staff_id);
         $staff->first_name = $request->first_name;
         $staff->last_name = $request->last_name;
-        $staff->login = $request->roll_number;
+        $staff->phone = $request->phone;
+        $staff->email = $request->email;
+        $staff->usertype = $request->usertype;
       
 
         if ($request->file('image') != null) {
@@ -232,7 +223,16 @@ class StaffsController extends Controller
             $file = $request->file('image');
             $extension = $file->getClientOriginalExtension();
             $filename = time() . '.' . $extension;
-            $file->move('uploads/' . $school->username, $filename);
+        
+            $image = Image::make($file)
+                ->resize(800, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                })
+                ->encode('jpg', 80); 
+        
+            $image->save('uploads/' . $school->username . '/' . $filename);
+        
             $staff->image = $filename;
         }
 

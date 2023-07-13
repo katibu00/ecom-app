@@ -33,54 +33,47 @@
 
 
                         <div class="row mb-3">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label for="edit_first_name">First Name</label>
                                 <input type="text" class="form-control" id="edit_first_name" value="" name="first_name" placeholder="First Name">
                             </div>
-                            <div class="col-md-4 mt-2 mt-sm-0">
-                                <label for="edit_middle_name">Middle Name</label>
-                                <input type="text" class="form-control" id="edit_middle_name" name="middle_name" placeholder="Middle Name">
-                            </div>
-                            <div class="col-md-4 mt-2 mt-sm-0">
-                                <label for="edit_last_name">Last Name</label>
-                                <input type="text" class="form-control" id="edit_last_name" name="last_name" placeholder="Last Name">
+                            <div class="col-md-6 mt-2 mt-sm-0">
+                                <label for="edit_last_name">Other Names</label>
+                                <input type="text" class="form-control" id="edit_last_name" name="last_name" placeholder="Other Names">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="edit_roll_number">Roll Number</label>
-                                <input type="text" class="form-control" id="edit_roll_number" name="roll_number" placeholder="Roll Number">
+                                <label for="edit_email">Email</label>
+                                <input type="text" class="form-control" id="edit_email" name="email" placeholder="Email">
                             </div>
-                            <div class="col-md-6 mt-2 mt-sm-0">
-                                <label for="edit_gender">Gender</label>
-                                <select class="form-select" id="edit_gender" name="gender">
-                                    <option value="">Select Gender...</option>
-                                    <option value="m">Male</option>
-                                    <option value="f">Female</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="edit_parent">Parent</label>
-                                <select class="form-select" id="edit_parent" name="parent_id">
-                                    <option value="">Select Parent...</option>
-                                    {{-- @foreach ($parents as $parent)
-                                    <option value="{{ $parent->id }}">{{ $parent->first_name.' '.$parent->middle_name.' '.$parent->last_name }}</option>
-                                    @endforeach --}}
-                                </select>
-                            </div>
-                            <div class="col-md-6 mt-2 mt-sm-0">
-                                <label for="edit_dob">Date of Birth</label>
-                                <input type="date" class="form-control" id="edit_dob" name="dob" placeholder="Date of Birth">
+                                <label for="edit_roll_number">Phone Number</label>
+                                <input type="text" class="form-control" id="edit_phone_number" name="phone" placeholder="Phone Number">
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-md-12">
-                                <label for="edit_fitness">Physical Fitness</label>
-                                <textarea class="form-control" id="edit_fitness" name="fitness" placeholder="Physical Fitness"></textarea>
+                            <div class="col-md-6 mt-2 mt-sm-0">
+                                <label for="edit_usertype">Role</label>
+                                <select class="form-select" name="usertype" id="edit_usertype" required>
+                                    <option value=""></option>
+                                    <option value="teacher">Teacher</option>
+                                    <option value="admin">Administrator</option>
+                                    <option value="accountant">Accountant</option>
+                                    <option value="proprietor">Proprietor</option>
+                                    <option value="director">Director</option>
+                                    <option value="staff">Non-teaching Staff</option>
+                                </select>  
                             </div>
+                            {{-- <div class="col-md-6 mt-2 mt-sm-0">
+                                <label for="edit_dob">Managed Class (Form Master)</label>
+                                <select class="form-select" name="class_id" required>
+                                    <option value=""></option>
+                                    
+                                </select>  
+                            </div> --}}
                         </div>
+                        
                     
                     </div>
                     

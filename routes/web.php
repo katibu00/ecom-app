@@ -104,6 +104,9 @@ Route::group(['middleware' => ['auth', 'parent']], function () {
 Route::group(['middleware' => ['auth', 'teachers']], function () {
     Route::get('/teacher/home', [HomeController::class, 'teacher'])->name('teacher.home');
 });
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('/accountant/home', [HomeController::class, 'accountant'])->name('accountant.home');
+});
 
 Route::group(['prefix' => 'schools', 'middleware' => ['auth', 'intellisas']], function () {
     Route::get('/index', [SchoolController::class, 'index'])->name('schools.index');
@@ -259,16 +262,11 @@ Route::group(['prefix' => 'marks', 'middleware' => ['auth', 'teachers']], functi
     Route::post('/store-psychomotor', [PsychomotorGradeController::class, 'storePsychomotor'])->name('psychomotor.store');
     Route::get('/view-psychomotor/{class_id}/{type}', [PsychomotorGradeController::class, 'viewRecords'])->name('psychomotor.view');
 
-
-
-
     // Route to show the Early Years marks entry page
-Route::get('/early-years/marks-entry', [EarlyYearsMarksEntryController::class,'index'])->name('early-years.marks-entry');
-Route::get('/marks-entry/students-by-class/{classId}', [EarlyYearsMarksEntryController::class,'getStudentsByClass'])->name('marks-entry.students-by-class');
-Route::get('/get-marks/{studentId}', [EarlyYearsMarksEntryController::class, 'getMarks'])->name('marks.getMarks');
-Route::post('/early-year-marks', [EarlyYearsMarksEntryController::class, 'store'])->name('early_year_marks.store');
-
-
+    Route::get('/early-years/marks-entry', [EarlyYearsMarksEntryController::class, 'index'])->name('early-years.marks-entry');
+    Route::get('/marks-entry/students-by-class/{classId}', [EarlyYearsMarksEntryController::class, 'getStudentsByClass'])->name('marks-entry.students-by-class');
+    Route::get('/get-marks/{studentId}', [EarlyYearsMarksEntryController::class, 'getMarks'])->name('marks.getMarks');
+    Route::post('/early-year-marks', [EarlyYearsMarksEntryController::class, 'store'])->name('early_year_marks.store');
 
 });
 

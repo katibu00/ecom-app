@@ -29,7 +29,7 @@
                     </td>
                     <td>
                         <div class="avatar avatar-sm me-2">
-                            <img @if ($staff->image == 'default.png') src="/uploads/default.png" @else src="/uploads/{{ $school->username }}/{{ $staff->image }}" @endif
+                            <img @if ($staff->image == null) src="/uploads/default.png" @else src="/uploads/{{ $school->username }}/{{ $staff->image }}" @endif
                                 alt="Avatar" class="rounded-circle" />
                         </div>
                     </td>
