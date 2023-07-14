@@ -129,6 +129,11 @@
                 <div data-i18n="End of Term Report">End of Term Report</div>
             </a>
         </li>
+        <li class="menu-item {{ $route == 'early_year_result.index' ? 'active' : '' }}">
+            <a href="{{ route('early_year_result.index') }}" class="menu-link">
+                <div data-i18n="Early Years">Early Years</div>
+            </a>
+        </li>
         <li class="menu-item {{ $route == 'comments.index' ? 'active' : '' }}">
             <a href="{{ route('comments.index') }}" class="menu-link">
                 <div data-i18n="Comments">Comments</div>

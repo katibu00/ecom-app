@@ -40,6 +40,7 @@ class MarksController extends Controller
             'marks_category' => 'required',
         ]);
 
+
         $user = Auth::user();
         $school = School::where('id', $user->school_id)->first();
         $term = $school->term;
@@ -51,9 +52,8 @@ class MarksController extends Controller
         $data['assign_id'] = $request->assign_id;
         $designation = $assign->designation;
         $data['marks_category'] = $request->marks_category;
-        $data['cas'] = CAScheme::where('school_id', $user->school_id)->get();
         if ($request->marks_category != 'exam') {
-            $data['max_mark'] = CAScheme::where('school_id', $user->school_id)->where('code', $request->marks_category)->first()->marks;
+            $data['max_mark'] = CAScheme::where('school_id', $user->school_id)->where('id', $request->marks_category)->first()->marks;
         } else {
             $data['max_mark'] = 60;
         }
@@ -378,5 +378,17 @@ class MarksController extends Controller
 
         return view('marks.submissions.index', $data);
     }
+
+    public function getCAs(Request $request)
+    {
+        $subjectId = $request->input('subject_id');
+        
+        $classId = AssignSubject::where('id', $subjectId)->value('class_id');
+        
+        $caSchemes = CAScheme::where('class_id', 'LIKE', '%'.$classId.'%')->get();
+
+        return response()->json(['ca_schemes' => $caSchemes]);
+    }
+
 
 }

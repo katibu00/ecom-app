@@ -100,7 +100,7 @@
        <table width="100%">
            <tr>
                <td class="text-center" width="15%">
-                <img  @if($school->logo == 'default.png') src="/uploads/no-image.jpg" @else src="/uploads/{{ $school->username }}/{{ $school->logo }}" @endif style="width: 80px; height: 80px;">
+                <img  @if($school->logo == null) src="/uploads/no-image.jpg" @else src="/uploads/{{ $school->username }}/{{ $school->logo }}" @endif style="width: 80px; height: 80px;">
             </td>
                <td class="text-center" width="85%">
                 <{{ $school->heading }} style="text-transform: uppercase; color: #009879;"><strong>{{$school->name}}</strong></{{$school->heading}}>
@@ -178,7 +178,7 @@
 
         <div style="width:15%; float: right;">
             @if($settings->show_passport == '1')
-              <p style="margin-top: -10px; margin-left: 0px;"><img @if($user->image == 'default.png') src="/uploads/default.png" @else src="/uploads/{{$school->username}}/{{$user->image}}" @endif style="width: 100px; height: 100px; border: 0px solid black;"></p>
+              <p style="margin-top: -10px; margin-left: 0px;"><img @if($user->image == null) src="/uploads/default.png" @else src="/uploads/{{$school->username}}/{{$user->image}}" @endif style="width: 100px; height: 100px; border: 0px solid black;"></p>
             @endif
         </div>
     </div>
@@ -358,8 +358,8 @@
                         ->where('class_id', $class_id)
                         ->where('officer', 'fm')
                         ->first();
-                        $principal_comment = $principal->comment.' '.$principal->additional;
-                        $master_comment = $master->comment.' '.$master->additional;
+                        $principal_comment = @$principal->comment.' '.@$principal->additional;
+                        $master_comment = @$master->comment.' '.@$master->additional;
                         $principal_length = strlen($principal_comment);
                         $master_length = strlen($master_comment);
 

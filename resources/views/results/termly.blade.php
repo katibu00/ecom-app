@@ -76,9 +76,3 @@
         </div>
     </div>
 @endsection
-
-@section('js')
-    @include('marks.scripts')
-    <script src="/js/sweetalert.min.js"></script>
-    {!! Toastr::message() !!}
-@endsection

@@ -17,6 +17,7 @@ use App\Http\Controllers\MarksController;
 use App\Http\Controllers\ParentController;
 use App\Http\Controllers\Result\AdminResultController;
 use App\Http\Controllers\Result\CommentsController;
+use App\Http\Controllers\Result\EarlyYearResultController;
 use App\Http\Controllers\Result\PsychomotorGradeController;
 use App\Http\Controllers\Result\PublishResultController;
 use App\Http\Controllers\Settings\AffectiveCrudController;
@@ -247,6 +248,7 @@ Route::group(['prefix' => 'users', 'middleware' => ['auth', 'teachers']], functi
 Route::group(['prefix' => 'marks', 'middleware' => ['auth', 'teachers']], function () {
     Route::get('/create', [MarksController::class, 'create'])->name('marks.create');
     Route::post('/create/fetch_students', [MarksController::class, 'getMarks'])->name('marks.create.fetch');
+    Route::post('/create/fetch_cas', [MarksController::class, 'getCAs'])->name('marks.create.fetch-cas');
     Route::post('/initialize-marks-entry', [MarksController::class, 'initializeMarks'])->name('initialize-marks-entry');
     Route::post('/save-marks-entry', [MarksController::class, 'saveMarks'])->name('save-marks-entry');
     Route::post('/submit-marks-entry', [MarksController::class, 'submitMarks'])->name('submit-marks-entry');
@@ -285,6 +287,11 @@ Route::group(['prefix' => 'result', 'middleware' => ['auth', 'teachers']], funct
     Route::post('/edit-comments', [CommentsController::class, 'editComments'])->name('comments.edit');
 
     Route::get('/publish/index', [PublishResultController::class, 'index'])->name('result.publish');
+
+    Route::get('/early-year-result', [EarlyYearResultController::class, 'index'])->name('early_year_result.index');
+    Route::post('/generate-early-year-report', [EarlyYearResultController::class,'generateReport'])->name('generate-early-year-report');
+
+
 
 });
 

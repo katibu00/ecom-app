@@ -71,4 +71,10 @@ class User extends Authenticatable
     {
         return $this->hasOne(Profile::class);
     }
+
+    public function earlyYearMarks()
+    {
+        return $this->hasMany(EarlyYearMark::class,'student_id');
+    }
+
 }
