@@ -201,9 +201,6 @@ class StudentsController extends Controller
             'message'=>'No User Found',
         ]);
     }
-
-   
-
   
     public function getStudentDetails(Request $request)
     {
@@ -286,25 +283,22 @@ class StudentsController extends Controller
         
     }
 
-    public function delete(Request $request){
-        $student_id = $request->id;
-        User::find($request->id)->delete();
-        Invoice::where('student_id', $student_id)->delete();
-        Mark::where('student_id', $student_id)->delete();
-        Attendance::where('student_id', $student_id)->delete();
-        PaymentSlip::where('student_id', $student_id)->delete();
-        PaymentRecord::where('student_id', $student_id)->delete();
-        ProcessedMark::where('student_id', $student_id)->delete();
-        Profile::where('user_id', $student_id)->delete();
-        SubjectOffering::where('student_id', $student_id)->delete();
-        
-       
-        return response()->json([
-            'status' => 200,
-            'message' => 'Student Deleted Successfully'
-        ]);
-        
-    }
+    public function delete(Request $request)
+{
+    $studentId = $request->id;
+
+    Invoice::where('student_id', $studentId)->delete();
+    Mark::where('student_id', $studentId)->delete();
+    ProcessedMark::where('student_id', $studentId)->delete();
+    SubjectOffering::where('student_id', $studentId)->delete();
+
+    User::find($studentId)->delete();
+
+    return response()->json([
+        'status' => 200,
+        'message' => 'Student Deleted Successfully'
+    ]);
+}
 
 
 }
