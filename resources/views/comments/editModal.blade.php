@@ -20,7 +20,7 @@
                                         <select class="form-select form-select-sm mb-3" id="update_teacher_id" required>
                                             <option value="">--Select Teacher--</option>
                                             @foreach ($staffs as $staff)
-                                                <option value="{{ $staff->id }}">{{ $staff->title }} {{ $staff->first_name }} {{ $staff->last_name }}</option>
+                                                <option value="{{ $staff->id }}">{{ $staff->first_name }} {{ $staff->last_name }}</option>
                                             @endforeach
                                         </select> 
                                         <input type="hidden" id="update_id">

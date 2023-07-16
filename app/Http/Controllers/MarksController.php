@@ -12,6 +12,7 @@ use App\Models\User;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class MarksController extends Controller
 {
@@ -35,10 +36,16 @@ class MarksController extends Controller
     public function getMarks(Request $request)
     {
 
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'assign_id' => 'required',
             'marks_category' => 'required',
         ]);
+    
+        if ($validator->fails()) {
+            return redirect()->route('marks.create')
+                ->withErrors($validator)
+                ->withInput();
+        }
 
 
         $user = Auth::user();
@@ -53,7 +60,8 @@ class MarksController extends Controller
         $designation = $assign->designation;
         $data['marks_category'] = $request->marks_category;
         if ($request->marks_category != 'exam') {
-            $data['max_mark'] = CAScheme::where('school_id', $user->school_id)->where('id', $request->marks_category)->first()->marks;
+             $caschema = CAScheme::where('school_id', $user->school_id)->where('id', $request->marks_category)->first();
+             $data['max_mark'] = @$caschema->marks;
         } else {
             $data['max_mark'] = 60;
         }
@@ -267,7 +275,7 @@ class MarksController extends Controller
             return response()->json([
                 'status' => 200,
                 'type' => 'error',
-                'message' => 'Problem occured. Please initiliaze marks entry first',
+                'message' => 'Not Save. Please initiliaze marks entry first',
             ]);
         }
 
@@ -292,7 +300,7 @@ class MarksController extends Controller
         } else {
             return response()->json([
                 'status' => 404,
-                'message' => 'Problem occured. Please initiliaze marks entry first',
+                'message' => 'Not Saved. Please initiliaze marks entry first',
             ]);
         }
 

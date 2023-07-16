@@ -1,5 +1,5 @@
 <div class="table-responsive text-nowrap">
-    <table class="table table-hover">
+    <table class="table comments-table table-hover">
     <thead>
         <tr>
             <th class="text-center">S/N</th>
@@ -42,7 +42,14 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-end">
                         <a class="dropdown-item viewDetails" href="#" data-class_id="{{ $row->id }}" data-class_name="{{ $row->name }}" data-bs-toggle="modal" data-bs-target="#viewCommentsModal"><i class="ti ti-eye text-primary me-2"></i>View Comments</a>
-                        <a class="dropdown-item" href="#"><i class="ti ti-trash me-1 text-danger"></i>Delete Comments</a>
+
+                        <a class="dropdown-item delete-comments-fm" href="#" data-class-id="{{ $row->id }}" data-class-name="{{ $row->name }}">
+                            <i class="ti ti-trash me-1 text-danger"></i>Delete Comments (Form Master)
+                        </a>
+                        <a class="dropdown-item delete-comments-p" href="#" data-class-id="{{ $row->id }}" data-class-name="{{ $row->name }}">
+                            <i class="ti ti-trash me-1 text-danger"></i>Delete Comments (Director)
+                        </a>
+                          
                     </div>
                 </div>
             </td>

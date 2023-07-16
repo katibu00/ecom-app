@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('officer');
             $table->string('comment')->nullable();
             $table->string('additional')->nullable();
+            $table->timestamps();
         
             $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');
             $table->foreign('session_id')->references('id')->on('sessions');

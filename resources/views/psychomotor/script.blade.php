@@ -27,51 +27,18 @@
                 success: function(response) {
 
                     if (response.status == 200) {
-                        $('.table').load(location.href + ' .table');
+                        $('.main-table').load(location.href + ' .main-table');
                         $('#addModal').modal('hide');
-                        $('#comments_form')[0].reset();
+                        $('#add_new_form')[0].reset();
                         Command: toastr["success"](response.message)
-                        toastr.options = {
-                            "closeButton": false,
-                            "debug": false,
-                            "newestOnTop": false,
-                            "progressBar": false,
-                            "positionClass": "toast-top-right",
-                            "preventDuplicates": false,
-                            "onclick": null,
-                            "showDuration": "300",
-                            "hideDuration": "1000",
-                            "timeOut": "5000",
-                            "extendedTimeOut": "1000",
-                            "showEasing": "swing",
-                            "hideEasing": "linear",
-                            "showMethod": "fadeIn",
-                            "hideMethod": "fadeOut"
-                        }
-
+                    
                         $('#submit_btn').text("Submit");
                         $('#submit_btn').attr("disabled", false);
                     }
                     if (response.status == 404) {
-                        $('#data_form')[0].reset();
+                        $('#add_new_form')[0].reset();
                         Command: toastr["error"](response.message)
-                        toastr.options = {
-                            "closeButton": false,
-                            "debug": false,
-                            "newestOnTop": false,
-                            "progressBar": false,
-                            "positionClass": "toast-top-right",
-                            "preventDuplicates": false,
-                            "onclick": null,
-                            "showDuration": "300",
-                            "hideDuration": "1000",
-                            "timeOut": "5000",
-                            "extendedTimeOut": "1000",
-                            "showEasing": "swing",
-                            "hideEasing": "linear",
-                            "showMethod": "fadeIn",
-                            "hideMethod": "fadeOut"
-                        }
+                       
                         $('#submit_btn').text("Submit");
                         $('#submit_btn').attr("disabled", false);
                     }
@@ -82,24 +49,7 @@
                         Command: toastr["error"](
                             "Session expired. please login again."
                         );
-                        toastr.options = {
-                            closeButton: false,
-                            debug: false,
-                            newestOnTop: false,
-                            progressBar: false,
-                            positionClass: "toast-top-right",
-                            preventDuplicates: false,
-                            onclick: null,
-                            showDuration: "300",
-                            hideDuration: "1000",
-                            timeOut: "5000",
-                            extendedTimeOut: "1000",
-                            showEasing: "swing",
-                            hideEasing: "linear",
-                            showMethod: "fadeIn",
-                            hideMethod: "fadeOut",
-                        };
-
+                        
                         setTimeout(() => {
                             window.location.replace('{{ route('login') }}');
                         }, 2000);
@@ -109,12 +59,9 @@
 
         });
 
-       
-
         //fetch students 
         $(document).on('submit', '#search_form', function(e) {
             e.preventDefault();
-
 
             var class_id = $('#class_id').val();
             var type = $('#type').val();
@@ -123,26 +70,9 @@
 
             if (class_id == '' || type == '') {
                 Command: toastr["error"]("All fields are required")
-                toastr.options = {
-                    "closeButton": false,
-                    "debug": false,
-                    "newestOnTop": false,
-                    "progressBar": false,
-                    "positionClass": "toast-top-right",
-                    "preventDuplicates": false,
-                    "onclick": null,
-                    "showDuration": "300",
-                    "hideDuration": "1000",
-                    "timeOut": "5000",
-                    "extendedTimeOut": "1000",
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut"
-                }
+
                 return;
             }
-
 
             if (type == 1) {
 
@@ -226,23 +156,7 @@
 
                         if (res.status == 404) {
                             Command: toastr["error"](res.message)
-                            toastr.options = {
-                                "closeButton": false,
-                                "debug": false,
-                                "newestOnTop": false,
-                                "progressBar": false,
-                                "positionClass": "toast-top-right",
-                                "preventDuplicates": false,
-                                "onclick": null,
-                                "showDuration": "300",
-                                "hideDuration": "1000",
-                                "timeOut": "5000",
-                                "extendedTimeOut": "1000",
-                                "showEasing": "swing",
-                                "hideEasing": "linear",
-                                "showMethod": "fadeIn",
-                                "hideMethod": "fadeOut"
-                            }
+                            
                             $('#marks-generate').addClass('d-none');
                         }
                         $('#search_btn').html("Fetch Record");
@@ -333,23 +247,7 @@
 
                         if (res.status == 404) {
                             Command: toastr["error"](res.message)
-                            toastr.options = {
-                                "closeButton": false,
-                                "debug": false,
-                                "newestOnTop": false,
-                                "progressBar": false,
-                                "positionClass": "toast-top-right",
-                                "preventDuplicates": false,
-                                "onclick": null,
-                                "showDuration": "300",
-                                "hideDuration": "1000",
-                                "timeOut": "5000",
-                                "extendedTimeOut": "1000",
-                                "showEasing": "swing",
-                                "hideEasing": "linear",
-                                "showMethod": "fadeIn",
-                                "hideMethod": "fadeOut"
-                            }
+                            
                             $('#marks-generate').addClass('d-none');
                         }
 

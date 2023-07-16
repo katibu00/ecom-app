@@ -246,8 +246,8 @@ Route::group(['prefix' => 'users', 'middleware' => ['auth', 'teachers']], functi
 // Route::get('/users/students/sort', [StudentsController::class, 'sort']);
 
 Route::group(['prefix' => 'marks', 'middleware' => ['auth', 'teachers']], function () {
-    Route::get('/create', [MarksController::class, 'create'])->name('marks.create');
-    Route::post('/create/fetch_students', [MarksController::class, 'getMarks'])->name('marks.create.fetch');
+    Route::get('/', [MarksController::class, 'create'])->name('marks.create');
+    Route::post('/entry', [MarksController::class, 'getMarks'])->name('marks.create.fetch');
     Route::post('/create/fetch_cas', [MarksController::class, 'getCAs'])->name('marks.create.fetch-cas');
     Route::post('/initialize-marks-entry', [MarksController::class, 'initializeMarks'])->name('initialize-marks-entry');
     Route::post('/save-marks-entry', [MarksController::class, 'saveMarks'])->name('save-marks-entry');
@@ -263,6 +263,7 @@ Route::group(['prefix' => 'marks', 'middleware' => ['auth', 'teachers']], functi
     Route::post('/get-psychomotor', [PsychomotorGradeController::class, 'getRecords'])->name('psychomotor.get');
     Route::post('/store-psychomotor', [PsychomotorGradeController::class, 'storePsychomotor'])->name('psychomotor.store');
     Route::get('/view-psychomotor/{class_id}/{type}', [PsychomotorGradeController::class, 'viewRecords'])->name('psychomotor.view');
+    Route::post('/update-psychomotor', [PsychomotorGradeController::class, 'updateRecord'])->name('psychomotor.update');
 
     // Route to show the Early Years marks entry page
     Route::get('/early-years/marks-entry', [EarlyYearsMarksEntryController::class, 'index'])->name('early-years.marks-entry');
@@ -274,17 +275,21 @@ Route::group(['prefix' => 'marks', 'middleware' => ['auth', 'teachers']], functi
 
 //termly result generation
 Route::group(['prefix' => 'result', 'middleware' => ['auth', 'teachers']], function () {
-    Route::get('/termly/index', [AdminResultController::class, 'termIndex'])->name('result.termly.index');
-    Route::post('/termly/index', [AdminResultController::class, 'termGenerate']);
+    Route::get('/end_of_term', [AdminResultController::class, 'termIndex'])->name('result.termly.index');
+    Route::post('/end_of_term', [AdminResultController::class, 'termGenerate']);
 
-    Route::get('/settings/index', [AdminResultController::class, 'settingsIndex'])->name('result.settings');
-    Route::post('/settings/index', [AdminResultController::class, 'settingsStore']);
+    Route::get('/end_of_session', [AdminResultController::class, 'sessionIndex'])->name('result.session.index');
+    Route::post('/end_of_session', [AdminResultController::class, 'sessionGenerate']);
 
-    Route::get('/comments/index', [CommentsController::class, 'index'])->name('comments.index');
+    Route::get('/settings', [AdminResultController::class, 'settingsIndex'])->name('result.settings');
+    Route::post('/settings', [AdminResultController::class, 'settingsStore']);
+
+    Route::get('/comments', [CommentsController::class, 'index'])->name('comments.index');
     Route::post('/get-comments', [CommentsController::class, 'getComments'])->name('comments.get');
     Route::post('/store-comments', [CommentsController::class, 'storeComments'])->name('comments.store');
     Route::post('/view-comments', [CommentsController::class, 'viewComments'])->name('comments.view');
     Route::post('/edit-comments', [CommentsController::class, 'editComments'])->name('comments.edit');
+    Route::post('/delete-comments', [CommentsController::class, 'deleteComments'])->name('comments.delete');
 
     Route::get('/publish/index', [PublishResultController::class, 'index'])->name('result.publish');
 

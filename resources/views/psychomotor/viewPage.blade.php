@@ -11,7 +11,7 @@
                             <span class="me-2">{{ ($type == 1) ? 'Psychomotor Skills' : (($type == 2) ? 'Affective Trait' : '') }} for {{ $class->name }}</span>
 
                             <div class="card-header-elements ms-auto">
-                                <a href="{{ route('psychomotor.index') }}" class="btn btn-danger">Back to List</a>
+                                <a href="{{ route('psychomotor.index') }}" class="btn btn-danger"><- Back to List</a>
                             </div>
                         </div>
 
@@ -19,14 +19,60 @@
 
                     </div>
                 </div>
-                {{-- @include('psychomotor.addModal')
-                @include('psychomotor.viewModal') --}}
+                @include('psychomotor.editModal')
             </div>
         </div>
     </div>
 @endsection
 
 @section('js')
-    <script src="/js/sweetalert.min.js"></script>
-    {{-- @include('psychomotor.script') --}}
+
+<script>
+    $(document).ready(function() {
+        $('.editItem').click(function() {
+            var studentName = $(this).data('student-name');
+            var gradeName = $(this).data('grade-name');
+            var score = $(this).data('score');
+            var rowId = $(this).data('id'); 
+
+            $('#studentName').text(studentName);
+            $('#gradeName').text(gradeName);
+            $('#score').val(score);
+
+            $('#saveScore').click(function() {
+                var newScore = $('#score').val();
+
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    url: '{{ route('psychomotor.update') }}',
+                    type: 'POST',
+                    data: {
+                        rowId: rowId,
+                        newScore: newScore
+                    },
+                    success: function(response) {
+                        // Handle the success response
+                        console.log('Score updated successfully');
+                        // Close the modal
+                        $('#editModal').modal('hide');
+                        // Refresh the page or update the necessary elements
+                        // location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle the error response
+                        console.error('Score update failed');
+                        // Optionally, you can display an error message or perform any error handling
+                    }
+                });
+            });
+        });
+    });
+</script>
+
+    
 @endsection

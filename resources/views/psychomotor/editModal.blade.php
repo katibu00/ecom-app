@@ -1,40 +1,26 @@
-<div class="modal fade" id="editModal">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title"></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal">
-                </button>
+                <h5 class="modal-title" id="editModalLabel">Edit Score for <span id="studentName"></span> for <span id="gradeName"></span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form>
-                <div class="modal-body">
-                
-                        <ul id="error_list"></ul>
-                        <div class="row">
-                            <div class="col-xl-12">
-                                <div class="mb-3 row">
-                                    <label class="col-lg-4 col-form-label" for="name">Teacher
-                                        <span class="text-danger">*</span>
-                                    </label>
-                                    <div class="col-lg-8">
-                                        <select class="form-select mb-3" id="update_teacher_id" required>
-                                            <option value="">--Select Teacher--</option>
-                                            @foreach ($staffs as $staff)
-                                                <option value="{{ $staff->id }}">{{ $staff->title }} {{ $staff->first_name }} {{ $staff->last_name }}</option>
-                                            @endforeach
-                                        </select> 
-                                        <input type="hidden" id="update_id">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="score">Score</label>
+                    <select class="form-control" id="score" name="score">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary" id="update_btn">Update</button>
-                </div>
-        </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveScore">Save</button>
+            </div>
         </div>
     </div>
 </div>

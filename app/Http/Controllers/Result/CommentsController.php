@@ -76,7 +76,7 @@ class CommentsController extends Controller
     }
     public function editComments(Request $request)
     {
-
+        // dd($request->all());
         $comment = Comment::find($request->commentID);
         $comment->comment = $request->comment;
         $comment->additional = $request->additional;
@@ -91,4 +91,28 @@ class CommentsController extends Controller
             'message' => 'Comment not found',
         ]);
     }
+
+    public function deleteComments(Request $request)
+{
+    $classId = $request->input('class_id');
+    $officer = $request->input('officer');
+
+    if($officer == 'p')
+    {
+        $text = 'Director';
+    }else if($officer == 'fm')
+    {
+        $text = 'Form Master';
+    }
+
+    $comments = Comment::where('class_id', $classId)
+        ->where('officer', $officer)
+        ->delete();
+
+    if ($comments) {
+        return response()->json(['status' => 'success', 'message' => 'Comments for '.$text.' deleted successfully.']);
+    } else {
+        return response()->json(['status' => 'error', 'message' => 'Failed to delete comments for '.$text.'.']);
+    }
+}
 }

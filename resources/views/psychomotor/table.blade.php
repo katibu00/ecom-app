@@ -1,4 +1,5 @@
-<table class="table table-responsive-sm r">
+<div class="table-responsive text-nowrap">
+<table class="table main-table">
     <thead>
         <tr>
             <th class="text-center">S/N</th>
@@ -55,3 +56,4 @@
         @endforeach
     </tbody>
 </table>
+</div>

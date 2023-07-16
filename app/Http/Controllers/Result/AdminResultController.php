@@ -31,6 +31,22 @@ class AdminResultController extends Controller
         return view('results.termly',$data);
     }
 
+    public function sessionIndex()
+    {
+        $data['sessions'] = Session::select('id','name')->where('school_id',auth()->user()->school_id)->get(); 
+        $user = auth()->user();
+
+        if($user->usertype == 'teacher' || $user->usertype == 'accountant')
+        {
+            $data['classes'] = Classes::select('id','name')->where('school_id',$user->school_id)->where('form_master_id',$user->id)->where('status',1)->get();
+        }else
+        {
+            $data['classes'] = Classes::select('id','name')->where('school_id',$user->school_id)->where('status',1)->get();
+        }  
+        $data['school'] = School::select('session_id','term')->where('id',auth()->user()->school_id)->first();
+        return view('results.session',$data);
+    }
+
 
     public function termGenerate(Request $request)
     {   
@@ -147,6 +163,33 @@ class AdminResultController extends Controller
 
        
        
+    }
+
+    public function sessionGenerate(Request $request)
+    {
+
+        $school_id = Auth::user()->school_id;
+        $user_id = Auth::user()->id;
+        $school = School::with('result_settings')->where('id', $school_id)->first();
+        $institution = School::where('id', $school_id)->first();
+        $session_id = $request->session_id;
+
+        $users = Mark::select('student_id')->where('class_id', $request->class_id)->where('school_id', $school_id)->where('session_id', $session_id)->groupBy('student_id')->get();
+
+
+        $class_id = $request->class_id;
+        $class_section_id = $request->class_section_id;
+        $term = $request->term;
+
+        $students = Mark::select('student_id')->where('class_id', $request->class_id)->where('school_id', $school_id)->where('session_id', $session_id)->groupBy('student_id')->get();
+
+        if ($students->count() == 0) {
+            Toastr::warning('No Marks Found', 'Warning');
+            return redirect()->back();
+        }
+
+        return view('pdfs.admin.results.session', compact('school', 'students', 'class_id', 'class_section_id', 'term', 'school_id', 'session_id'));
+
     }
 
 }

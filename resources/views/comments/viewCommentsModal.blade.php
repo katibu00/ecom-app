@@ -35,13 +35,15 @@
                     <table class="table table-bordered table-striped" style="width: 100%">
                         <thead>
                             <tr>
-                                <th>S/N</th>
-                                <th>Roll Number</th>
-                                <th>Student Name</th>
-                                <th>Comment</th>
-
+                              <th>S/N</th>
+                              <th>Roll Number</th>
+                              <th>Student Name</th>
+                              <th>Comment</th>
+                              <th>Additional</th>
+                              <th>Action</th>
                             </tr>
-                        </thead>
+                          </thead>
+                          
                         <tbody id="comments-generate-tr">
 
                         </tbody>

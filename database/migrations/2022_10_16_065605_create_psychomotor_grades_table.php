@@ -23,12 +23,12 @@ return new class extends Migration
             $table->string('type');
             $table->unsignedBigInteger('grade_id');
             $table->integer('score');
+            $table->timestamps();
         
             $table->foreign('school_id')->references('id')->on('schools');
             $table->foreign('session_id')->references('id')->on('sessions');
             $table->foreign('class_id')->references('id')->on('classes');
             $table->foreign('student_id')->references('id')->on('users');
-            $table->foreign('grade_id')->references('id')->on('grades');
         });
         
     }

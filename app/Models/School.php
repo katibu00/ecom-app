@@ -36,5 +36,8 @@ class School extends Model
     public function session(){
         return $this->belongsTo(Session::class, 'session_id','id');
     }
+    public function result_settings(){
+        return $this->hasOne(ResultSettings::class, 'school_id','id');
+    }
     
 }

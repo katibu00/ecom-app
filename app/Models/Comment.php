@@ -12,7 +12,6 @@ class Comment extends Model
     public function student(){
         return $this->belongsTo(User::class, 'student_id','id');
     }
-    public $timestamps = false;
 
     // public function class(){
     //     return $this->belongsTo(Classes::class, 'class_id','id');
