@@ -51,13 +51,6 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::domain('signup.intelps.cloud')->group(function () {
-
-    Route::get('/', [SignupController::class,'index']);
-
-});
-
-
 Route::get('/', function () {
 
     if (auth()->check()) {
@@ -97,15 +90,17 @@ Route::get('/sendmail', function () {
     return 'sendd successfully';
 });
 
-// Route::middleware('tenant')->group(function() {
-//     // routes
-// });
+
 
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
 Route::post('/login', [LoginController::class, 'login']);
 Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
 Route::get('/change/password', [ChangePasswordController::class, 'changePasswordIndex'])->name('change.password');
 Route::post('/change/password', [ChangePasswordController::class, 'changePasswordStore']);
+
+Route::get('/signup', [SignupController::class, 'index'])->name('signup')->middleware('guest');
+Route::post('/signup', [SignupController::class, 'store']);
+
 
 ///// Intellisas routes /////
 // Route::middleware('tenant')->group(function () {
