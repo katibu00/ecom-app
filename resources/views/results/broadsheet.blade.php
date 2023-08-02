@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('PageTitle', 'End of Term Report')
+@section('PageTitle', 'Broadsheet Report')
 
 
 @section('content')
@@ -11,10 +11,10 @@
                     <div class="card-body">
 
                         <div class="card-title header-elements  d-flex">
-                            <h5 class="m-0 me-2 d-none d-md-block">End of Term Report</h5>
+                            <h5 class="m-0 me-2 d-none d-md-block">Broadsheet Report</h5>
                         </div>
 
-                        <form class="form" action="{{ route('result.termly.index')}}" method="POST" target="_blank">
+                        <form class="form" action="{{ route('result.broadsheet.index')}}" method="POST" target="_blank">
                             @csrf
                             <div class="row">
                                 <div class="col-sm-3 mb-1">
@@ -55,18 +55,7 @@
                                     <button type="submit" class="btn btn-primary">Generate</button>
                                 </div>
                             </div>
-                            <div class="row my-3">
-                                <div class="form-check form-check-inline">
-                                    <label class="form-check-label">
-                                        <input type="checkbox" class="form-check-input" name="comments">Comments
-                                    </label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <label class="form-check-label">
-                                        <input type="checkbox" class="form-check-input"  name="psychomotor">Psychomotor
-                                    </label>
-                                </div>
-                            </div>
+                            
                         </form>
 
 

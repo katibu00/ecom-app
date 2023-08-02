@@ -4,6 +4,12 @@
         <div data-i18n="Home">Home</div>
     </a>
 </li>
+<li class="menu-item {{ $route == 'glance.index' ? 'active' : '' }}">
+    <a href="{{ route('glance.index') }}" class="menu-link">
+        <i class="menu-icon tf-icons ti ti-home"></i>
+        <div data-i18n="At a Glance">Glance</div>
+    </a>
+</li>
 
 <li class="menu-item {{ $prefix == '/billing' ? 'active open' : '' }}">
     <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -118,6 +124,26 @@
     </ul>
 </li>
 
+<li class="menu-item {{ $prefix == '/cbt/admin' ? 'active open' : '' }}">
+    <a href="javascript:void(0);" class="menu-link menu-toggle">
+        <i class="menu-icon tf-icons ti ti-mouse-2"></i>
+        <div data-i18n="CBT">CBT</div>
+    </a>
+    <ul class="menu-sub">
+        <li class="menu-item {{ $route == 'cbt.assessments.index' ? 'active' : '' }}">
+            <a href="{{ route('cbt.assessments.index') }}" class="menu-link">
+                <div data-i18n="Assessments">Assessments</div>
+            </a>
+        </li>
+        <li class="menu-item {{ $route == 'cbt.attempts.index' ? 'active' : '' }}">
+            <a href="{{ route('cbt.attempts.index') }}" class="menu-link">
+                <div data-i18n="Attempts">Attempts</div>
+            </a>
+        </li>
+        
+    </ul>
+</li>
+
 <li class="menu-item {{ $prefix == '/result' ? 'active open' : '' }}">
     <a href="javascript:void(0);" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons ti ti-report-analytics"></i>
@@ -140,6 +166,12 @@
                 <div data-i18n="Early Years">Early Years</div>
             </a>
         </li>
+        
+        <li class="menu-item {{ $route == 'result.broadsheet.index' ? 'active' : '' }}">
+            <a href="{{ route('result.broadsheet.index') }}" class="menu-link">
+                <div data-i18n="Broadsheet">Broadsheet</div>
+            </a>
+        </li>
         <li class="menu-item {{ $route == 'comments.index' ? 'active' : '' }}">
             <a href="{{ route('comments.index') }}" class="menu-link">
                 <div data-i18n="Comments">Comments</div>
@@ -148,6 +180,11 @@
         <li class="menu-item {{ $route == 'result.publish' ? 'active' : '' }}">
             <a href="{{ route('result.publish') }}" class="menu-link">
                 <div data-i18n="Publish Result">Publish Result</div>
+            </a>
+        </li>
+        <li class="menu-item {{ $route == 'result.analysis.index' ? 'active' : '' }}">
+            <a href="{{ route('result.analysis.index') }}" class="menu-link">
+                <div data-i18n="Result Analysis">Result Analysis</div>
             </a>
         </li>
        

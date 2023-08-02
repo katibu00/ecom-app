@@ -311,7 +311,7 @@
                     </script>
                     {{ $school->name }}
                   </div>
-                  <div><a href="https://fb.me/katibu1" target="_blank" class="fw-semibold">IntelS 2.0</a></div>
+                  <div><a href="https://intelps.cloud" target="_blank" class="fw-semibold">IntelS 2.0</a></div>
                 </div>
               </div>
             </footer>

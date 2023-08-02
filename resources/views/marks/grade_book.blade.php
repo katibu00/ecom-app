@@ -48,7 +48,7 @@
                                                         ->where('class_id', $class_id)
                                                         ->where('designation', 1)
                                                         ->get(); 
-                                        $cas = App\Models\CAScheme::where('school_id', $school->id)->get();
+                                        $cas = App\Models\CAScheme::where('school_id', $school->id)->where('class_id', 'LIKE', '%'.$class_id.'%')->get();
                                     @endphp
 
                                     @foreach (@$students as $student)
@@ -91,14 +91,14 @@
                                                                 $score = App\Models\Mark::where('school_id', $school->id)
                                                                     ->where('session_id', $school->session_id)
                                                                     ->where('term', $school->term)
-                                                                    ->where('type', $ca->code)
+                                                                    ->where('type', $ca->id)
                                                                     ->where('student_id', $student->id)
                                                                     ->where('class_id', $student->class_id)
                                                                     ->where('subject_id', $subject->subject_id)
                                                                     ->first();
                                                                     $total_ca += @$score->marks;
                                                             @endphp
-                                                            <td>{{ @$score->absent == 'abs'?'absent': @$score->marks }}</td>
+                                                            <td>{{ @$score->absent == 'abs'?'Absent': @$score->marks }}</td>
                                                         @endforeach
 
 

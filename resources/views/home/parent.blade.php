@@ -30,7 +30,13 @@
                 <ul
                   class="list-inline mb-0 d-flex align-items-center flex-wrap justify-content-sm-start justify-content-center gap-2"
                 >
-                  <li class="list-inline-item"><i class="ti ti-wallet"></i>  &#8358;{{ number_format(auth()->user()->wallet->balance,2) }} Wallet Balance</li>
+                <li class="list-inline-item"><i class="ti ti-wallet"></i>
+                  @if(auth()->user()->wallet)
+                      &#8358;{{ number_format(auth()->user()->wallet->balance, 2) }} Wallet Balance
+                  @else
+                      Wallet Not Available
+                  @endif
+              </li>
                   <li class="list-inline-item"><i class="ti ti-users"></i>  {{ $children->count() > 1 ? $children->count().' Wards': $children->count().' Ward' }}</li>
                 </ul>
               </div>

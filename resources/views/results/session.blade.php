@@ -52,7 +52,7 @@
                                 </div>
                                 <div class="col-sm-3">
                                     <label class="form-label" for=""></label>
-                                    <button type="submit" class="btn btn-primary">Search Records</button>
+                                    <button type="submit" class="btn btn-primary">Generate</button>
                                 </div>
                             </div>
                             

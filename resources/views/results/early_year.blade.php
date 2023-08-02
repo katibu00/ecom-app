@@ -16,7 +16,7 @@
                         <form id="reportForm" class="" action="{{ route('generate-early-year-report') }}" method="POST">
                             <div class="row">
                                 <div class="col-sm-3 mb-1">
-                                    <select class="form-select mb-2" name="session_id">
+                                    <select class="form-select mb-2" name="session_id" id="session_id">
                                         <option value="">--select Session--</option>
                                         @foreach ($sessions as $session)
                                             <option value="{{ $session->id }}"
@@ -29,7 +29,7 @@
                                     @enderror
                                 </div>
                                 <div class="col-sm-3 mb-1">
-                                    <select class="form-select mb-2" name="class_id">
+                                    <select class="form-select mb-2" name="class_id" id="class_id">
                                         <option value="">--Select Class--</option>
                                         @foreach ($classes as $class)
                                             <option value="{{ $class->id }}">{{ $class->name }}</option>
@@ -40,7 +40,7 @@
                                     @enderror
                                 </div>
                                 <div class="col-sm-3 mb-1">
-                                    <select class="form-select mb-2" name="term">
+                                    <select class="form-select mb-2" name="term" id="term">
                                         <option value="">--Select Term--</option>
                                         <option value="first" {{ $school->term == 'first' ? 'selected' : '' }}>First</option>
                                         <option value="second" {{ $school->term == 'second' ? 'selected' : '' }}>Second
@@ -54,7 +54,7 @@
                                 </div>
                                 <div class="col-sm-3">
                                     <label class="form-label" for=""></label>
-                                    <button type="submit" class="btn btn-primary">Search Records</button>
+                                    <button type="submit" class="btn btn-primary">Generate</button>
                                 </div>
                             </div>
 
@@ -78,7 +78,13 @@
         var submitButton = form.find('button[type="submit"]');
         var originalButtonText = submitButton.html();
 
-        submitButton.html('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Loading...')
+        if($('#session_id').val() == '' || $('#class_id').val() == '' || $('#term').val() == '')
+        {
+            toastr.error('All Fields are required');
+            return;
+        }
+
+        submitButton.html('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Please Wait...')
             .attr('disabled', 'disabled');
         $.ajaxSetup({
             headers: {
@@ -98,6 +104,8 @@
                 link.href = window.URL.createObjectURL(blob);
                 link.download = 'early_years_report.pdf';
                 link.click();
+                toastr.success('Result Generated Successfully.');
+
             },
             error: function() {
                 toastr.error('Failed to retrieve data.');
