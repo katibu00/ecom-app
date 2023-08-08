@@ -40,6 +40,7 @@ use App\Http\Controllers\Settings\SessionsController;
 use App\Http\Controllers\Settings\StudentTypeController;
 use App\Http\Controllers\Settings\SubjectsController;
 use App\Http\Controllers\SignupController;
+use App\Http\Controllers\StudentDocumentsController;
 use App\Http\Controllers\Users\ParentsController;
 use App\Http\Controllers\Users\StaffsController;
 use App\Http\Controllers\Users\StudentsController;
@@ -47,9 +48,6 @@ use App\Http\Controllers\Users\SubjectOfferingController;
 use App\Mail\ResetSchoolAdminPassword;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
-
-
-
 
 Route::get('/', function () {
 
@@ -67,8 +65,6 @@ Route::get('/', function () {
 
 })->middleware('guest');
 
-
-
 Route::get('/home', function () {
 
     if (auth()->user()->usertype == 'admin') {
@@ -81,7 +77,7 @@ Route::get('/home', function () {
         return redirect()->route('parent.home');
     }
 
-})->middleware('auth');
+})->name('home')->middleware('auth');
 
 Route::get('/sendmail', function () {
 
@@ -89,8 +85,6 @@ Route::get('/sendmail', function () {
 
     return 'sendd successfully';
 });
-
-
 
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
 Route::post('/login', [LoginController::class, 'login']);
@@ -100,7 +94,6 @@ Route::post('/change/password', [ChangePasswordController::class, 'changePasswor
 
 Route::get('/signup', [SignupController::class, 'index'])->name('signup')->middleware('guest');
 Route::post('/signup', [SignupController::class, 'store']);
-
 
 ///// Intellisas routes /////
 // Route::middleware('tenant')->group(function () {
@@ -218,6 +211,10 @@ Route::group(['prefix' => 'settings', 'middleware' => ['auth', 'managers']], fun
     Route::post('/fee_structure/copy', [FeeStructuresController::class, 'copyFeeStructure'])->name('settings.fee_structure.copy');
     Route::post('fee_structure/change_term', [FeeStructuresController::class, 'changeTerm'])->name('settings.fee_structure.change_term');
 
+    Route::get('/subjects_offering/index', [SubjectOfferingController::class, 'index'])->name('subjects_offering.index');
+    Route::post('/get-subjects_offering', [SubjectOfferingController::class, 'getSubjects'])->name('get-subjects_offering');
+    Route::post('/save-subjects_offering', [SubjectOfferingController::class, 'saveSubjectsOffering'])->name('save-subjects_offering');
+
 });
 
 Route::group(['prefix' => 'users', 'middleware' => ['auth', 'teachers']], function () {
@@ -248,10 +245,6 @@ Route::group(['prefix' => 'users', 'middleware' => ['auth', 'teachers']], functi
     Route::post('/parents/search', [ParentsController::class, 'search'])->name('users.parents.search');
     Route::post('/parents/details', [ParentsController::class, 'details'])->name('users.parents.details');
     Route::post('/get-parent_details', [ParentsController::class, 'getParentDetails'])->name('get-parent_details');
-
-    Route::get('/subjects_offering/index', [SubjectOfferingController::class, 'index'])->name('subjects_offering.index');
-    Route::post('/get-subjects_offering', [SubjectOfferingController::class, 'getSubjects'])->name('get-subjects_offering');
-    Route::post('/save-subjects_offering', [SubjectOfferingController::class, 'saveSubjectsOffering'])->name('save-subjects_offering');
 
 });
 
@@ -384,9 +377,22 @@ Route::group(['prefix' => 'glance', 'middleware' => ['auth', 'admin']], function
     Route::get('/index', [GlanceController::class, 'glance_index'])->name('glance.index');
     Route::get('/students', [GlanceController::class, 'students'])->name('glance.students');
     Route::get('/subjects', [GlanceController::class, 'subjects'])->name('glance.subjects');
-    Route::get('/invoice', [GlanceController::class, 'invoice'])->name('glance.invoice');
+    Route::get('/subject_offerings', [GlanceController::class, 'subjectOffering'])->name('glance.subject_offering');
+    Route::get('/fee_structure', [GlanceController::class, 'feeStructure'])->name('glance.fee_structure');
+    Route::get('/invoices', [GlanceController::class, 'invoice'])->name('glance.invoices');
     Route::get('/gradebook', [GlanceController::class, 'gradebook'])->name('glance.gradebook');
-    Route::get('/fee_collection', [GlanceController::class, 'fee'])->name('glance.fee');
+    Route::get('/fee_collection', [GlanceController::class, 'feeCollection'])->name('glance.fee_collection');
+
+});
+
+Route::group(['prefix' => 'student_documents', 'middleware' => ['auth', 'admin']], function () {
+    Route::get('/id_cards', [StudentDocumentsController::class, 'idCardIndex'])->name('id_cards.index');
+    Route::post('/id_cards', [StudentDocumentsController::class, 'generateIDCards'])->name('id_cards.generate');
+
+    Route::get('/personalized_answer_sheets', [StudentDocumentsController::class, 'answersheetIndex'])->name('answer_sheets.index');
+    Route::post('/personalized_answer_sheets', [StudentDocumentsController::class, 'generateAnswersheet'])->name('answer_sheets.generate');
+
+    
 
 });
 
@@ -400,7 +406,7 @@ Route::group(['prefix' => 'cbt/admin', 'middleware' => ['auth', 'admin']], funct
     Route::get('/questions/{question}/edit', [AdminCBTController::class, 'editQuestions'])->name('cbt.questions.edit');
     Route::put('/questions/{question}', [AdminCBTController::class, 'updateQuestion'])->name('cbt.questions.update');
     Route::post('/cbt/schedule/save', [AdminCBTController::class, 'saveSchedule'])->name('cbt.schedule.save');
-    Route::get('/cbt/schedule/get',  [AdminCBTController::class, 'getSchedule'])->name('cbt.schedule.get');
+    Route::get('/cbt/schedule/get', [AdminCBTController::class, 'getSchedule'])->name('cbt.schedule.get');
 
     Route::get('cbt/assessments/details', [AdminCBTController::class, 'getExamDetails'])->name('cbt.assessments.details');
     Route::post('/cbt/assessments/delete', [AdminCBTController::class, 'deleteExam'])->name('cbt.assessments.delete');
@@ -408,13 +414,9 @@ Route::group(['prefix' => 'cbt/admin', 'middleware' => ['auth', 'admin']], funct
     Route::get('/exams/{examId}/edit', [AdminCBTController::class, 'editExam'])->name('cbt.exams.edit');
     Route::put('/assessments/{examId}', [AdminCBTController::class, 'updateExam'])->name('cbt.assessments.update');
 
-
     Route::get('/attempts', [ExamAttemptsController::class, 'index'])->name('cbt.attempts.index');
     Route::post('/attempts', [ExamAttemptsController::class, 'fetchRecords'])->name('cbt.attempts.fetch_records');
     Route::get('/cbt/attempts/show/{examId}/{studentId}', [YourControllerNameHere::class, 'show'])->name('cbt.attempts.show');
-
-
-
 
 });
 
@@ -422,20 +424,13 @@ Route::get('/{username}/system-cbt', [StudentCBTController::class, 'loginIndex']
 Route::post('/cbt-login', [StudentCBTController::class, 'login'])->name('cbt-login');
 Route::get('/{username}/exams', [StudentCBTController::class, 'listExams'])->name('exams.list');
 
-
 Route::group(['prefix' => 'cbt/student', 'middleware' => []], function () {
     Route::get('/exams', [StudentCBTController::class, 'takeExam'])->name('cbt.student.exams.show');
     Route::get('/exam-result/{examId}/{score}', [StudentCBTController::class, 'showResult'])->name('cbt.student.exams.result');
 
-
 });
 
-Route::post('/submit-quiz', [StudentCBTController::class,'submitExam']);
+Route::post('/submit-quiz', [StudentCBTController::class, 'submitExam']);
 // Route::get('/exam-result', [StudentCBTController::class, 'showResult'])->name('exam-result');
-
-
-
-
-
 
 // });

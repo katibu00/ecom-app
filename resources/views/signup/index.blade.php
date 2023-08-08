@@ -383,8 +383,7 @@
                                     <a href="https://help.intelps.cloud" target="_blank"
                                         class="footer-link me-4">Knowledge Base</a>
 
-                                    <a href="#" target="_blank"
-                                        class="footer-link d-none d-sm-inline-block">Support</a>
+                                  
                                 </div>
                             </div>
                         </div>

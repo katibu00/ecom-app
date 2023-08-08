@@ -4,15 +4,16 @@ namespace App\Http\Controllers\Accounting;
 
 use App\Http\Controllers\Controller;
 use App\Models\Classes;
-use App\Models\ClassSection;
 use App\Models\FeeStructure;
 use App\Models\Invoice;
+use App\Models\PaymentRecord;
 use App\Models\School;
 use App\Models\StudentType;
 use App\Models\User;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class InvoicesController extends Controller
@@ -72,7 +73,7 @@ class InvoicesController extends Controller
             ->where('student_type', 't')
             ->where('term', $school->term)
             ->sum('amount');
-      
+
         $invoices = Invoice::where('school_id', $school->id)
             ->where('session_id', $school->session_id)
             ->where('term', $school->term)
@@ -119,7 +120,7 @@ class InvoicesController extends Controller
                     }
                 } elseif ($request->student_type[$i] == 't') {
                     $data->amount = $transfer;
-                   
+
                     if ($transfer == 0) {
                         return response()->json([
                             'status' => 404,
@@ -164,25 +165,25 @@ class InvoicesController extends Controller
             'id' => 'required',
             'student_type' => 'required',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json([
                 'status' => 400,
                 'errors' => $validator->messages(),
             ]);
         }
-    
+
         $data = Invoice::findOrFail($request->id);
         $data->pre_balance = $request->pre_balance;
         $data->student_type = $request->student_type;
-    
+
         if ($request->student_type == 'r' || $request->student_type == 's') {
             $regular = FeeStructure::where('school_id', $data->school_id)
                 ->where('class_id', $data->class_id)
                 ->where('student_type', 'r')
                 ->where('term', $data->term)
                 ->sum('amount');
-    
+
             $data->amount = $regular;
         } elseif ($request->student_type == 't') {
             $transfer = FeeStructure::where('school_id', $data->school_id)
@@ -190,7 +191,7 @@ class InvoicesController extends Controller
                 ->where('student_type', 't')
                 ->where('term', $data->term)
                 ->sum('amount');
-    
+
             $data->amount = $transfer;
         } else {
             $payable = FeeStructure::where('school_id', $data->school_id)
@@ -198,26 +199,26 @@ class InvoicesController extends Controller
                 ->where('student_type', $request->student_type)
                 ->where('term', $data->term)
                 ->sum('amount');
-    
+
             $data->amount = $payable;
         }
-    
+
         $data->discount = $request->discount;
         $data->update();
-    
+
         return response()->json([
             'status' => 200,
             'message' => 'Invoice has been Updated Successfully',
         ]);
     }
-    
+
     public function PrintIndex()
     {
         $data['classes'] = Classes::select('id', 'name')->where('school_id', auth()->user()->school_id)->get();
         return view('accounting.invoices.print_index', $data);
     }
 
-    function print(Request $request) {
+    public function print(Request $request) {
         $this->validate($request, [
             'class_id' => 'required',
             'name' => 'required',
@@ -247,21 +248,44 @@ class InvoicesController extends Controller
         $school = School::select('id', 'term', 'session_id')->where('id', auth()->user()->school_id)->first();
 
         if ($request->action == 'delete') {
-            $deletedRows = Invoice::where('class_id', $request->class_id)
-                ->where('school_id', auth()->user()->school_id)
-                ->where('session_id', $school->session_id)
-                ->where('term', $school->term)
-                ->delete();
-        
-            if ($deletedRows > 0) {
-                Toastr::success('Invoices Deleted Successfully');
-            } else {
-                Toastr::info('No rows deleted');
+            $school = School::where('id', auth()->user()->school_id)->first();
+
+            // Start a database transaction
+            DB::beginTransaction();
+
+            try {
+                $deletedRows = Invoice::where('class_id', $request->class_id)
+                    ->where('school_id', auth()->user()->school_id)
+                    ->where('session_id', $school->session_id)
+                    ->where('term', $school->term)
+                    ->delete();
+
+                // Delete related payment records
+                PaymentRecord::where('class_id', $request->class_id)
+                    ->where('school_id', auth()->user()->school_id)
+                    ->where('session_id', $school->session_id)
+                    ->where('term', $school->term)
+                    ->delete();
+
+                // Commit the transaction
+                DB::commit();
+
+                if ($deletedRows > 0) {
+                    Toastr::success('Invoices and related payment records deleted successfully');
+                } else {
+                    Toastr::info('No invoices or related payment records were deleted');
+                }
+            } catch (\Exception $e) {
+                // If an error occurs, rollback the transaction
+                DB::rollBack();
+
+                Toastr::error('An error occurred while deleting invoices and related payment records');
             }
-        
+
             return redirect()->route('invoices.index');
+
         }
-        
+
     }
 
     public function fetchData(Request $request)
@@ -274,10 +298,10 @@ class InvoicesController extends Controller
 
             $invoices = Invoice::where('student_type', 't')->where('school_id', $school_id)->get();
         } elseif (strpos($selectedValue, 'type_') === 0) {
-            $studentTypeId = substr($selectedValue, 5); 
+            $studentTypeId = substr($selectedValue, 5);
             $invoices = Invoice::where('student_type', $studentTypeId)->where('school_id', $school_id)->get();
         } elseif (strpos($selectedValue, 'class_') === 0) {
-            $classId = substr($selectedValue, 6); 
+            $classId = substr($selectedValue, 6);
             $invoices = Invoice::where('class_id', $classId)->where('school_id', $school_id)->get();
         } else {
             return response()->json([
@@ -285,19 +309,13 @@ class InvoicesController extends Controller
                 'message' => 'Invalid selected value',
             ]);
         }
-    
+
         $view = view('accounting.invoices.table')->with('invoices', $invoices)->render();
-    
+
         return response()->json([
             'status' => 'success',
             'data' => $view,
         ]);
     }
-    
-    
-    
-    
-    
-
 
 }

@@ -15,7 +15,7 @@ class ClassesController extends Controller
     public function index()
     {
         $school_id = auth()->user()->school_id;
-        $data['classes'] = Classes::with('section','form_master')->where('school_id',$school_id)->get();
+        $data['classes'] = Classes::with('section','formMaster')->where('school_id',$school_id)->get();
         $data['sections'] = Section::select('id','name')->where('school_id', $school_id)->get();
         $data['staffs'] = User::select('id', 'first_name', 'last_name')
                                 ->where('school_id', $school_id)

@@ -6,7 +6,7 @@
 </li>
 <li class="menu-item {{ $route == 'glance.index' ? 'active' : '' }}">
     <a href="{{ route('glance.index') }}" class="menu-link">
-        <i class="menu-icon tf-icons ti ti-home"></i>
+        <i class="menu-icon tf-icons ti ti-sunglasses"></i>
         <div data-i18n="At a Glance">Glance</div>
     </a>
 </li>
@@ -207,11 +207,7 @@
                 <div data-i18n="Students">Students</div>
             </a>
         </li>
-        <li class="menu-item {{ $route == 'subjects_offering.index' ? 'active' : '' }} {{ $route == 'get-subjects_offering' ? 'active' : '' }}">
-            <a href="{{ route('subjects_offering.index') }}" class="menu-link">
-                <div data-i18n="Subjects Offering">Subjects Offering</div>
-            </a>
-        </li>
+       
         <li class="menu-item {{ $route == 'users.staffs.index' ? 'active' : '' }} {{ $route == 'users.staffs.create' ? 'active' : '' }}">
             <a href="{{ route('users.staffs.index') }}" class="menu-link">
                 <div data-i18n="Staffs">Staffs</div>
@@ -222,6 +218,26 @@
                 <div data-i18n="Parents">Parents</div>
             </a>
         </li>
+    </ul>
+</li>
+<li class="menu-item {{ $prefix == '/student_documents' ? 'active open' : '' }}">
+    <a href="javascript:void(0);" class="menu-link menu-toggle">
+        <i class="menu-icon tf-icons ti ti-book-download"></i>
+        <div data-i18n="Student Documents">Student Documents</div>
+    </a>
+    <ul class="menu-sub">
+        <li class="menu-item {{ $route == 'id_cards.index' ? 'active' : '' }}">
+            <a href="{{ route('id_cards.index') }}" class="menu-link">
+                <div data-i18n="ID Cards">ID Cards</div>
+            </a>
+        </li>
+        <li class="menu-item {{ $route == 'answer_sheets.index' ? 'active' : '' }}">
+            <a href="{{ route('answer_sheets.index') }}" class="menu-link">
+                <div data-i18n="Answer Sheets">Answer Sheets</div>
+            </a>
+        </li>
+       
+   
     </ul>
 </li>
 
@@ -256,9 +272,15 @@
                 <div data-i18n="Subjects">Subjects</div>
             </a>
         </li>
+
         <li class="menu-item {{ $route == 'settings.assign_subjects.index' ? 'active' : '' }}">
             <a href="{{ route('settings.assign_subjects.index') }}" class="menu-link">
                 <div data-i18n="Assign Subjects">Assign Subjects</div>
+            </a>
+        </li>
+        <li class="menu-item {{ $route == 'subjects_offering.index' ? 'active' : '' }} {{ $route == 'get-subjects_offering' ? 'active' : '' }}">
+            <a href="{{ route('subjects_offering.index') }}" class="menu-link">
+                <div data-i18n="Subjects Offering">Subjects Offering</div>
             </a>
         </li>
 

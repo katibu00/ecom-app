@@ -19,7 +19,7 @@
                         <strong>{{ $value->name }}</strong>
                     </td>
                     <td>
-                        <strong>{{ @$value->form_master->first_name.' '. @$value->form_master->last_name }}</strong>
+                        <strong>{{ @$value->formMaster->first_name.' '. @$value->formMaster->last_name }}</strong>
                     </td>
                     <td>
                         {!! $value->status == 1 ? '  <span class="badge bg-label-primary me-1">Active</span>': '  <span class="badge bg-label-danger me-1">Not Active</span>' !!}

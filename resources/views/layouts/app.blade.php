@@ -311,7 +311,11 @@
                     </script>
                     {{ $school->name }}
                   </div>
-                  <div><a href="https://intelps.cloud" target="_blank" class="fw-semibold">IntelS 2.0</a></div>
+                  <div>
+                    <a href="https://help.intelps.cloud" target="_blank" class="footer-link me-4">Help Docs</a>
+                    <a href="https://help.intelps.cloud" target="_blank" class="footer-link me-4">Tutorials</a>
+                    <a href="https://intelps.cloud" target="_blank" class="fw-semibold">IntelS 2.0</a>
+                  </div>
                 </div>
               </div>
             </footer>

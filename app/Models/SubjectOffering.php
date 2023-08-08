@@ -20,4 +20,11 @@ class SubjectOffering extends Model
         return $this->belongsTo(Classes::class, 'class_id','id');
     }
 
+    public function student()
+    {
+        return $this->belongsTo(User::class, 'student_id');
+    }
+
+  
+
 }

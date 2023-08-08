@@ -16,13 +16,13 @@
                         <table class="table mb-2 table-sm">
                             <thead>
                                 <tr>
-                                    <th>Class Name</th>
-                                    <th>Students #</th>
-                                    <th>Assigned Subjects #</th>
-                                    <th>Form Master</th>
-                                    <th>Marking Progress</th>
+                                    <th>Class</th>
+                                    <th>Students</th>
+                                    <th>Subjects</th>
+                                    <th>Master</th>
+                                    <th>Marking</th>
                                     <th>Fee Collection </th>
-                                    <th>Attendance Records</th>
+                                    <th>Attendance</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -66,16 +66,47 @@
                                     <td>{{ $class->attendanceRecords->count() }}</td>
                                     <td>
                                         <div class="dropdown">
-                                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton{{ $class->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                Actions
+                                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                                <i class="ti ti-dots-vertical"></i>
                                             </button>
-                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $class->id }}">
-                                                <a class="dropdown-item" href">Edit</a>
-                                                <a class="dropdown-item" href="">Delete</a>
-                                                <!-- Add more action menu items here -->
+                                            <div class="dropdown-menu">
+
+                                                <a class="dropdown-item" href="{{ route('glance.students', ['classId' => $class->id]) }}">
+                                                    <i class="ti ti-users me-1"></i> Students
+                                                </a>
+
+                                                <a class="dropdown-item" href="{{ route('glance.subjects', ['classId' => $class->id]) }}">
+                                                    <i class="ti ti-book me-1"></i> Subjects
+                                                </a>
+
+                                                <a class="dropdown-item" href="{{ route('glance.subject_offering', ['classId' => $class->id]) }}">
+                                                    <i class="ti ti-check me-1"></i> Subjects Offering
+                                                </a>
+                                                
+                                                <a class="dropdown-item" href="{{ route('glance.fee_structure', ['classId' => $class->id]) }}">
+                                                    <i class="ti ti-businessplan me-1"></i> Fee Schedule
+                                                </a>
+
+                                                <a class="dropdown-item" href="{{ route('glance.invoices', ['classId' => $class->id]) }}">
+                                                    <i class="ti ti-calendar me-1"></i> Invoices
+                                                </a>
+
+                                                <a class="dropdown-item" href="{{ route('glance.fee_collection', ['classId' => $class->id]) }}">
+                                                    <i class="ti ti-report-money me-1"></i> Fee Collection
+                                                </a>
+                                                
+                                                <a class="dropdown-item" href="javascript:void(0);">
+                                                    <i class="ti ti-file-check me-1"></i> Gradebook
+                                                </a>
+
+                                                <a class="dropdown-item" href="javascript:void(0);">
+                                                    <i class="ti ti-checklist me-1"></i> Attendance
+                                                </a>
+                                               
                                             </div>
                                         </div>
                                     </td>
+                                    
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -87,3 +118,4 @@
     </div>
 </div>
 @endsection
+  

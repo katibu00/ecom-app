@@ -1,53 +1,43 @@
-@extends('layout.master')
-@section('PageTitle', 'Subjects Assignment')
+@extends('layouts.app')
+@section('PageTitle', 'Students')
 @section('content')
 
+<div class="container-xxl flex-grow-1 container-p-y">
 
-    <div id="content-page" class="content-page">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="iq-card">
-                        <div class="iq-card-header d-flex justify-content-between">
-                            <div class="iq-header-title">
-                                <h6><strong>Class Name: </strong>{{ $subjects['0']['class']['name']}} {{$subjects['0']['class_section']['name']}}</h6>
-                            </div>
-
-                            <a class="btn btn-success float-right btn-sm" href="{{ route('assign.subjects.index') }}"><i
-                                    class="fa fa-list"></i> Subjects Assignment List</a>
-                        </div>
-                        <hr>
-                        <div class="iq-card-body">
-                            <div class="table-responsive">
-                                <table class="table  mb-1 mt-2 table-borderless table-test">
-                                    <thead>
-                                        <tr>
-                                            <th>S/N</th>
-                                            <th>Subjects</th>
-                                            <th>Teacher</th>
-
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-                                       @foreach ($subjects as $key => $value)
-
-                                        <tr>
-                                            <td>{{ $key + 1 }}</td>
-                                            <td>{{ $value['subject']['name'] }}</td>
-                                            <td>{{ $value['user']['first_name'] }} {{ $value['user']['middle_name'] }}  {{ $value['user']['last_name'] }}</td>
-                                        </tr>
-                                      
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+    <div class="row mb-5">
+        <div class="col-md">
+            <div class="card mb-4">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="m-0">{{ $name->name }} Subjects</h5>
+                    <a href="{{ route('settings.subjects.index') }}" class="btn btn-primary">Manage Subjects</a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive text-nowrap">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>S/N</th>
+                                <th>Subject</th>
+                                <th>Designation</th>
+                                <th>Teacher</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($subjects as $key => $subject)
+                            <tr>
+                                <td>{{ $key+1 }}</td>
+                                <td>{{ $subject->subject->name }}</td>
+                                <td>{{ $subject->designation == 1?'Mandatory':'Optional' }}</td>
+                                <td>{{ $subject->teacher->first_name.' '.$subject->teacher->middle_name.' '.$subject->teacher->last_name }}</td>
+                
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
                 </div>
             </div>
-
         </div>
     </div>
-    </div>
+</div>
 @endsection

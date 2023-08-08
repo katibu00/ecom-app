@@ -1,56 +1,59 @@
-@extends('layout.master')
-@section('PageTitle', 'Fee Assignment Details')
+@extends('layouts.app')
+@section('PageTitle', 'Invoices')
 @section('content')
-    <?php
-    $sum = 0;
-    foreach ($allData as $key => $value) {
-        $sum += $value->amount;
-    }
-    ?>
 
-    <div id="content-page" class="content-page">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="iq-card">
-                        <div class="iq-card-header d-flex justify-content-between">
-                            <div class="iq-header-title">
-                                <h5><strong>Class Name: </strong>{{ $allData['0']['class']['name'] }} |
-                                    <strong>Total:</strong> &#x20A6;{{ number_format($sum, 0) }} | <strong>Student
-                                        Type:</strong> {{ $allData['0']->student_type }}</h5>
-                            </div>
+<div class="container-xxl flex-grow-1 container-p-y">
 
-                            <a class="btn btn-success float-right btn-sm" href="{{ route('fee.assign.index') }}"><i
-                                    class="fa fa-list"></i> Fee Assignment List</a>
-                        </div>
-                        <hr>
-                        <div class="iq-card-body">
-                            <div class="table-responsive">
-                                <table class="table  mt-2 table-borderless table-test">
-                                    <thead>
+    <div class="row mb-5">
+        <div class="col-md">
+            <div class="card mb-4">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="m-0">{{ $name->name }} Invoices</h5>
+                </div>
+                <div class="card-body">
+                    @if (count($invoices) > 0)
+                        <div class="table-responsive text-nowrap">
+                            <table class="table mb-2 table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>S/N</th>
+                                        <th>Student</th>
+                                        <th>Invoice</th>
+                                        <th>Student Type</th>
+                                        <th>Amount</th>
+                                        <th>Pre-Balance</th>
+                                        <th>Discount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($invoices as $key => $invoice)
                                         <tr>
-                                            <th>S/N</th>
-                                            <th>Fee Type</th>
-                                            <th>Amount</th>
-
+                                            <td>{{ $key+1 }}</td>
+                                            <td>{{ @$invoice->student->first_name.' '. @$invoice->student->middle_name.' '. @$invoice->student->last_name }}</td>
+                                            <td>{{ $invoice->number }}</td>
+                                            <td>
+                                                @if ($invoice->student_type == 'r')
+                                                    Regular
+                                                @elseif ($invoice->student_type == 't')
+                                                    Transfer
+                                                @else
+                                                    {{ $invoice->studentType->name ?? 'N/A' }}
+                                                @endif
+                                            </td>
+                                            <td>{{ '₦' . number_format($invoice->amount, 2, ',', '.') }}</td>
+                                            <td>{{ $invoice->pre_balance ? '₦' . number_format($invoice->pre_balance, 2, ',', '.') : 'N/A' }}</td>
+                                            <td>{{ $invoice->discount ? '₦' . number_format($invoice->discount, 2, ',', '.') : 'N/A' }}</td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($allData as $key => $value)
-                                            <tr>
-                                                <td>{{ $key + 1 }}</td>
-
-                                                <td>{{ $value['fee_type']['name'] }}</td>
-                                                <td>{{ $value->amount }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
-                    </div>
+                    @else
+                        <div class="alert alert-info">No invoices for the selected class.</div>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
+</div>
 @endsection
