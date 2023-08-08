@@ -142,10 +142,13 @@
                                         <h6 class="mb-0">Revenue</h6>
                                     </div>
                                     @php
-                                        $progress = number_format($fee_collected/$expectedRevenueSum*100,2); 
-                                        $oustanding = number_format(($expectedRevenueSum -$fee_collected)/$expectedRevenueSum*100,2); 
-                                        $expenses = number_format(($total_expenses)/$expectedRevenueSum*100,2); 
+                                        $progress = $expectedRevenueSum != 0 ? number_format($fee_collected / $expectedRevenueSum * 100, 2) : 0;
+                                    
+                                        $oustanding = $expectedRevenueSum != 0 ? number_format(($expectedRevenueSum - $fee_collected) / $expectedRevenueSum * 100, 2) : 0;
+                                    
+                                        $expenses = $expectedRevenueSum != 0 ? number_format(($total_expenses) / $expectedRevenueSum * 100, 2) : 0;
                                     @endphp
+                                
                                     <h4 class="my-2 pt-1">₦{{ number_format($fee_collected,0) }}</h4>
                                     <div class="progress w-75" style="height: 4px">
                                         <div class="progress-bar" role="progressbar" style="width: {{ $progress }}%" aria-valuenow="{{ $progress }}"
