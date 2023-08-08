@@ -316,34 +316,39 @@
                         <h5 class="card-title">Upcoming Birthdays</h5>
                     </div>
                     <div class="card-body">
-                        @foreach ($selectedUsers as $userData)
-                            <div class="upcoming-birthday py-3 border-bottom">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="student-info">
-                                        <h6 class="student-name mb-0">{{ $userData['user']->user->first_name.' '.$userData['user']->user->middle_name.' '.$userData['user']->user->last_name }}</h6>
-                                        <p class="birthday-date text-muted mb-0">
-                                            {{ Carbon\Carbon::createFromFormat('Y-m-d', $userData['user']->dob)->format('F d') }}
-                                        </p>
-                                        <p class="birthday-age text-muted mb-0">Age: {{ $userData['age'] }}</p>
-                                        <p class="days-until-birthday text-muted mb-0">
-                                            @if ($userData['days_until_birthday'] === 0)
-                                                Today is the birthday!
-                                            @elseif ($userData['days_until_birthday'] === 1)
-                                                Tomorrow is the birthday
-                                            @else
-                                                {{ $userData['days_until_birthday'] }} days until birthday
-                                            @endif
-                                        </p>
+                        @if (count($selectedUsers) > 0)
+                            @foreach ($selectedUsers as $userData)
+                                <div class="upcoming-birthday py-3 border-bottom">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="student-info">
+                                            <h6 class="student-name mb-0">{{ $userData['user']->user->first_name.' '.$userData['user']->user->middle_name.' '.$userData['user']->user->last_name }}</h6>
+                                            <p class="birthday-date text-muted mb-0">
+                                                {{ Carbon\Carbon::createFromFormat('Y-m-d', $userData['user']->dob)->format('F d') }}
+                                            </p>
+                                            <p class="birthday-age text-muted mb-0">Age: {{ $userData['age'] }}</p>
+                                            <p class="days-until-birthday text-muted mb-0">
+                                                @if ($userData['days_until_birthday'] === 0)
+                                                    Today is the birthday!
+                                                @elseif ($userData['days_until_birthday'] === 1)
+                                                    Tomorrow is the birthday
+                                                @else
+                                                    {{ $userData['days_until_birthday'] }} days until birthday
+                                                @endif
+                                            </p>
+                                        </div>
+                                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#smsModal">
+                                            <i class="bi bi-chat-text-fill"></i> SMS
+                                        </button>
                                     </div>
-                                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#smsModal">
-                                        <i class="bi bi-chat-text-fill"></i> SMS
-                                    </button>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        @else
+                            <p class="text-muted mb-0">No upcoming birthdays.</p>
+                        @endif
                     </div>
                 </div>
             </div>
+            
             
             
 

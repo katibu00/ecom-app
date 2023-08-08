@@ -568,46 +568,49 @@ foreach ($classes as $class) {
 
     // Fetch users in the school of the authenticated user
     $schoolId = auth()->user()->school_id;
-        
+
     $users = Profile::whereHas('user', function ($query) use ($schoolId) {
         $query->where('school_id', $schoolId);
     })->with('user')->get();
+
     $currentDate = Carbon::now();
 
     $upcomingBirthdays = [];
 
     foreach ($users as $user) {
-        $userBirthdate = Carbon::createFromFormat('Y-m-d', $user->dob);
+        if ($user->dob !== null) {
+            $userBirthdate = Carbon::createFromFormat('Y-m-d', $user->dob);
 
-        // Compare only the day and month
-        $userDayMonth = $userBirthdate->format('m-d');
-        $currentDayMonth = $currentDate->format('m-d');
+            $userDayMonth = $userBirthdate->format('m-d');
+            $currentDayMonth = $currentDate->format('m-d');
 
-        if ($userDayMonth === $currentDayMonth) {
-            $daysUntilBirthday = 0;
-        } elseif ($userDayMonth > $currentDayMonth) {
-            $upcomingBirthday = $userBirthdate->copy()->year($currentDate->year);
-            $daysUntilBirthday = $currentDate->diffInDays($upcomingBirthday);
+            if ($userDayMonth === $currentDayMonth) {
+                $daysUntilBirthday = 0;
+            } elseif ($userDayMonth > $currentDayMonth) {
+                $upcomingBirthday = $userBirthdate->copy()->year($currentDate->year);
+                $daysUntilBirthday = $currentDate->diffInDays($upcomingBirthday);
+            } else {
+                $upcomingBirthday = $userBirthdate->copy()->year($currentDate->year);
+                $daysUntilBirthday = $currentDate->diffInDays($upcomingBirthday);
+            }
+
+            $age = $userBirthdate->diffInYears($currentDate);
+
+            $upcomingBirthdays[] = [
+                'user' => $user,
+                'days_until_birthday' => $daysUntilBirthday,
+                'age' => $age,
+            ];
         } else {
-            $upcomingBirthday = $userBirthdate->copy()->year($currentDate->year);
-            $daysUntilBirthday = $currentDate->diffInDays($upcomingBirthday);
+            // Handle the case where dob is null
+            // For example, you might want to skip this user or handle it differently
         }
-
-        $age = $userBirthdate->diffInYears($currentDate);
-
-        $upcomingBirthdays[] = [
-            'user' => $user,
-            'days_until_birthday' => $daysUntilBirthday,
-            'age' => $age,
-        ];
     }
 
-    // Sort the upcoming birthdays by days until birthday in ascending order
     usort($upcomingBirthdays, function ($a, $b) {
         return $a['days_until_birthday'] - $b['days_until_birthday'];
     });
 
-    // Get the 5 users with the most recently upcoming birthdays or birthdays today
     $selectedUsers = array_slice($upcomingBirthdays, 0, 5);
 
 // dd($selectedUsers);
