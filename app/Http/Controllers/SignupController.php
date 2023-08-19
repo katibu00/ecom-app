@@ -25,13 +25,14 @@ class SignupController extends Controller
             'school_address' => 'required|string|max:255',
             'school_phone' => 'required|string|max:255',
             'school_email' => 'nullable|email|max:255',
-            'school_website' => 'nullable|string|max:255',
+            'school_url' => 'nullable|string|max:255',
+            'country' => 'required|string|max:255',
             
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email',
             'phone' => 'required|string|max:255|unique:users,phone',
-            'password' => 'required|string|min:8',
+            'password' => 'required|string|confirmed|min:8',
             'agree_terms' => 'required|accepted',
             'decision_on_behalf' => 'required|accepted',
         ]);
@@ -52,7 +53,7 @@ class SignupController extends Controller
             'address' => $request->input('school_address'),
             'phone_first' => $request->input('school_phone'),
             'email' => $request->input('school_email'),
-            'website' => $request->input('school_website'),
+            'website' => $request->input('school_url'),
             'admin_id' => $admin->id, 
         ]);
 

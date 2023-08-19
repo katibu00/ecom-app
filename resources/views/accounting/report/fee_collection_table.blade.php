@@ -47,7 +47,7 @@
                                         ->where('class_id', @$student->class_id)
                                         ->where('student_type', @$invoice->student_type)->sum('amount'); 
           
-            $paid = App\Models\PaymentRecord::select('paid_amount')->where('student_id',$student->id)->where('invoice_id',@$invoice->id)->sum('paid_amount');
+            $paid = App\Models\PaymentRecord::select('amount')->where('student_id',$student->id)->where('invoice_id',@$invoice->id)->sum('amount');
             $payable = @$slip->payable-@$invoice->discount+@$invoice->pre_balance;
           @endphp
 

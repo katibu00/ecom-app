@@ -210,16 +210,7 @@ class FeeStructuresController extends Controller
         $term = $request->query('term');
 
         $class = Classes::find($class_id);
-        $termName = '';
-        if ($term == 1) {
-            $termName = 'First';
-        } elseif ($term == 2) {
-            $termName = 'Second';
-        } elseif ($term == 3) {
-            $termName = 'Third';
-        } else {
-            $termName = 'Unknown Term';
-        }
+        
 
         $data['fees'] = FeeCategory::select('id', 'name')->where('school_id', $school_id)->get();
         $data['rows'] = FeeStructure::with('fee_category')
@@ -240,10 +231,10 @@ class FeeStructuresController extends Controller
 
         $data['student_type'] = $student_type;
         $data['class_id'] = $class_id;
-        $data['totals'] = $totals; // Pass the totals to the view
+        $data['totals'] = $totals; 
         $data['class'] = $class;
-        $data['termName'] = $termName;
         $data['studentType'] = $studentType;
+        $data['termName'] = $request->query('term');
 
         return view('settings.fee_structure.edit', $data);
     }

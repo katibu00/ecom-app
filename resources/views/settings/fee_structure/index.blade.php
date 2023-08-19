@@ -18,9 +18,9 @@
                             </div>
                             <div class="col-md-4 col-sm-6">
                                 <select class="form-select form-select-sm" id="termSelect" name="term">
-                                    <option value="1">First Term</option>
-                                    <option value="2">Second Term</option>
-                                    <option value="3">Third Term</option>
+                                    <option value="first">First Term</option>
+                                    <option value="second">Second Term</option>
+                                    <option value="third">Third Term</option>
                                 </select>
                                 
                             </div>

@@ -16,7 +16,7 @@
                $revenue = App\Models\PaymentRecord::select('amount')->where('class_id',$class->id)
                ->where('session_id',$school->session_id)
                ->where('term',$school->term)
-               ->sum('paid_amount');
+               ->sum('amount');
                $total += $revenue;
            @endphp
           <tr>

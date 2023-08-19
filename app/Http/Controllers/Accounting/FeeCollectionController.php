@@ -93,11 +93,11 @@ class FeeCollectionController extends Controller
                 array_push($additionals, $data_row);
             }
          
-            $all_payments = PaymentRecord::select('id','student_id','number','paid_amount','description')->where('invoice_id',$request->invoice_id)->latest()->get();
+            $all_payments = PaymentRecord::select('id','student_id','number','amount','description')->where('invoice_id',$request->invoice_id)->latest()->get();
             $total_paid = 0;
             foreach($all_payments as $payment)
             {
-                $total_paid+= $payment->paid_amount;
+                $total_paid+= $payment->amount;
             }
 
             $total_payable = (int)$paymentSlip->payable-(int)$paymentSlip->discount;
@@ -234,7 +234,7 @@ class FeeCollectionController extends Controller
         }
         $data->number = $number + 1;
       
-        $data->paid_amount = $request->paid_amount;
+        $data->amount = $request->paid_amount;
         $data->method = $request->method;
         $data->description = $request->description;
         $data->save();
@@ -253,8 +253,8 @@ class FeeCollectionController extends Controller
 
     public function refreshPayment(Request $request)
     {
-        $all_payments = PaymentRecord::select('id','student_id','number','paid_amount','description')->where('invoice_id',$request->invoice_id)->latest()->get();
-        $total_paid = PaymentRecord::select('id')->where('invoice_id',$request->invoice_id)->sum('paid_amount');
+        $all_payments = PaymentRecord::select('id','student_id','number','amount','description')->where('invoice_id',$request->invoice_id)->latest()->get();
+        $total_paid = PaymentRecord::select('id')->where('invoice_id',$request->invoice_id)->sum('amount');
        
         $paymentSlip = PaymentSlip::where('invoice_id', $request->invoice_id)
                     ->where('school_id',auth()->user()->school_id)
@@ -273,7 +273,7 @@ class FeeCollectionController extends Controller
 
     public function generateReceipt($id)
     {
-        $payment_record = PaymentRecord::select('number','student_id','session_id','method','term','invoice_id','paid_amount','description','created_at')->where('id',$id)->first();
+        $payment_record = PaymentRecord::select('number','student_id','session_id','method','term','invoice_id','amount','description','created_at')->where('id',$id)->first();
         $payment_slip = PaymentSlip::select('session_id','term','number','payable','discount','paid')->where('invoice_id',$payment_record->invoice_id)->first();
     
         $school = School::select('name','username','motto','address','phone_first','phone_second','email','website','logo','heading')->where('id', auth()->user()->school_id)->first();

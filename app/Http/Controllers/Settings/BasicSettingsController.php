@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\MonnifyAPISetting;
 use App\Models\School;
 use App\Models\Session;
+use App\Models\Subscription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File as File;
@@ -32,10 +33,10 @@ class BasicSettingsController extends Controller
             'school_email' => 'required|email',
             'address'=>'required',
             'school_phone' => 'required',
-            'website' => 'required',
+            'website' => 'nullable',
             'session_id' => 'required',
             'term' => 'required',
-            'motto' => 'required',
+            'motto' => 'nullable',
             
         ]);
        
@@ -69,6 +70,20 @@ class BasicSettingsController extends Controller
         }
 
         $school->save();
+
+        $subscriptions = $school->subscriptions();
+
+        if ($subscriptions->count() === 0) {
+           
+            $subscription = new Subscription();
+            $subscription->school_id = $school->id;
+            $subscription->session_id = $request->session_id;
+            $subscription->term = $school->term;
+            $subscription->plan_id = 1;
+            $subscription->subscription_type = 'trial';
+            $subscription->save();
+
+        } 
 
         return response()->json([
             'status'=>200,

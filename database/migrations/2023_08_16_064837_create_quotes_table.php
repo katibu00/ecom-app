@@ -13,14 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('sections', function (Blueprint $table) {
+        Schema::create('quotes', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->unsignedBigInteger('school_id');
-        
-            $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');
+            $table->text('quote');
+            $table->string('author')->nullable();
+            $table->timestamps();
         });
-        
     }
 
     /**
@@ -30,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sections');
+        Schema::dropIfExists('quotes');
     }
 };

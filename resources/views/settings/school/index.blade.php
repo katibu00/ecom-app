@@ -27,12 +27,11 @@ $route = Route::current()->getName();
                 <div class="card mb-4">
                     <h5 class="card-header">School Basic Settings</h5>
                     <!-- Account -->
-                    <ul id="error_list"></ul>
+                    <div class="container"><ul id="error_list"></ul></div>
                     <form id="edit_school_form" method="POST" enctype="multipart/form-data">
                         <div class="card-body">
                             <div class="d-flex align-items-start align-items-sm-center gap-4">
-                                <img @if ($school->logo == 'default.jpg') src="/uploads/no-image.jpg" @else src="/uploads/{{ $school->username }}/{{ $school->logo }}" @endif
-                                    alt="school logo" class="d-block w-px-100 h-px-100 rounded" id="uploadedAvatar" />
+                                <img src="/uploads/{{ $school->logo ? '/'. $school->username.'/'.$school->logo : 'no-image.jpg' }}" alt="school logo" class="d-block w-px-100 h-px-100 rounded" id="uploadedAvatar" />
                                 <div class="button-wrapper">
                                     <label for="upload" class="btn btn-primary me-2 mb-3" tabindex="0">
                                         <span class="d-none d-sm-block">Upload new logo</span>
@@ -137,16 +136,6 @@ $route = Route::current()->getName();
                                         </select>
                                     </div>
                                 </div>
-                                <div class="row mb-3">
-                                    <label class="col-sm-2 col-form-label">Fee/Head/Term</label>
-                                    <div class="col-sm-10">
-                                        <input type="number" class="form-control" name="service_fee"
-                                            value="{{ $school->service_fee }}"
-                                            placeholder="Negociated Service Fee/Student" disabled>
-                                    </div>
-                                </div>
-
-
 
                             </div>
                             <div class="mt-2">

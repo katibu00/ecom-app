@@ -11,7 +11,7 @@ class BankAccountsController extends Controller
 {
     public function index()
     {
-        $data['bank_accounts'] = BankAccount::select('id', 'name','bank','number','status')->where('school_id',auth()->user()->school_id)->latest()->get();
+        $data['bank_accounts'] = BankAccount::select('id', 'name','bank','number','status')->where('school_id',auth()->user()->school_id)->get();
         return view('settings.bank_accounts.index', $data);
     }
 

@@ -18,14 +18,13 @@ return new class extends Migration
             $table->string('name');
             $table->string('motto')->nullable();
             $table->string('username');
-            $table->string('state');
-            $table->string('lga');
+            $table->string('state')->nullable();
+            $table->string('lga')->nullable();;
             $table->string('address');
-            $table->unsignedInteger('service_fee');
             $table->string('phone_first');
             $table->string('phone_second')->nullable();
             $table->string('email')->nullable();
-            $table->string('website');
+            $table->string('website')->nullable();
             $table->string('logo')->nullable();
             $table->unsignedBigInteger('session_id')->nullable();
             $table->string('term')->nullable();

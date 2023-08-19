@@ -13,14 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('sections', function (Blueprint $table) {
+        Schema::create('price_plans', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->unsignedBigInteger('school_id');
-        
-            $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');
+            $table->integer('price');
+            $table->json('features');
+            $table->string('status')->default('active');
+            $table->timestamps();
         });
-        
     }
 
     /**
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sections');
+        Schema::dropIfExists('price_plans');
     }
 };

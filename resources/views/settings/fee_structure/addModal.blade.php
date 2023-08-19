@@ -33,9 +33,9 @@
                             <label for="termSelect" class="form-label">Term:</label>
                             <select class="form-select form-select-sm" id="termSelect" name="term" required>
                                 <option value=""></option>
-                                <option value="1">First Term</option>
-                                <option value="2">Second Term</option>
-                                <option value="3">Third Term</option>
+                                <option value="first">First Term</option>
+                                <option value="second">Second Term</option>
+                                <option value="third">Third Term</option>
                             </select>
                         </div>
                     </div>

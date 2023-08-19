@@ -193,19 +193,21 @@
                                                     <div class="col-sm-6">
                                                         <label class="form-label" for="school_username">School
                                                             Username</label>
-                                                        <small class="form-text text-muted">unique username to access
+                                                        <small class="form-text text-muted">Unique username to access
                                                             your school portal. Example: username.intelps.cloud</small>
                                                         <input type="text" id="school_username"
                                                             name="school_username" class="form-control"
                                                             placeholder="Enter school username" />
                                                     </div>
                                                     <div class="col-sm-6">
-                                                        <label class="form-label" for="school_website">School
+                                                        <label class="form-label" for="school_url">School
                                                             URL</label>
-                                                        <input type="text" id="school_website"
-                                                            name="school_website" class="form-control"
-                                                            placeholder="Enter school website (optional)" />
+                                                        <input type="text" id="school_url"
+                                                            name="school_url" class="form-control"
+                                                            placeholder="{username}.intelps.cloud" disabled />
                                                     </div>
+
+
                                                     <div class="col-sm-6">
                                                         <label class="form-label" for="school_phone">School Phone
                                                             Number</label>
@@ -232,8 +234,8 @@
                                                     <div class="col-sm-6">
                                                         <label class="form-label"
                                                             for="state">State/Province</label>
-                                                        <input type="text" id="state" class="form-control"
-                                                            placeholder="Enter state/province" />
+                                                        <input type="text" id="state" name="state"
+                                                            class="form-control" placeholder="Enter state/province" />
                                                     </div>
                                                     <!-- Add more school information fields here -->
                                                     <div class="col-12 d-flex justify-content-between">
@@ -284,12 +286,13 @@
                                                             class="form-control" placeholder="Enter password" />
                                                     </div>
                                                     <div class="col-sm-6">
-                                                        <label class="form-label" for="confirm_password">Confirm
+                                                        <label class="form-label" for="password_confirmation">Confirm
                                                             Password</label>
-                                                        <input type="password" id="confirm_password"
-                                                            name="confirm-password" class="form-control"
+                                                        <input type="password" id="password_confirmation"
+                                                            name="password_confirmation" class="form-control"
                                                             placeholder="Confirm password" />
                                                     </div>
+
                                                     <!-- Add more administrator details fields here -->
                                                     <div class="col-12 d-flex justify-content-between">
                                                         <button type="button"
@@ -383,7 +386,7 @@
                                     <a href="https://help.intelps.cloud" target="_blank"
                                         class="footer-link me-4">Knowledge Base</a>
 
-                                  
+
                                 </div>
                             </div>
                         </div>
@@ -446,6 +449,12 @@
             $("#signupForm").on("submit", function(e) {
                 e.preventDefault();
 
+                var submitButton = $(".btn-submit");
+                submitButton.prop("disabled", true);
+                submitButton.html(
+                    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp;Please Wait...'
+                );
+
                 var formData = $(this).serialize();
                 $.ajax({
                     url: "signup", // Replace with your backend URL
@@ -484,7 +493,7 @@
                             $.each(errors, function(field, messages) {
                                 var formControl = $("#" +
                                     field
-                                    ); // Make sure 'field' matches the IDs in the HTML
+                                ); // Make sure 'field' matches the IDs in the HTML
                                 formControl.addClass("is-invalid");
 
                                 // Append each error message to the error container
@@ -496,22 +505,30 @@
 
                             // Show the error container
                             $("#error-container").removeClass("d-none");
+                            submitButton.prop("disabled", false);
+                            submitButton.text("Submit");
                         }
                     },
                 });
             });
 
-            // Custom logic to append username.intelps.cloud to the school URL field
-            $("#school-username").on("change", function() {
+            $("#school_username").on("input", function() {
                 var schoolUsername = $(this).val();
-                var schoolURLField = $("#school-website");
+                var schoolURLField = $("#school_url");
+
                 if (schoolUsername) {
                     var schoolURL = "https://" + schoolUsername + ".intelps.cloud";
                     schoolURLField.val(schoolURL);
+
                 } else {
                     schoolURLField.val("");
+
                 }
             });
+
+
+
+
         });
     </script>
 

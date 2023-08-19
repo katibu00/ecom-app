@@ -2,7 +2,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="copyModalLabel">Copy Fee Structure for [Class Name]</h5>
+                <h5 class="modal-title" id="copyModalLabel">Copy Fee Structure of [Class Name]</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -31,9 +31,9 @@
                         <label for="copyTerm">Term</label>
                         <select class="form-select" id="copyTerm" name="copy_term">
                             <option value=""></option>
-                            <option value="1">First Term</option>
-                            <option value="2">Second Term</option>
-                            <option value="3">Third Term</option>
+                            <option value="first">First Term</option>
+                            <option value="second">Second Term</option>
+                            <option value="third">Third Term</option>
                         </select>
                     </div>
                 </form>

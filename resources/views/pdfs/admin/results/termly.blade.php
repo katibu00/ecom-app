@@ -68,8 +68,14 @@
 </head>
 @php
     $count = $students->count();
-    $settings = App\Models\ResultSettings::where('School_id',auth()->user()->school_id)->first();
+    $settings = App\Models\ResultSettings::where('School_id', auth()->user()->school_id)->first();
+        if (!$settings) {
+        $settings = new App\Models\ResultSettings();
+        $settings->School_id = auth()->user()->school_id;
+        $settings->save();
+    }
 @endphp
+
 
 <body>
 

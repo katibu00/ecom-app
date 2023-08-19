@@ -8,7 +8,7 @@ $userType = auth()->user()->usertype;
     <div class="app-brand demo">
       <a href="#" class="app-brand-link">
         <span class="app-brand-logo demo">
-            <img src="/uploads/{{ $school->username }}/{{ $school->logo }}" width="25" height="25" />
+          <img src="/uploads/{{ $school->logo ? '/'. $school->username.'/'.$school->logo : 'no-image.jpg' }}" width="25" height="25" />
         </span>
         <span class="app-brand-text demo menu-text">{{ $school->username }}</span>
       </a>

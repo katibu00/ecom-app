@@ -90,16 +90,9 @@
             let class_id = $(this).data('class_id');
             let std_type = $(this).data('std_type');
             let term = $(this).data('term');
-            var termName = '';
-            if (term == 1) {
-                termName = "First";
-            } else if (term == 2) {
-                termName = "Second";
-            } else if (term == 3) {
-                termName = "Third";
-            }
+            
 
-            $("#modalTitle").html('Fee Details: ' + name + ' - ' + std_type + ' (' + termName +
+            $("#modalTitle").html('Fee Details: ' + name + ' - ' + std_type + ' (' + term +
                 ' Term)');
 
 
@@ -402,13 +395,10 @@
                 type: 'POST',
                 data: data,
                 success: function(response) {
+                   
                     $('#copyModal').modal('hide');
-                    if (response.message && response.status === 'success') {
-                        toastr.success(response.message);
-                        location.reload();
-                    } else if (response.message && response.status === 'error') {
-                        toastr.error(response.message);
-                    }
+                    toastr.success(response.message);
+                    location.reload();
                    
                 },
                 complete: function() {

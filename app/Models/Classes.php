@@ -85,7 +85,7 @@ class Classes extends Model
     public function getFeeCollectionProgress()
     {
         $totalExpectedFee = $this->feeStructures()->where('student_type', 'regular')->sum('amount'); // Assuming the feeStructures relationship exists
-        $totalCollectedFee = $this->paymentRecords()->sum('paid_amount'); // Assuming the paymentRecords relationship exists
+        $totalCollectedFee = $this->paymentRecords()->sum('amount'); // Assuming the paymentRecords relationship exists
 
         if ($totalExpectedFee === 0) {
             return 0;
@@ -99,5 +99,17 @@ class Classes extends Model
     {
         return $this->hasManyThrough(Mark::class, User::class, 'class_id', 'student_id');
     }
+
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class,'class_id');
+    }
+
+    public function psychomotorSubmits()
+    {
+        return $this->hasMany(PsychomotorSubmit::class,'class_id');
+    }
+
 
 }

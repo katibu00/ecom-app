@@ -220,6 +220,7 @@
         </li>
     </ul>
 </li>
+
 <li class="menu-item {{ $prefix == '/student_documents' ? 'active open' : '' }}">
     <a href="javascript:void(0);" class="menu-link menu-toggle">
         <i class="menu-icon tf-icons ti ti-book-download"></i>
@@ -345,4 +346,11 @@
         </li>
 
     </ul>
+</li>
+
+<li class="menu-item {{ $route == 'account_information.index' ? 'active' : '' }}">
+    <a href="{{ route('account_information.index') }}" class="menu-link">
+        <i class="menu-icon tf-icons ti ti-receipt"></i>
+        <div data-i18n="Account Information">Account Information</div>
+    </a>
 </li>

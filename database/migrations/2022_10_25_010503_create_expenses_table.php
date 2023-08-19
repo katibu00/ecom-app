@@ -26,6 +26,7 @@ return new class extends Migration
             $table->integer('number');
             $table->double('amount');
             $table->tinyInteger('status')->default(0);
+            $table->timestamps();
         
             $table->foreign('school_id')->references('id')->on('schools');
             $table->foreign('session_id')->references('id')->on('sessions');

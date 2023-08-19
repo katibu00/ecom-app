@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountInformationController;
 use App\Http\Controllers\Accounting\ExpensesController;
 use App\Http\Controllers\Accounting\FeeCollectionController;
 use App\Http\Controllers\Accounting\InvoicesController;
@@ -427,6 +428,10 @@ Route::get('/{username}/exams', [StudentCBTController::class, 'listExams'])->nam
 Route::group(['prefix' => 'cbt/student', 'middleware' => []], function () {
     Route::get('/exams', [StudentCBTController::class, 'takeExam'])->name('cbt.student.exams.show');
     Route::get('/exam-result/{examId}/{score}', [StudentCBTController::class, 'showResult'])->name('cbt.student.exams.result');
+
+});
+Route::group(['prefix' => 'account_information', 'middleware' => ['auth','admin']], function () {
+    Route::get('/', [AccountInformationController::class, 'index'])->name('account_information.index');
 
 });
 
