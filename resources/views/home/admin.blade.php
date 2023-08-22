@@ -523,94 +523,96 @@
         chart.render();
     </script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const weeklyEarningReportsEl = document.querySelector("#weeklyEarningReports");
-            const currentYearData = {!! json_encode($monthlyIncomes) !!};
-
-            weeklyEarningReportsConfig = {
-                chart: {
-                    height: 202,
-                    parentHeightOffset: 0,
-                    type: 'bar',
-                    toolbar: {
-                        show: false
-                    }
-                },
-                plotOptions: {
-                    bar: {
-                        barHeight: '60%',
-                        columnWidth: '38%',
-                        startingShape: 'rounded',
-                        endingShape: 'rounded',
-                        borderRadius: 4,
-                        distributed: true
-                    }
-                },
-                grid: {
-                    show: false,
-                    padding: {
-                        top: -30,
-                        bottom: 0,
-                        left: -10,
-                        right: -10
-                    }
-                },
-                colors: [
-                    '#0000FF',
-                ],
-                dataLabels: {
-                    enabled: false
-                },
-                series: [{
-                    data: Object.values(currentYearData),
-                }, ],
-                legend: {
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const weeklyEarningReportsEl = document.querySelector("#weeklyEarningReports");
+        const currentYearData = {!! json_encode($monthlyIncomes) !!};
+        
+        // Extract the total_income values from the currentYearData array
+        const incomeData = currentYearData.map(item => item.total_income);
+        
+        weeklyEarningReportsConfig = {
+            chart: {
+                height: 202,
+                parentHeightOffset: 0,
+                type: 'bar',
+                toolbar: {
+                    show: false
+                }
+            },
+            plotOptions: {
+                bar: {
+                    barHeight: '60%',
+                    columnWidth: '38%',
+                    startingShape: 'rounded',
+                    endingShape: 'rounded',
+                    borderRadius: 4,
+                    distributed: true
+                }
+            },
+            grid: {
+                show: false,
+                padding: {
+                    top: -30,
+                    bottom: 0,
+                    left: -10,
+                    right: -10
+                }
+            },
+            colors: [
+                '#0000FF',
+            ],
+            dataLabels: {
+                enabled: false
+            },
+            series: [{
+                data: incomeData, // Use the extracted incomeData array
+            }],
+            legend: {
+                show: false
+            },
+            xaxis: {
+                categories: currentYearData.map(item => item.month_name), // Use month_name from currentYearData
+                axisBorder: {
                     show: false
                 },
-                xaxis: {
-                    categories: [
-                        @foreach ($months as $month)
-                            "{{ $month['month_name'] }}",
-                        @endforeach
-                    ],
-                    axisBorder: {
-                        show: false
-                    },
-                    axisTicks: {
-                        show: false
-                    },
-                    labels: {
-                        style: {
-                            colors: '#0000FF',
-                            fontSize: '13px',
-                            fontFamily: 'Public Sans'
-                        }
-                    }
+                axisTicks: {
+                    show: false
                 },
-                yaxis: {
-                    labels: {
-                        show: false
+                labels: {
+                    style: {
+                        colors: '#0000FF',
+                        fontSize: '13px',
+                        fontFamily: 'Public Sans'
                     }
-                },
-                tooltip: {
-                    enabled: true
-                },
-                responsive: [{
-                    breakpoint: 1025,
-                    options: {
-                        chart: {
-                            height: 199
-                        }
+                }
+            },
+            yaxis: {
+                labels: {
+                    show: false
+                }
+            },
+            tooltip: {
+                enabled: true
+            },
+            responsive: [{
+                breakpoint: 1025,
+                options: {
+                    chart: {
+                        height: 199
                     }
-                }]
-            };
-            if (typeof weeklyEarningReportsEl !== undefined && weeklyEarningReportsEl !== null) {
-                const weeklyEarningReports = new ApexCharts(weeklyEarningReportsEl, weeklyEarningReportsConfig);
-                weeklyEarningReports.render();
-            }
-        });
-    </script>
+                }
+            }]
+        };
+        if (typeof weeklyEarningReportsEl !== undefined && weeklyEarningReportsEl !== null) {
+            const weeklyEarningReports = new ApexCharts(weeklyEarningReportsEl, weeklyEarningReportsConfig);
+            weeklyEarningReports.render();
+        }
+    });
+</script>
+
+
+
 
 
 @endsection

@@ -5,12 +5,10 @@ namespace App\Http\Controllers\Users;
 use App\Http\Controllers\Controller;
 use App\Models\School;
 use App\Models\User;
-use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\File as File;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\File as File;
 use Intervention\Image\Facades\Image;
 
 class StaffsController extends Controller
@@ -18,29 +16,31 @@ class StaffsController extends Controller
     public function index()
     {
         $school_id = auth()->user()->school_id;
-        $data['staffs'] = User::select('id', 'image', 'first_name', 'phone', 'last_name', 'login', 'usertype', 'status')
-                                    ->where('school_id', $school_id)
-                                    ->where('status', 1)
-                                    ->whereNotIn('usertype', ['std', 'parent', 'intellisas'])
-                                    ->orderBy('first_name')
-                                    ->paginate(15);
+        $data['staffData'] = User::select('id', 'image','email', 'first_name', 'phone', 'last_name', 'login', 'usertype', 'status')
+            ->where('school_id', $school_id)
+            ->where('status', 1)
+            ->whereNotIn('usertype', ['std', 'parent', 'intellisas'])
+            ->orderBy('first_name')
+            ->orderBy('last_name')
+            ->get();
     
-        $data['school'] = School::select('username')->where('id',$school_id)->first();
-        return view('users.staffs.index',$data);
+        $data['school'] = School::select('username')->where('id', $school_id)->first();
+        return view('users.staffs.index', $data);
     }
+    
     public function paginate()
     {
         $school_id = auth()->user()->school_id;
-        $data['staffs'] = User::select('id', 'image','first_name','phone','last_name','login','usertype','status')
-                                    ->where('usertype','!=','std')
-                                    ->where('usertype','!=','parent')
-                                    ->where('usertype','!=','intellisas')
-                                    ->where('school_id',$school_id)
-                                    ->where('status',1)
-                                    ->orderBy('first_name')
-                                    ->paginate(15);       
-         $data['school'] = School::select('username')->where('id',auth()->user()->school_id)->first();
-        return view('users.staffs.table',$data)->render();
+        $data['staffs'] = User::select('id', 'image', 'first_name', 'phone', 'last_name', 'login', 'usertype', 'status')
+            ->where('usertype', '!=', 'std')
+            ->where('usertype', '!=', 'parent')
+            ->where('usertype', '!=', 'intellisas')
+            ->where('school_id', $school_id)
+            ->where('status', 1)
+            ->orderBy('first_name')
+            ->paginate(15);
+        $data['school'] = School::select('username')->where('id', auth()->user()->school_id)->first();
+        return view('users.staffs.table', $data)->render();
     }
 
     public function create()
@@ -49,68 +49,111 @@ class StaffsController extends Controller
         return view('users.staffs.create');
     }
 
+
+
+
+
+
+
+    
     public function store(Request $request)
     {
-        
-        $rowCount = count($request->first_name);
-        if($rowCount != NULL){
-            for ($i=0; $i < $rowCount; $i++){
-                $data = new User();
-                $data->first_name = $request->title[$i].' '.$request->first_name[$i];
-                $data->last_name = $request->last_name[$i];
-
-                $login = $request->login[$i];
-                $fieldType = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
-                if($fieldType == 'email')
-                {
-                    $data->email = $request->login[$i];
-                }else{
-                    $data->phone = $request->login[$i];
+        $validator = Validator::make($request->all(), [
+            'staff_title.*' => 'required',
+            'staff_first_name.*' => 'required',
+            'staff_last_name.*' => 'required',
+            'staff_role.*' => 'required',
+        ]);
+    
+        $validator->sometimes('staff_email_phone.*', 'email|unique:users,email', function ($input) {
+            return filter_var($input->staff_email_phone, FILTER_VALIDATE_EMAIL);
+        });
+    
+        $validator->sometimes('staff_email_phone.*', 'unique:users,phone', function ($input) {
+            return !filter_var($input->staff_email_phone, FILTER_VALIDATE_EMAIL);
+        });
+    
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'errors' => $validator->errors()->toArray()], 422);
+        }
+    
+        $errors = [];
+        $staffData = [];
+    
+        foreach ($request->input('staff_title') as $index => $title) {
+            $data = [
+                'first_name' => $title.' '.$request->input('staff_first_name')[$index],
+                'last_name' => $request->input('staff_last_name')[$index],
+                'role' => $request->input('staff_role')[$index],
+            ];
+    
+            $emailPhone = $request->input('staff_email_phone')[$index];
+            if (filter_var($emailPhone, FILTER_VALIDATE_EMAIL)) {
+                if (User::where('email', $emailPhone)->exists()) {
+                    $errors['staff_email_phone.' . $index] = 'Already exsiting Email is Present in one of your rows.';
+                } else {
+                    $data['email'] = $emailPhone;
                 }
-                $password = Str::random(7, 'abcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*()');
-
-                $data->usertype = $request->usertype[$i];
-                $data->school_id = auth()->user()->school_id;
-                $data->password = Hash::make($password);
-                $data->middle_name = $password;
-                $data->save();
+            } else {
+                if (User::where('phone', $emailPhone)->exists()) {
+                    $errors['staff_email_phone.' . $index] = 'Already existing Phone is Present in one of your rows';
+                } else {
+                    $data['phone'] = $emailPhone;
+                }
             }
-        };
-       Toastr::success("Staffs Registered Successfully");
-       return redirect()->route('users.staffs.index');
+    
+            // Generate a random password
+            $password = Str::random(12);
+            $data['password'] = bcrypt($password);
+            $data['school_id'] = auth()->user()->school_id;
+            $data['middle_name'] = $password;
+            $data['usertype'] = $request->input('staff_role')[$index]; // Set usertype based on staff_role
+    
+            $staffData[] = $data;
+        }
+    
+        if (!empty($errors)) {
+            return response()->json(['success' => false, 'errors' => $errors], 422);
+        }
+    
+        // Insert the staff data into the appropriate table columns
+        foreach ($staffData as $data) {
+            User::create($data);
+        }
+    
+        return response()->json(['success' => true]);
     }
+    
+
     
 
     public function sort(Request $request)
     {
-        $data['school'] = School::select('username')->where('id',auth()->user()->school_id)->first();
+        $data['school'] = School::select('username')->where('id', auth()->user()->school_id)->first();
 
-        if($request->sort_staffs == 'all')
-        {
-            $data['staffs'] = User::select('id', 'image','first_name','phone','last_name','login','usertype','status')
-                            ->where('usertype','!=','std')
-                            ->where('usertype','!=','parent')
-                            ->where('usertype','!=','intellisas')
-                            ->where('school_id',auth()->user()->school_id)
-                            ->orderBy('first_name')
-                            ->paginate(50000);
-        }else{
+        if ($request->sort_staffs == 'all') {
+            $data['staffs'] = User::select('id', 'image', 'first_name', 'phone', 'last_name', 'login', 'usertype', 'status')
+                ->where('usertype', '!=', 'std')
+                ->where('usertype', '!=', 'parent')
+                ->where('usertype', '!=', 'intellisas')
+                ->where('school_id', auth()->user()->school_id)
+                ->orderBy('first_name')
+                ->paginate(50000);
+        } else {
 
-            $data['staffs'] = User::select('id', 'image','first_name','phone','last_name','login','usertype','status')
-                            ->where('usertype','!=','std')
-                            ->where('usertype','!=','parent')
-                            ->where('usertype','!=','intellisas')
-                            ->where('school_id',auth()->user()->school_id)
-                            ->where('status', $request->sort_staffs)
-                            ->orderBy('first_name')
-                            ->paginate(50000);
+            $data['staffs'] = User::select('id', 'image', 'first_name', 'phone', 'last_name', 'login', 'usertype', 'status')
+                ->where('usertype', '!=', 'std')
+                ->where('usertype', '!=', 'parent')
+                ->where('usertype', '!=', 'intellisas')
+                ->where('school_id', auth()->user()->school_id)
+                ->where('status', $request->sort_staffs)
+                ->orderBy('first_name')
+                ->paginate(50000);
         }
-      
-        if( $data['staffs']->count() > 0)
-        {
+
+        if ($data['staffs']->count() > 0) {
             return view('users.staffs.table', $data)->render();
-        }else
-        {
+        } else {
             return response()->json([
                 'status' => 404,
             ]);
@@ -119,71 +162,65 @@ class StaffsController extends Controller
 
     public function search(Request $request)
     {
-    
+
         $school_id = auth()->user()->school_id;
-        $data['school'] = School::select('username')->where('id',$school_id)->first();
+        $data['school'] = School::select('username')->where('id', $school_id)->first();
 
+        $data['staffs'] = User::select('id', 'image', 'first_name', 'phone', 'last_name', 'login', 'usertype', 'status')
+            ->where(function ($query) use ($request) {
+                $query->where('first_name', 'like', '%' . $request['query'] . '%')->orWhere('last_name', 'like', '%' . $request['query'] . '%');
+            })
+            ->where('usertype', '!=', 'std')
+            ->where('usertype', '!=', 'parent')
+            ->where('usertype', '!=', 'intellisas')
+            ->where('school_id', $school_id)
+            ->orderBy('first_name')
+            ->paginate(100000);
 
-        $data['staffs'] = User::select('id', 'image','first_name','phone','last_name','login','usertype','status')
-                                ->where(function($query) use ($request){
-                                    $query->where('first_name','like','%'.$request['query'].'%')->orWhere('last_name','like','%'.$request['query'].'%');
-                                })
-                                ->where('usertype','!=','std')
-                                ->where('usertype','!=','parent')
-                                ->where('usertype','!=','intellisas')
-                                ->where('school_id',$school_id)                              
-                                ->orderBy('first_name')
-                                ->paginate(100000);
-
-        if( $data['staffs']->count() )
-        {
+        if ($data['staffs']->count()) {
             return view('users.staffs.table', $data)->render();
-        }else
-        {
+        } else {
             return response()->json([
                 'status' => 404,
             ]);
         }
-       
+
     }
 
     public function details(Request $request)
     {
 
-        $staff = User::where('id', $request->staff_id)->where('school_id',auth()->user()->school_id)->first();
+        $staff = User::where('id', $request->staff_id)->where('school_id', auth()->user()->school_id)->first();
         $registered = $staff->created_at->diffForHumans();
-        $school_name = School::select('username')->where('id',auth()->user()->school_id)->first();
-       
-        if($staff)
-        {
+        $school_name = School::select('username')->where('id', auth()->user()->school_id)->first();
+
+        if ($staff) {
             return response()->json([
-                'status'=>200,
-                'staff'=>$staff,
-                'registered'=>$registered,
-                'school_name'=>$school_name,
+                'status' => 200,
+                'staff' => $staff,
+                'registered' => $registered,
+                'school_name' => $school_name,
             ]);
         }
-       
+
         return response()->json([
-            'status'=>400,
-            'message'=>'No User Found',
+            'status' => 400,
+            'message' => 'No User Found',
         ]);
     }
-
- 
 
     public function getStaffDetails(Request $request)
     {
 
         $staff = User::find($request->staff_id);
-        $school_username = School::select('username')->where('id',auth()->user()->school_id)->first();
+        $school_username = School::select('username')->where('id', auth()->user()->school_id)->first();
 
-        if($staff){
+        if ($staff) {
             return response()->json([
                 'staff' => $staff,
                 'school_username' => $school_username,
                 'status' => 200,
-            ]);  
+            ]);
         }
 
         return response()->json([
@@ -196,26 +233,25 @@ class StaffsController extends Controller
     {
         // return $request->all();
         $validator = Validator::make($request->all(), [
-            'first_name'=>'required',
-            'last_name'=>'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
             'usertype' => 'required',
         ]);
-       
-        if($validator->fails()){
+
+        if ($validator->fails()) {
             return response()->json([
-                'status'=>400,
-                'errors'=>$validator->messages(),
+                'status' => 400,
+                'errors' => $validator->messages(),
             ]);
         }
-        $school = School::select('username')->where('id',auth()->user()->school_id)->first();
-       
+        $school = School::select('username')->where('id', auth()->user()->school_id)->first();
+
         $staff = User::find($request->edit_staff_id);
         $staff->first_name = $request->first_name;
         $staff->last_name = $request->last_name;
         $staff->phone = $request->phone;
         $staff->email = $request->email;
         $staff->usertype = $request->usertype;
-      
 
         if ($request->file('image') != null) {
             $destination = 'uploads/' . $school->username . '/' . $staff->image;
@@ -223,24 +259,24 @@ class StaffsController extends Controller
             $file = $request->file('image');
             $extension = $file->getClientOriginalExtension();
             $filename = time() . '.' . $extension;
-        
+
             $image = Image::make($file)
                 ->resize(800, null, function ($constraint) {
                     $constraint->aspectRatio();
                     $constraint->upsize();
                 })
-                ->encode('jpg', 80); 
-        
+                ->encode('jpg', 80);
+
             $image->save('uploads/' . $school->username . '/' . $filename);
-        
+
             $staff->image = $filename;
         }
 
         $staff->update();
 
         return response()->json([
-            'status'=>200,
-            'message'=>'staff Profile Updated Successfully',
+            'status' => 200,
+            'message' => 'staff Profile Updated Successfully',
         ]);
     }
 }

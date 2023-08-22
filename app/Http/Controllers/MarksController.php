@@ -24,10 +24,10 @@ class MarksController extends Controller
 
         if($user->usertype == 'teacher' || $user->usertype == 'accountant')
         {
-            $data['subjects'] = AssignSubject::select('id', 'subject_id', 'class_id', 'designation')->where('teacher_id', $user->id)->get();
+            $data['subjects'] = AssignSubject::select('id', 'subject_id', 'class_id', 'designation')->where('school_id', $user->school_id)->where('teacher_id', $user->id)->get();
         }else
         {
-            $data['subjects'] = AssignSubject::select('id', 'subject_id', 'class_id', 'designation')->get();
+            $data['subjects'] = AssignSubject::select('id', 'subject_id', 'class_id', 'designation')->where('school_id', $user->school_id)->get();
         }
         $data['cas'] = CAScheme::where('school_id', $user->school_id)->get();
         return view('marks.create', $data);

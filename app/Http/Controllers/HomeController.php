@@ -175,9 +175,7 @@ class HomeController extends Controller
         $totalEnteredCAs = $this->calculateTotalEnteredCAs($classes, $school);
         $paymentSlips = $this->getPaymentSlips($school)->count(); // Define this function
         $monthlyIncomes = $this->getMonthlyIncomes($currentMonth, $currentYear, $school); // Define this function
-        $months = $this->generateMonths($currentMonth, $currentYear);
         $revenueThisMonth = $this->getRevenueThisMonth($currentMonth, $currentYear, $school); // Define this function
-
         $upcomingBirthdays = $this->getUpcomingBirthdays($school);
 
         $payments = $this->getLastPayments($school);
@@ -219,7 +217,7 @@ class HomeController extends Controller
 
         return view('home.admin', compact(
             'fee_collected', 'randomQuote', 'payments', 'totalEnteredCAs', 'totalCAs', 'paymentSlips', 'invoice_count',
-            'expectedRevenueSum', 'total_expenses', 'total_invoice', 'total_discount', 'total_pre_bal', 'monthlyIncomes', 'months',
+            'expectedRevenueSum', 'total_expenses', 'total_invoice', 'total_discount', 'total_pre_bal', 'monthlyIncomes',
             'revenueThisMonth', 'totalStudents', 'totalParents', 'totalStaff', 'upcomingBirthdays','school'
         ));
     }
@@ -233,23 +231,6 @@ class HomeController extends Controller
             ->sum('amount');
 
         return $revenueThisMonth;
-    }
-
-    public function generateMonths($currentMonth, $currentYear)
-    {
-        $months = [];
-
-        for ($i = 5; $i >= 0; $i--) {
-            $monthNumber = ($currentMonth - $i <= 0) ? $currentMonth - $i + 12 : $currentMonth - $i;
-            $monthName = Carbon::create($currentYear, $monthNumber, 1)->format('M');
-
-            $months[] = [
-                'month_number' => $monthNumber,
-                'month_name' => $monthName,
-            ];
-        }
-
-        return $months;
     }
 
     public function getMonthlyIncomes($currentMonth, $currentYear, $school)
