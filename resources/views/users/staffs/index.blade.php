@@ -159,63 +159,58 @@
 
 
 <!-- Edit Profile Modal -->
-<div class="modal fade" id="editModal">
-    <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="edit_staff_modal_title">Loading . . .</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal">
-                </button>
+                <h5 class="modal-title" id="editProfileModalLabel">Loading...</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="edit_staff_form" enctype="multipart/form-data">
+            <div class="container"><ul id="edit_error_list"></ul></div>
+            <form id="editProfileForm" enctype="multipart/form-data">
                 <div class="modal-body">
-                    <div class="" id="edit_loading_div">
-                        <div class="col-12 d-flex align-items-center justify-content-center">
-                        <div class="spinner-border" style="height: 40px; width: 40px; margin: 0 auto;" role="status"></div>
+                    <div class="loading-section" id="loadingSection">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <div class="spinner-border" role="status"></div>
                         </div>
                     </div>
-                    <input type="hidden" id="edit_staff_id" name="edit_staff_id" />
-                
-                    <div class="profile-personal-info d-none" id="edit_content_div">
-        
-
+                    <input type="hidden" id="userId" name="userId" />
+                    <div class="profile-section d-none" id="contentSection">
                         <div class="mb-3 row">
                             <div class="col-md-12">
                                 <div class="profile-img-edit">
-                                    <img class="profile-pic" id="edit_staff_picture" width="150" height="150" src="/uploads/default.png" alt="staff picture">
+                                    <img class="profile-pic mb-2" id="profileImage" width="150" height="150" src="/uploads/default.png" alt="Staff Picture">
                                     <div class="p-image">
-                                    <i class="fa fa-pencil  upload-button"></i>
-                                    <input class="file-upload" type="file" accept="image/*" name="image" />
+                                        <i class="fa fa-pencil upload-button"></i>
+                                        <input class="file-upload" type="file" accept="image/*" name="image" />
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="edit_first_name">First Name</label>
-                                <input type="text" class="form-control" id="edit_first_name" value="" name="first_name" placeholder="First Name">
+                                <label for="firstName">First Name</label>
+                                <input type="text" class="form-control" id="firstName" name="first_name" placeholder="First Name">
                             </div>
                             <div class="col-md-6 mt-2 mt-sm-0">
-                                <label for="edit_last_name">Other Names</label>
-                                <input type="text" class="form-control" id="edit_last_name" name="last_name" placeholder="Other Names">
+                                <label for="lastName">Other Names</label>
+                                <input type="text" class="form-control" id="lastName" name="last_name" placeholder="Other Names">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="edit_email">Email</label>
-                                <input type="text" class="form-control" id="edit_email" name="email" placeholder="Email">
+                                <label for="email">Email</label>
+                                <input type="text" class="form-control" id="email" name="email" placeholder="Email">
                             </div>
                             <div class="col-md-6">
-                                <label for="edit_roll_number">Phone Number</label>
-                                <input type="text" class="form-control" id="edit_phone_number" name="phone" placeholder="Phone Number">
+                                <label for="phoneNumber">Phone Number</label>
+                                <input type="text" class="form-control" id="phoneNumber" name="phone" placeholder="Phone Number">
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6 mt-2 mt-sm-0">
-                                <label for="edit_usertype">Role</label>
-                                <select class="form-select" name="usertype" id="edit_usertype" required>
+                                <label for="userType">Role</label>
+                                <select class="form-select" name="usertype" id="userType" required>
                                     <option value=""></option>
                                     <option value="teacher">Teacher</option>
                                     <option value="admin">Administrator</option>
@@ -225,21 +220,43 @@
                                     <option value="staff">Non-teaching Staff</option>
                                 </select>  
                             </div>
-                            
+                            <!-- Add other input fields here -->
                         </div>
-                        
-                    
                     </div>
-                    
                 </div>
-
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Dismiss</button>
-                    <button type="submit" id="edit_staff_btn" class="btn btn-primary">Save Changes</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Dismiss</button>
+                    <button type="submit" id="saveProfileBtn" class="btn btn-primary">Save Changes</button>
                 </div>
             </form>
         </div>
     </div>
+</div>
+
+<div class="modal fade" id="userDetailsModal" tabindex="-1" aria-labelledby="userDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userDetailsModalLabel">User Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="loading-section" id="userLoadingSection">
+                    <div class="d-flex align-items-center justify-content-center">
+                        <div class="spinner-border" role="status"></div>
+                    </div>
+                </div>
+                <div class="user-details-section d-none" id="userDetailsSection">
+                    <!-- Display user details here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 
@@ -249,112 +266,216 @@
 
 @section('js')
 
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.min.css">
 <script>
 
-$(document).on('click', '.edit_staff', function(e) {
-            e.preventDefault();
+$(document).ready(function() {
+   
+    $(document).on('click', '.edit-profile-btn', function(e) {
+        e.preventDefault();
 
-            let staff_id = $(this).data('user-id');
-            let staff_name = $(this).data('user-name');
-            $('#edit_staff_id').val(staff_id);
+        let userId = $(this).data('user-id');
+        let userName = $(this).data('user-name');
+        $('#userId').val(userId);
 
-            $('#edit_loading_div').removeClass('d-none');
-            $('#edit_content_div').addClass('d-none');
-            $('#edit_staff_form')[0].reset();
-            $('#edit_usertype option:selected').removeAttr('selected');
-            $('#edit_staff_modal_title').html('Edit ' + staff_name + 's Profile');
+        $('#edit_error_list').html("").removeClass('alert alert-danger');
 
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
+        $('#loadingSection').removeClass('d-none');
+        $('#contentSection').addClass('d-none');
+        $('#editProfileForm')[0].reset();
+        $('#userType option:selected').removeAttr('selected');
+        $('#editProfileModalLabel').html(`Edit ${userName}'s Profile`);
 
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('get-staff_details') }}',
-                data: {
-                    'staff_id': staff_id,
-                },
-                success: function(res) {
-
-                    if (res.staff.image != null) {
-                        $("#edit_staff_picture").attr("src", "/uploads/" + res
-                            .school_username.username + '/' + res.staff.image);
-                    }
-
-                    $('#edit_loading_div').addClass('d-none');
-                    $('#edit_content_div').removeClass('d-none');
-                    $('#edit_first_name').val(res.staff.first_name);
-                    $('#edit_last_name').val(res.staff.last_name);
-                    $('#edit_email').val(res.staff.email);
-                    $('#edit_phone_number').val(res.staff.phone);
-                    $(`#edit_usertype option[value="${res.staff.usertype}"]`).attr(
-                        "selected", "selected");
-                   
-
-
-
-                }
-            });
-
-
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
         });
 
-        //edit staffs form
-        $(document).on('submit', '#edit_staff_form', function(e) {
-            e.preventDefault();
-
-            let formData = new FormData($('#edit_staff_form')[0]);
-
-            spinner =
-                '<div class="spinner-border" style="height: 15px; width: 15px;" role="status"></div>&nbsp; Saving . . .'
-            $('#edit_staff_btn').html(spinner);
-            $('#edit_staff_btn').attr("disabled", true);
-
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        $.ajax({
+            type: 'POST',
+            url: '{{ route('get-staff_details') }}',
+            data: {
+                'staff_id': userId,
+            },
+            success: function(res) {
+                if (res.staff.image != null) {
+                    $("#profileImage").attr("src", "/uploads/" + res.school_username.username + '/' + res.staff.image);
+                }else{
+                    $("#profileImage").attr("src", "/uploads/default.png");
                 }
-            });
+            
 
-            $.ajax({
-                type: "POST",
-                url: "https://app.intelps.cloud/users/staffs/edit",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
+                $('#loadingSection').addClass('d-none');
+                $('#contentSection').removeClass('d-none');
+                $('#firstName').val(res.staff.first_name);
+                $('#lastName').val(res.staff.last_name);
+                $('#email').val(res.staff.email);
+                $('#phoneNumber').val(res.staff.phone);
+                $('#userType').val(res.staff.usertype); // Assuming this is the ID of the selected option in your dropdown
+                // Other fields...
+            }
 
-                    if (response.status == 400) {
-                        $('#error_list').html("");
-                        $('#error_list').addClass('alert alert-danger');
-                        $.each(response.errors, function(key, err) {
-                            $('#error_list').append('<li>' + err + '</li>');
+        });
+    });
+
+    $(document).on('submit', '#editProfileForm', function(e) {
+        e.preventDefault();
+
+        let formData = new FormData($('#editProfileForm')[0]);
+
+        let spinner = '<div class="spinner-border" style="height: 15px; width: 15px;" role="status"></div>&nbsp; Saving...';
+        $('#saveProfileBtn').html(spinner);
+        $('#saveProfileBtn').attr("disabled", true);
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "{{ route('users.staffs.edit') }}",
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                if (response.status == 400) {
+                    $('#edit_error_list').html("").addClass('alert alert-danger');
+                    $.each(response.errors, function(key, err) {
+                        $('#edit_error_list').append('<li>' + err + '</li>');
+                    });
+                    $('#saveProfileBtn').text("Save Changes").attr("disabled", false);
+                    toastr["error"]("Some Required Fields are not Filled");
+                } else if (response.status == 200) {
+                    toastr["success"](response.message);
+                    $('#saveProfileBtn').text("Save Changes").attr("disabled", false);
+                    $('#editProfileModal').modal('hide');
+                    $('.mainStaffTable').load(location.href + ' .mainStaffTable');
+                }
+            }
+        });
+    });
+
+    $(document).on('click', '.view-details', function(e) {
+        e.preventDefault();
+
+        let userId = $(this).data('user-id');
+        let userName = $(this).data('user-name');
+
+        $('#userDetailsModalLabel').text('Details for ' + userName);
+        $('#userLoadingSection').removeClass('d-none');
+        $('#userDetailsSection').addClass('d-none');
+        $('#userDetailsSection').html(''); // Clear previous user details
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            type: 'POST',
+            url: '{{ route('get-staff_details') }}', 
+            data: {
+                'staff_id': userId,
+            },
+            success: function(res) {
+
+                let userDetailsHtml = '';
+                let role = res.staff.usertype || '';
+                role = role.charAt(0).toUpperCase() + role.slice(1);
+                userDetailsHtml += '<p><strong>First Name:</strong> ' + (res.staff.first_name || '') + '</p>';
+                userDetailsHtml += '<p><strong>Last Name:</strong> ' + (res.staff.last_name || '') + '</p>';
+                userDetailsHtml += '<p><strong>Email:</strong> ' + (res.staff.email || '') + '</p>';
+                userDetailsHtml += '<p><strong>Phone Number:</strong> ' + (res.staff.phone || '') + '</p>';
+                userDetailsHtml += '<p><strong>Role:</strong> ' + role + '</p>';
+
+                $('#userLoadingSection').addClass('d-none');
+                $('#userDetailsSection').removeClass('d-none');
+                $('#userDetailsSection').html(userDetailsHtml);
+            }
+        });
+    });
+
+
+
+    $(document).on('click', '.delete-user', function(e) {
+        e.preventDefault();
+
+        let userId = $(this).data('user-id');
+        let userName = $(this).data('user-name');
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: `You are about to delete ${userName}'s profile. This action cannot be undone.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('staffs.delete') }}', // Replace with your actual delete route
+                    data: {
+                        'user_id': userId,
+                    },
+                    success: function(response) {
+                        // Handle success here, show a success message or update the UI
+                        Swal.fire({
+                            title: 'Deleted!',
+                            text: `${userName}'s profile has been deleted.`,
+                            icon: 'success'
                         });
-                        $('#edit_staff_btn').text("Save Changes");
-                        $('#edit_staff_btn').attr("disabled", false);
-                        Command: toastr["error"]("some Required Fields are not Filled")
+                        $('.mainStaffTable').load(location.href + ' .mainStaffTable');
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle error here, show an error message or alert the user
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'An error occurred while deleting the user.',
+                            icon: 'error'
+                        });
                     }
+                });
+            }
+        });
+    });
 
-                    if (response.status == 200) {
-                        Command: toastr["success"](response.message)
 
-                        $('#edit_staff_btn').text("Save Changes");
-                        $('#edit_staff_btn').attr("disabled", false);
-                        $('#editModal').modal('hide');
-                        $('.table').load(location.href + ' .table');
-                    }
+     //change profile picture
+     var readURL = function(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    $('.profile-pic').attr('src', e.target.result);
                 }
-            })
 
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+
+        $(".file-upload").on('change', function() {
+            readURL(this);
         });
 
+        $(".upload-button").on('click', function() {
+            $(".file-upload").click();
+        });
 
+});
 </script>
-
-
 
 
 

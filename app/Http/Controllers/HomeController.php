@@ -146,9 +146,10 @@ class HomeController extends Controller
         $lastMonth = ($currentMonth - 1 <= 0) ? 12 : $currentMonth - 1;
 
         $incomeRecords = PaymentRecord::select(
-            DB::raw('MONTH(created_at) as month'),
-            DB::raw('SUM(amount) as total_income')
-        )
+                DB::raw('MONTH(created_at) as month'),
+                DB::raw('SUM(amount) as total_income')
+            )
+            ->where('school_id', $school->id)
             ->whereYear('created_at', $currentYear)
             ->whereMonth('created_at', '>=', $currentMonth - 5)
             ->groupBy('month')
@@ -286,6 +287,7 @@ class HomeController extends Controller
 
         $allStudentIds = DB::table('users')
             ->where('usertype', 'std')
+            ->where('school_id', $school->id)
             ->pluck('id')
             ->toArray();
 
@@ -293,6 +295,7 @@ class HomeController extends Controller
             $paymentSlip = PaymentSlip::where('student_id', $studentId)
                 ->where('session_id', $school->session_id)
                 ->where('term', $school->term)
+                ->where('school_id', $school->id)
                 ->first();
 
             if ($paymentSlip) {
@@ -301,6 +304,7 @@ class HomeController extends Controller
                 $invoice = Invoice::where('student_id', $studentId)
                     ->where('session_id', $school->session_id)
                     ->where('term', $school->term)
+                    ->where('school_id', $school->id)
                     ->first();
 
                 if ($invoice) {
@@ -309,6 +313,7 @@ class HomeController extends Controller
                     $student = User::find($studentId);
                     $feeStructure = FeeStructure::where('class_id', $student->class_id)
                         ->where('term', $school->term)
+                        ->where('school_id', $school->id)
                         ->where('student_type', 'r')
                         ->first();
 
@@ -407,6 +412,7 @@ class HomeController extends Controller
     public function getLastPayments($school)
     {
         $lastPayments = PaymentRecord::where('term', $school->term)
+            ->where('school_id', $school->id)
             ->orderBy('created_at', 'desc')
             ->limit(5)
             ->get();
@@ -415,6 +421,7 @@ class HomeController extends Controller
 
         foreach ($lastPayments as $paymentRecord) {
             $paymentSlip = PaymentSlip::where('student_id', $paymentRecord->student_id)
+                ->where('school_id', $school->id)
                 ->where('session_id', $school->session_id)
                 ->where('term', $school->term)
                 ->first();
@@ -445,7 +452,7 @@ class HomeController extends Controller
 
         foreach ($classes as $class) {
             $assignedSubjects = $class->assignedSubjects;
-            $caSchemes = CAScheme::where('class_id', 'LIKE', "%{$class->id}%")->get();
+            $caSchemes = CAScheme::where('school_id', $school->id)->where('class_id', 'LIKE', "%{$class->id}%")->get();
 
             $totalEnteredCAs += Mark::whereNotNull('type')
                 ->where('class_id', $class->id)

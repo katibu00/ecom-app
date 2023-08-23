@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\MonnifyAPISetting;
 use App\Models\School;
 use App\Models\Session;
+use App\Models\SMSProvider;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -24,6 +25,12 @@ class BasicSettingsController extends Controller
     {
         $data['monnify'] = MonnifyAPISetting::where('school_id',auth()->user()->school_id)->first();
         return view('settings.monnify.index', $data);
+    }
+
+    public function SMSIndex()
+    {
+        $data['sms'] = SMSProvider::where('school_id',auth()->user()->school_id)->first();
+        return view('settings.sms.index', $data);
     }
 
     public function updateBasic(Request $request)

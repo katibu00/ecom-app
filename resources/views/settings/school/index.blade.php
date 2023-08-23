@@ -22,6 +22,10 @@ $route = Route::current()->getName();
                         <a class="nav-link {{ $route == 'settings.monnify.index' ? 'active' : '' }}" href="{{ route('settings.monnify.index') }}"><i
                                 class="ti-xs ti ti-building me-1"></i> Monnify API</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ $route == 'settings.sms_gateway.index' ? 'active' : '' }}" href="{{ route('settings.sms_gateway.index') }}"><i
+                                class="ti-xs ti ti-message me-1"></i> SMS Gateway</a>
+                    </li>
                    
                 </ul>
                 <div class="card mb-4">

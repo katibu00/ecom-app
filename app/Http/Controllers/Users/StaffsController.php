@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\File as File;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
+
+
 
 class StaffsController extends Controller
 {
@@ -28,32 +32,6 @@ class StaffsController extends Controller
         return view('users.staffs.index', $data);
     }
     
-    public function paginate()
-    {
-        $school_id = auth()->user()->school_id;
-        $data['staffs'] = User::select('id', 'image', 'first_name', 'phone', 'last_name', 'login', 'usertype', 'status')
-            ->where('usertype', '!=', 'std')
-            ->where('usertype', '!=', 'parent')
-            ->where('usertype', '!=', 'intellisas')
-            ->where('school_id', $school_id)
-            ->where('status', 1)
-            ->orderBy('first_name')
-            ->paginate(15);
-        $data['school'] = School::select('username')->where('id', auth()->user()->school_id)->first();
-        return view('users.staffs.table', $data)->render();
-    }
-
-    public function create()
-    {
-
-        return view('users.staffs.create');
-    }
-
-
-
-
-
-
 
     
     public function store(Request $request)
@@ -123,69 +101,6 @@ class StaffsController extends Controller
     
         return response()->json(['success' => true]);
     }
-    
-
-    
-
-    public function sort(Request $request)
-    {
-        $data['school'] = School::select('username')->where('id', auth()->user()->school_id)->first();
-
-        if ($request->sort_staffs == 'all') {
-            $data['staffs'] = User::select('id', 'image', 'first_name', 'phone', 'last_name', 'login', 'usertype', 'status')
-                ->where('usertype', '!=', 'std')
-                ->where('usertype', '!=', 'parent')
-                ->where('usertype', '!=', 'intellisas')
-                ->where('school_id', auth()->user()->school_id)
-                ->orderBy('first_name')
-                ->paginate(50000);
-        } else {
-
-            $data['staffs'] = User::select('id', 'image', 'first_name', 'phone', 'last_name', 'login', 'usertype', 'status')
-                ->where('usertype', '!=', 'std')
-                ->where('usertype', '!=', 'parent')
-                ->where('usertype', '!=', 'intellisas')
-                ->where('school_id', auth()->user()->school_id)
-                ->where('status', $request->sort_staffs)
-                ->orderBy('first_name')
-                ->paginate(50000);
-        }
-
-        if ($data['staffs']->count() > 0) {
-            return view('users.staffs.table', $data)->render();
-        } else {
-            return response()->json([
-                'status' => 404,
-            ]);
-        }
-    }
-
-    public function search(Request $request)
-    {
-
-        $school_id = auth()->user()->school_id;
-        $data['school'] = School::select('username')->where('id', $school_id)->first();
-
-        $data['staffs'] = User::select('id', 'image', 'first_name', 'phone', 'last_name', 'login', 'usertype', 'status')
-            ->where(function ($query) use ($request) {
-                $query->where('first_name', 'like', '%' . $request['query'] . '%')->orWhere('last_name', 'like', '%' . $request['query'] . '%');
-            })
-            ->where('usertype', '!=', 'std')
-            ->where('usertype', '!=', 'parent')
-            ->where('usertype', '!=', 'intellisas')
-            ->where('school_id', $school_id)
-            ->orderBy('first_name')
-            ->paginate(100000);
-
-        if ($data['staffs']->count()) {
-            return view('users.staffs.table', $data)->render();
-        } else {
-            return response()->json([
-                'status' => 404,
-            ]);
-        }
-
-    }
 
     public function details(Request $request)
     {
@@ -236,7 +151,18 @@ class StaffsController extends Controller
             'first_name' => 'required',
             'last_name' => 'required',
             'usertype' => 'required',
+            'email' => [
+                Rule::unique('users')->ignore($request->userId)->where(function ($query) {
+                    return $query->whereNotNull('email');
+                }),
+            ],
+            'phone' => [
+                Rule::unique('users')->ignore($request->userId)->where(function ($query) {
+                    return $query->whereNotNull('phone');
+                }),
+            ],
         ]);
+        
 
         if ($validator->fails()) {
             return response()->json([
@@ -246,31 +172,49 @@ class StaffsController extends Controller
         }
         $school = School::select('username')->where('id', auth()->user()->school_id)->first();
 
-        $staff = User::find($request->edit_staff_id);
+        $staff = User::find($request->userId);
         $staff->first_name = $request->first_name;
         $staff->last_name = $request->last_name;
         $staff->phone = $request->phone;
         $staff->email = $request->email;
         $staff->usertype = $request->usertype;
-
+        
         if ($request->file('image') != null) {
-            $destination = 'uploads/' . $school->username . '/' . $staff->image;
-            File::delete($destination);
+            $destination = public_path('uploads/' . $school->username);
+        
+            // Create the directory if it doesn't exist
+            if (!is_dir($destination)) {
+                mkdir($destination, 0777, true);
+            }
+        
+            // Delete the old image if it exists
+            if ($staff->image) {
+                $existingImagePath = $destination . '/' . $staff->image;
+                if (file_exists($existingImagePath)) {
+                    unlink($existingImagePath);
+                }
+            }
+        
             $file = $request->file('image');
             $extension = $file->getClientOriginalExtension();
             $filename = time() . '.' . $extension;
-
+        
             $image = Image::make($file)
                 ->resize(800, null, function ($constraint) {
                     $constraint->aspectRatio();
                     $constraint->upsize();
                 })
                 ->encode('jpg', 80);
-
-            $image->save('uploads/' . $school->username . '/' . $filename);
-
+        
+            // Save the image in the desired directory
+            $image->save($destination . '/' . $filename);
+        
             $staff->image = $filename;
         }
+        
+        
+        
+        
 
         $staff->update();
 
@@ -278,5 +222,19 @@ class StaffsController extends Controller
             'status' => 200,
             'message' => 'staff Profile Updated Successfully',
         ]);
+    }
+
+    public function delete(Request $request)
+    {
+        $userId = $request->input('user_id');
+
+        try {
+            $user = User::findOrFail($userId);
+            $user->delete();
+
+            return response()->json(['message' => 'User deleted successfully.'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to delete user.'], 500);
+        }
     }
 }

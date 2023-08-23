@@ -42,13 +42,13 @@
                             Actions
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <li><a class="dropdown-item" href="#">Details</a></li>
-                            <li><a class="dropdown-item edit-profile-btn" data-bs-toggle="modal"
-                                data-bs-target="#editModal" href="#" data-user-id="{{ $staff['id'] }}" data-user-name=">{{ $staff['first_name'].' '. $staff['last_name'] }}">Edit Profile</a></li>
+                            <li><a class="dropdown-item view-details" href="#" data-bs-toggle="modal" data-bs-target="#userDetailsModal" data-user-id="{{ $staff['id'] }}" data-user-name="{{ $staff['first_name'].' '. $staff['last_name'] }}">Details</a></li>
+                            <li><a class="dropdown-item edit-profile-btn" data-bs-toggle="modal" data-bs-target="#editProfileModal" href="#" data-user-id="{{ $staff['id'] }}" data-user-name=">{{ $staff['first_name'].' '. $staff['last_name'] }}">Edit Profile</a></li>
                             <li><a class="dropdown-item" href="#">Suspend</a></li>
                             <li><a class="dropdown-item" href="#">Send Password</a></li>
                             <li><a class="dropdown-item" href="#">Assign Subjects</a></li>
                             <li><a class="dropdown-item" href="#">Assign to Class</a></li>
+                            <li><a class="dropdown-item delete-user" href="#" data-user-id="{{ $staff['id'] }}" data-user-name="{{ $staff['first_name'].' '. $staff['last_name'] }}">Delete</a></li>
                         </ul>
                     </div>
                 </td>

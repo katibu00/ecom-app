@@ -133,8 +133,11 @@ Route::group(['prefix' => 'settings', 'middleware' => ['auth', 'managers']], fun
     Route::get('/basic/index', [BasicSettingsController::class, 'index'])->name('settings.basic.index');
     Route::post('/basic/index', [BasicSettingsController::class, 'updateBasic']);
 
-    Route::get('/basic/monnify/index', [BasicSettingsController::class, 'monnifyIndex'])->name('settings.monnify.index');
-    Route::post('/basic/monnify/index', [BasicSettingsController::class, 'monnifyStore']);
+    Route::get('/basic/monnify_api_settings', [BasicSettingsController::class, 'monnifyIndex'])->name('settings.monnify.index');
+    Route::post('/basic/monnify', [BasicSettingsController::class, 'monnifyStore']);
+
+    Route::get('/basic/sms_gateway', [BasicSettingsController::class, 'SMSIndex'])->name('settings.sms_gateway.index');
+    Route::post('/basic/sms_gateway', [BasicSettingsController::class, 'SMSStore']);
 
     Route::get('/sessions/index', [SessionsController::class, 'index'])->name('settings.sessions.index');
     Route::post('/sessions/index', [SessionsController::class, 'store']);
@@ -237,6 +240,8 @@ Route::group(['prefix' => 'users', 'middleware' => ['auth', 'teachers']], functi
     Route::post('/staffs/search', [StaffsController::class, 'search'])->name('users.staffs.search');
     Route::post('/staffs/details', [StaffsController::class, 'details'])->name('users.staff.details');
     Route::post('/get-staff_details', [StaffsController::class, 'getStaffDetails'])->name('get-staff_details');
+    Route::post('/staffs/delete', [StaffsController::class, 'delete'])->name('staffs.delete');
+
 
     Route::get('/parents/index', [ParentsController::class, 'index'])->name('users.parents.index');
     Route::get('/parents/create', [ParentsController::class, 'create'])->name('users.parents.create');
