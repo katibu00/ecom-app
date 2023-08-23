@@ -172,7 +172,7 @@ class HomeController extends Controller
         list($total_invoice, $total_discount, $total_pre_bal, $invoice_count) = $this->calculateInvoiceTotals($invoices);
         $classes = Classes::all();
         // ... Other calculations ...
-        $totalCAs = $this->calculateTotalCAs($classes);
+        $totalCAs = $this->calculateTotalCAs($classes, $school);
         $totalEnteredCAs = $this->calculateTotalEnteredCAs($classes, $school);
         $paymentSlips = $this->getPaymentSlips($school)->count(); // Define this function
         $monthlyIncomes = $this->getMonthlyIncomes($currentMonth, $currentYear, $school); // Define this function
@@ -266,13 +266,13 @@ class HomeController extends Controller
             ->get();
     }
 
-    public function calculateTotalCAs($classes)
+    public function calculateTotalCAs($classes, $school)
     {
         $totalCAs = 0;
 
         foreach ($classes as $class) {
             $assignedSubjects = $class->assignedSubjects;
-            $caSchemes = CAScheme::where('class_id', 'LIKE', "%{$class->id}%")->get();
+            $caSchemes = CAScheme::where('school_id',$school->id)->where('class_id', 'LIKE', "%{$class->id}%")->get();
 
             // You may need to adjust this logic based on your actual data structure
             $totalCAs += $assignedSubjects->count() * $caSchemes->count();
