@@ -170,13 +170,13 @@ class HomeController extends Controller
             ->get();
 
         list($total_invoice, $total_discount, $total_pre_bal, $invoice_count) = $this->calculateInvoiceTotals($invoices);
-        $classes = Classes::all();
-        // ... Other calculations ...
+        $classes = Classes::where('school_id', $school->id)->get();
+
         $totalCAs = $this->calculateTotalCAs($classes, $school);
         $totalEnteredCAs = $this->calculateTotalEnteredCAs($classes, $school);
-        $paymentSlips = $this->getPaymentSlips($school)->count(); // Define this function
-        $monthlyIncomes = $this->getMonthlyIncomes($currentMonth, $currentYear, $school); // Define this function
-        $revenueThisMonth = $this->getRevenueThisMonth($currentMonth, $currentYear, $school); // Define this function
+        $paymentSlips = $this->getPaymentSlips($school)->count();
+        $monthlyIncomes = $this->getMonthlyIncomes($currentMonth, $currentYear, $school);
+        $revenueThisMonth = $this->getRevenueThisMonth($currentMonth, $currentYear, $school);
         $upcomingBirthdays = $this->getUpcomingBirthdays($school);
 
         $payments = $this->getLastPayments($school);
