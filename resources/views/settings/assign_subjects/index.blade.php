@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('PageTitle', 'Classes')
+@section('PageTitle', 'Assign Subjects')
 
 
 @section('content')
@@ -8,10 +8,10 @@
         <!-- Basic Bootstrap Table -->
         <div class="card">
             <div class="card-header header-elements">
-                <span class="me-2">Classes</span>
+                <span class="me-2">Assign Subjects</span>
 
                 <div class="card-header-elements ms-auto">
-                    @if (count($classes) > 0)
+                    @if (count($subjects) > 0)
                     <button type="button" data-bs-toggle="modal" data-bs-target="#addModal" class="btn btn-sm btn-primary">
                         <span class="tf-icon ti ti-plus ti-xs me-1"></span>Assign Subjects
                     </button>

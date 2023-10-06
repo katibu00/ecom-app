@@ -39,7 +39,7 @@ $route = Route::current()->getName();
                                     </select>
                                 </div>
                             </div>
-                            
+
                             <div class="row mb-3" id="api_token_row">
                                 <label class="col-sm-3 col-form-label">API Token</label>
                                 <div class="col-sm-9">

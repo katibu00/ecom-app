@@ -34,7 +34,7 @@
                                 
                                 <div class="col-sm-4">
                                     <label class="form-label" for=""></label>
-                                    <button type="submit" class="btn btn-sm btn-primary">Search Students</button>
+                                    <button type="submit" class="btn btn-sm btn-primary">Fetch Submissions</button>
                                 </div>
                             </div>
                         </form>

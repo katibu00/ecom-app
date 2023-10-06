@@ -18,19 +18,24 @@ class PsychomotorCrudController extends Controller
 
     public function store(Request $request)
     {
+        $school_id = auth()->user()->school_id;
+
+        $count = PsychomotorCrud::where('school_id', $school_id)->count();
+
 
         $dataCount = count($request->name);
         if($dataCount != NULL){
             for ($i=0; $i < $dataCount; $i++){
                 $data = new PsychomotorCrud();
                 $data->name = $request->name[$i];
-                $data->school_id = auth()->user()->school_id;
+                $data->school_id = $school_id;
                 $data->save();
             }
         }
 
         return response()->json([
             'status'=>200,
+            'count'=>$count,
             'message'=>'Psychomotor Skill(s) Created Successfully',
         ]);
     }

@@ -1,63 +1,49 @@
 <script>
     $(document).ready(function() {
-       
+
         //create
-        $(document).on('submit', '#create_class_form', function(e){
+        $(document).on('submit', '#create_class_form', function(e) {
             e.preventDefault();
-            
+
             let formData = new FormData($('#create_class_form')[0]);
-    
-            spinner = '<div class="spinner-border" style="height: 15px; width: 15px;" role="status"></div> &nbsp; Submitting . . .'
-                     $('#submit_btn').html(spinner);
-                     $('#submit_btn').attr("disabled", true);
-    
+
+            spinner =
+                '<div class="spinner-border" style="height: 15px; width: 15px;" role="status"></div> &nbsp; Submitting . . .'
+            $('#submit_btn').html(spinner);
+            $('#submit_btn').attr("disabled", true);
+
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-    
+
             $.ajax({
                 type: "POST",
                 url: "{{ route('settings.psychomotor_crud.index') }}",
                 data: formData,
                 contentType: false,
                 processData: false,
-                success: function(response){
-    
-                        if(response.status == 200){
-                            $('.table').load(location.href+' .table');
-                            $('#addModal').modal('hide');
-                            $('#create_class_form')[0].reset();
-                            Command: toastr["success"](response.message)
-                            toastr.options = {
-                            "closeButton": false,
-                            "debug": false,
-                            "newestOnTop": false,
-                            "progressBar": false,
-                            "positionClass": "toast-top-right",
-                            "preventDuplicates": false,
-                            "onclick": null,
-                            "showDuration": "300",
-                            "hideDuration": "1000",
-                            "timeOut": "5000",
-                            "extendedTimeOut": "1000",
-                            "showEasing": "swing",
-                            "hideEasing": "linear",
-                            "showMethod": "fadeIn",
-                            "hideMethod": "fadeOut"
-                            }
+                success: function(response) {
 
-                            $('#submit_btn').text("Submit");
-                            $('#submit_btn').attr("disabled", false);
-                        }
+                    if (response.status == 200) {
+                        $('.table').load(location.href + ' .table');
+                        $('#addModal').modal('hide');
+                        $('#create_class_form')[0].reset();
+                        Command: toastr["success"](response.message)
+                        if (response.count < 1) {
+                                location.reload(); 
+                            }
+                        $('#submit_btn').text("Submit");
+                        $('#submit_btn').attr("disabled", false);
+                    }
                 }
             });
-    
+
         });
 
-         //delete item
-         $(document).on('click', '.deleteItem', function(e) {
+        //delete item
+        $(document).on('click', '.deleteItem', function(e) {
             e.preventDefault();
 
             let id = $(this).data('id');
@@ -105,19 +91,18 @@
 
         });
 
-         //edit item
-         $(document).on('click', '.editItem', function() {
-           
+        //edit item
+        $(document).on('click', '.editItem', function() {
+
             let name = $(this).data('name');
             let id = $(this).data('id');
             let status = $(this).data('status');
-            if(status == 1)
-            {
+            if (status == 1) {
                 $("#status").prop("checked", true)
-            }else{
+            } else {
                 $("#status").prop("checked", false)
             }
-         
+
             $('#edit_name').val(name);
             $('#update_id').val(id);
         });
@@ -135,7 +120,8 @@
                 }
             });
 
-            spinner = '<div class="spinner-border" style="height: 15px; width: 15px;" role="status"></div> &nbsp; Updating. . .';
+            spinner =
+                '<div class="spinner-border" style="height: 15px; width: 15px;" role="status"></div> &nbsp; Updating. . .';
             $("#update_btn").html(spinner);
             $("#update_btn").attr("disabled", true);
 
@@ -143,7 +129,9 @@
                 type: "POST",
                 url: "{{ route('settings.psychomotor_crud.update') }}",
                 data: {
-                    'name': name, 'id':id,  status: $("#status").prop("checked") == true ? 1 : 0,
+                    'name': name,
+                    'id': id,
+                    status: $("#status").prop("checked") == true ? 1 : 0,
                 },
                 dataType: "json",
                 success: function(res) {
@@ -151,29 +139,12 @@
                     if (res.status == 400) {
                         $("#update_error_list").html("");
                         $("#update_error_list").addClass("alert alert-danger");
-                        $.each(res.errors, function (key, err) {
+                        $.each(res.errors, function(key, err) {
                             $("#update_error_list").append("<li>" + err + "</li>");
                         });
                         Command: toastr["error"](
                             "Check your input and try again."
                         );
-                        toastr.options = {
-                            closeButton: false,
-                            debug: false,
-                            newestOnTop: false,
-                            progressBar: false,
-                            positionClass: "toast-top-right",
-                            preventDuplicates: false,
-                            onclick: null,
-                            showDuration: "300",
-                            hideDuration: "1000",
-                            timeOut: "5000",
-                            extendedTimeOut: "1000",
-                            showEasing: "swing",
-                            hideEasing: "linear",
-                            showMethod: "fadeIn",
-                            hideMethod: "fadeOut",
-                        };
                         $("#update_btn").text("Update");
                         $("#update_btn").attr("disabled", false);
                     }
@@ -185,26 +156,10 @@
                         $('#editModal').modal('hide');
                         $('#update_btn').text("Update");
                         $('#update_btn').attr("disabled", false);
-                        $('.table').load(location.href+' .table');
-                        
+                        $('.table').load(location.href + ' .table');
+
                         Command: toastr["success"](res.message);
-                        toastr.options = {
-                            closeButton: false,
-                            debug: false,
-                            newestOnTop: false,
-                            progressBar: false,
-                            positionClass: "toast-top-right",
-                            preventDuplicates: false,
-                            onclick: null,
-                            showDuration: "300",
-                            hideDuration: "1000",
-                            timeOut: "5000",
-                            extendedTimeOut: "1000",
-                            showEasing: "swing",
-                            hideEasing: "linear",
-                            showMethod: "fadeIn",
-                            hideMethod: "fadeOut",
-                        };
+
                         $("#update_btn").text("Update");
                         $("#update_btn").attr("disabled", false);
 
@@ -216,26 +171,9 @@
                         Command: toastr["error"](
                             "Session expired. please login again."
                         );
-                        toastr.options = {
-                            closeButton: false,
-                            debug: false,
-                            newestOnTop: false,
-                            progressBar: false,
-                            positionClass: "toast-top-right",
-                            preventDuplicates: false,
-                            onclick: null,
-                            showDuration: "300",
-                            hideDuration: "1000",
-                            timeOut: "5000",
-                            extendedTimeOut: "1000",
-                            showEasing: "swing",
-                            hideEasing: "linear",
-                            showMethod: "fadeIn",
-                            hideMethod: "fadeOut",
-                        };
 
                         setTimeout(() => {
-                               window.location.replace('{{ route('login') }}');
+                            window.location.replace('{{ route('login') }}');
                         }, 2000);
                     }
                 },
@@ -243,7 +181,7 @@
         });
 
 
-        
+
     });
 </script>
 
@@ -260,5 +198,4 @@
             counter -= 1;
         });
     });
-
 </script>

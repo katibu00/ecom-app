@@ -134,10 +134,10 @@ Route::group(['prefix' => 'settings', 'middleware' => ['auth', 'managers']], fun
     Route::post('/basic/index', [BasicSettingsController::class, 'updateBasic']);
 
     Route::get('/basic/monnify_api_settings', [BasicSettingsController::class, 'monnifyIndex'])->name('settings.monnify.index');
-    Route::post('/basic/monnify', [BasicSettingsController::class, 'monnifyStore']);
+    Route::post('/basic/monnify_api_settings', [BasicSettingsController::class, 'monnifyStore']);
 
     Route::get('/basic/sms_gateway', [BasicSettingsController::class, 'SMSIndex'])->name('settings.sms_gateway.index');
-    Route::post('/basic/sms_gateway', [BasicSettingsController::class, 'SMSStore']);
+    Route::post('/basic/sms_gateway', [BasicSettingsController::class, 'saveSMSSettings']);
 
     Route::get('/sessions/index', [SessionsController::class, 'index'])->name('settings.sessions.index');
     Route::post('/sessions/index', [SessionsController::class, 'store']);

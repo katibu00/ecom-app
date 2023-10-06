@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Models\Classes;
+use App\Models\FeeStructure;
 use App\Models\Mark;
 use App\Models\Section;
 use App\Models\User;
@@ -79,24 +80,32 @@ class ClassesController extends Controller
     }
 
     public function delete(Request $request){
-        $check = Mark::where('class_id', $request->id)->first();
-        if($check)
-        {
+        // Check if the class has related data in the `marks` table
+        $checkMarks = Mark::where('class_id', $request->id)->first();
+    
+        // Check if the class has related data in the `fee_structures` table
+        $checkFeeStructures = FeeStructure::where('class_id', $request->id)->first();
+    
+        if ($checkMarks || $checkFeeStructures) {
             return response()->json([
                 'status' => 400,
-                'message' => 'Class has marks data and hence cannot be deleted'
+                'message' => 'Class cannot be deleted because it is associated with other data (e.g., marks or fee structures).'
             ]);
         }
-        $data = Classes::find($request->id);
-
-        if($data->delete()){
-
+    
+        $class = Classes::find($request->id);
+    
+        if ($class->delete()) {
             return response()->json([
                 'status' => 200,
                 'message' => 'Class Deleted Successfully'
             ]);
-
-        };
+        }
     
+        return response()->json([
+            'status' => 400,
+            'message' => 'Failed to delete the class. Please try again later.'
+        ]);
     }
+    
 }

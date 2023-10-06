@@ -65,15 +65,12 @@
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             }
                         });
-
-
                         $.ajax({
                             url: "{{ route('settings.assign_subjects.delete') }}",
                             method: 'POST',
                             data: {
                                 id: id,
                             },
-
                             success: function(res) {
 
                                 if (res.status == 200) {
@@ -86,10 +83,8 @@
 
                             }
                         });
-
                     }
                 });
-
         });
 
         //edit item
@@ -168,9 +163,6 @@
                         $("#update_btn").text("Update");
                         $("#update_btn").attr("disabled", false);
                         $("#update_form")[0].reset();
-                        // $(".form-select").prop('selectedIndex', 0);
-
-
                     }
                 },
                 error: function(xhr, ajaxOptions, thrownError) {

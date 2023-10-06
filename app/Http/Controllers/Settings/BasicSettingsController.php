@@ -101,60 +101,78 @@ class BasicSettingsController extends Controller
     public function monnifyStore(Request $request)
     {
         $enableMonnify = $request->input('enable_monnify');
+        $schoolId = auth()->user()->school_id;
+        
+        $data = [
+            'enable_monnify' => $enableMonnify,
+            'secret_key' => $request->input('secret_key'),
+            'public_key' => $request->input('public_key'),
+            'contract_code' => $request->input('contract_code'),
+        ];
+        
+        $monnify = MonnifyAPISetting::where('school_id', $schoolId)->first();
     
-        if (!$enableMonnify) {
-            $monnify = MonnifyAPISetting::find(auth()->user()->school_id);
+        if ($enableMonnify) {
+            $validator = Validator::make($data, [
+                'enable_monnify' => 'required|boolean',
+                'secret_key' => 'required',
+                'public_key' => 'required',
+                'contract_code' => 'required',
+            ]);
+    
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'errors' => $validator->messages(),
+                ]);
+            }
+    
             if ($monnify) {
-                $monnify->enable_monnify = 0;
+                $monnify->update($data);
+            } else {
+                $monnify = new MonnifyAPISetting($data);
+                $monnify->school_id = $schoolId;
+                $monnify->save();
+            }
+        } else {
+            if ($monnify) {
+                $monnify->enable_monnify = false;
                 $monnify->update();
             } else {
                 $monnify = new MonnifyAPISetting();
-                $monnify->school_id = auth()->user()->school_id;
-                $monnify->enable_monnify = 0;
+                $monnify->school_id = $schoolId;
                 $monnify->save();
             }
-    
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Monnify API Settings Saved Successfully',
-            ]);
-        }
-    
-        $validator = Validator::make($request->all(), [
-            'enable_monnify' => 'required|boolean',
-            'secret_key' => 'required',
-            'public_key' => 'required',
-            'contract_code' => 'required',
-        ]);
-    
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'errors' => $validator->messages(),
-            ]);
-        }
-    
-        $monnify = MonnifyAPISetting::find(auth()->user()->school_id);
-        if ($monnify) {
-            $monnify->enable_monnify = 1;
-            $monnify->secret_key = $request->input('secret_key');
-            $monnify->public_key = $request->input('public_key');
-            $monnify->contract_code = $request->input('contract_code');
-            $monnify->update();
-        } else {
-            $monnify = new MonnifyAPISetting();
-            $monnify->school_id = auth()->user()->school_id;
-            $monnify->enable_monnify = 1;
-            $monnify->secret_key = $request->input('secret_key');
-            $monnify->public_key = $request->input('public_key');
-            $monnify->contract_code = $request->input('contract_code');
-            $monnify->save();
         }
     
         return response()->json([
             'status' => 'success',
             'message' => 'Monnify API Settings Saved Successfully',
         ]);
+    }
+    
+
+
+    public function saveSMSSettings(Request $request)
+    {
+        $userSchoolId = auth()->user()->school_id;
+
+        $sms = SMSProvider::where('school_id', $userSchoolId)->first();
+
+        if (!$sms) {
+            $sms = new SMSProvider();
+            $sms->school_id = $userSchoolId;
+        }
+        $sms->sms_provider = $request->input('sms_provider');
+        $sms->api_token = $request->input('api_token');
+        $sms->sender_id = $request->input('sender_id');
+        $sms->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'SMS Settings Saved Successfully',
+        ]);
+
     }
     
     

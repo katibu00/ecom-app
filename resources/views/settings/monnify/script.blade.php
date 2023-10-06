@@ -19,7 +19,7 @@
             });
     $.ajax({
         type: 'POST',
-        url: $form.attr('action'),
+        url: '{{ route('settings.monnify.index') }}',
         data: formData,
         contentType: false,
         processData: false,

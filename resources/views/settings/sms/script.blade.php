@@ -1,7 +1,7 @@
 <script>
     $(document).ready(function() {
 
-        $(document).on('submit', '#monnify_form', function(e) {
+        $(document).on('submit', '#sms_form', function(e) {
             e.preventDefault();
             var $form = $(this);
             var $submitButton = $form.find('#submit_btn');
@@ -19,7 +19,7 @@
             });
             $.ajax({
                 type: 'POST',
-                url: $form.attr('action'),
+                url: '{{ route('settings.sms_gateway.index') }}',
                 data: formData,
                 contentType: false,
                 processData: false,
@@ -54,9 +54,7 @@
     $('#sender_id_row').hide();
 
     // Show/hide fields and notes based on the selected SMS provider
-    $('#sms_provider').change(function() {
-        const selectedProvider = $(this).val();
-
+    function toggleFields(selectedProvider) {
         if (selectedProvider === 'intellisas') {
             $('#api_token_row').hide();
             $('#sender_id_row').hide();
@@ -66,7 +64,18 @@
             $('#sender_id_row').show();
             $('#intellisas_note').hide();
         }
+    }
+
+    // Check the selected SMS provider when the page loads
+    const initialProvider = $('#sms_provider').val();
+    toggleFields(initialProvider);
+
+    // Handle changes in the selected SMS provider
+    $('#sms_provider').change(function() {
+        const selectedProvider = $(this).val();
+        toggleFields(selectedProvider);
     });
 });
+
 
 </script>

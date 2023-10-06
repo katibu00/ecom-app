@@ -22,16 +22,21 @@ class CASchemeController extends Controller
     public function store(Request $request)
     {
 
+        $school_id = auth()->user()->school_id;
+
+        $count = CAScheme::where('school_id', $school_id)->count();
+
         $data = new CAScheme();
         $data->code = $request->code;
         $data->desc = $request->desc;
         $data->marks = $request->marks;
-        $data->school_id = auth()->user()->school_id;
+        $data->school_id = $school_id;
         $data->class_id = implode(',', $request->class_ids);
         $data->save();
             
         return response()->json([
             'status'=>200,
+            'count'=>$count,
             'message'=>'CA Scheme(s) Created Successfully',
         ]);
     }

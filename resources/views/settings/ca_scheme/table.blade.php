@@ -1,3 +1,5 @@
+@if (count($cas) > 0)
+
 <div class="table-responsive text-nowrap">
 <table class="table table-responsive-sm">
     <thead>
@@ -45,3 +47,16 @@
     </tbody>
 </table>
 </div>
+@else
+<div class="container">
+    <div class="alert alert-primary text-center">
+        <h5 class="mb-4 text-danger">No CA Schema Created!</h5>
+        {{-- <p class="mb-4">Input all the Psyc in your school.</p> --}}
+        <p class="mb-4">Note: Before creating CA Scheme make sure you have added Classes.</p>
+        <button type="button" data-bs-toggle="modal" data-bs-target="#addModal" class="btn btn-sm btn-primary">
+            Add CA Scheme
+        </button>
+    </div>  
+</div>
+
+@endif

@@ -10,6 +10,9 @@
         </div>
         
         <div class="card-body">
+            
+            @if (count($learningDomains) > 0)
+
             <table class="table">
                 <thead>
                     <tr>
@@ -37,6 +40,18 @@
                     @endforeach
                 </tbody>
             </table>
+            @else
+            <div class="container">
+                <div class="alert alert-primary text-center">
+                    <h5 class="mb-4 text-danger">No Learning Domain Created!</h5>
+                    {{-- <p class="mb-4">Note: Before creating CA Scheme make sure you have added Classes.</p> --}}
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#addDomainModal" class="btn btn-sm btn-primary">
+                        Add Learning Domain
+                    </button>
+                </div>  
+            </div>
+
+            @endif
         </div>
     </div>
 </div>
